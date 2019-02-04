@@ -1,0 +1,15 @@
+bewoners:
+  name: Bewoners
+  entities:
+    - device_tracker.dionne_dvh
+    - device_tracker.nik_iphone_x
+wakker:
+  name: Wie is wakker
+  entities:
+    - input_boolean.dionne_wakker
+    - input_boolean.nik_wakker
+actief:
+  name: Actief
+  entities:
+    - binary_sensor.dionne_actief
+    - binary_sensor.nik_actief

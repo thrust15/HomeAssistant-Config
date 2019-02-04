@@ -1,0 +1,69 @@
+- alias: Overloop licht aan indien beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.overloop
+      from: 'off'
+      to: 'on'
+  action: 
+    - service: light.turn_on
+      entity_id: light.trap
+      data_template:
+        profile: >
+          {% if (states.group.wakker.state == 'on') %}
+          relax
+          {% else %}
+          nightlight
+          {% endif %}
+    - condition: numeric_state
+      entity_id: sensor.overloop_licht
+      below: 20
+    - service: light.turn_on
+      entity_id: light.overloop_lamp
+      data_template:
+        profile: >
+          {% if (states.group.wakker.state == 'on') %}
+          relax
+          {% else %}
+          nightlight
+          {% endif %}
+
+- alias: Overloop licht uit geen beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.overloop
+      from: 'on'
+      to: 'off'
+  action: 
+    service: light.turn_off
+    entity_id:
+      - light.overloop
+
+- alias: Muziek harder als stofzuigen
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.badkamer_stekker_power
+      above: 1000
+  condition:
+    - condition: state
+      entity_id: media_player.slaapkamer
+      state: 'playing'
+  action:
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data_template:
+        volume_level: '{{states.media_player.slaapkamer.attributes.volume_level + 0.5}}'
+
+- alias: Muziek zachter stofzuigen klaar
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.badkamer_stekker_power
+      below: 1000
+  condition:
+    - condition: state
+      entity_id: media_player.slaapkamer
+      state: 'playing'
+  action:
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data_template:
+        volume_level: '{{states.media_player.slaapkamer.attributes.volume_level - 0.5}}'

@@ -1,0 +1,162 @@
+- alias: Muziek strijkkamer aan
+  trigger:
+    platform: state
+    entity_id: binary_sensor.beweging_strijkkamer
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.nik_wakker
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.dionne_wakker
+        state: 'on'
+      - condition: state
+        entity_id: media_player.woonkamer
+        state: 'playing'
+      - condition: template
+        value_template: '{{states.media_player.strijkkamer.attributes.sonos_group[0] != "media_player.woonkamer"}}'
+  action:
+    - service: media_player.volume_set
+      entity_id: media_player.strijkkamer
+      data:
+        volume_level: 0.05
+    - service: media_player.sonos_join
+      entity_id: media_player.strijkkamer
+      data:
+        master: media_player.woonkamer
+
+- alias: Muziek strijkkamer uit
+  trigger:
+    platform: state
+    entity_id: binary_sensor.beweging_strijkkamer
+    to: 'off'
+    for:
+      minutes: 15
+  condition:
+    condition: template
+    value_template: '{{states.media_player.strijkkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
+  action:
+    - service: media_player.sonos_unjoin
+      entity_id: media_player.strijkkamer
+
+- alias: Muziek slaapkamer aan
+  trigger:
+    platform: state
+    entity_id: binary_sensor.slaapkamer
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: >
+          {{states.media_player.grote_slaapkamer.state == null
+          or 
+          states.media_player.grote_slaapkamer.state == 'unavailable'}}
+      - condition: state
+        entity_id: input_boolean.nik_wakker
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.dionne_wakker
+        state: 'on'
+      - condition: state
+        entity_id: media_player.woonkamer
+        state: 'playing'
+      - condition: template
+        value_template: '{{states.media_player.slaapkamer.attributes.sonos_group[0] != "media_player.woonkamer"}}'
+  action:
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.10
+    - service: media_player.sonos_join
+      entity_id: media_player.slaapkamer
+      data:
+        master: media_player.woonkamer
+
+- alias: Muziek slaapkamer uit
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.slaapkamer
+      to: 'off'
+      for:
+        minutes: 15
+    - platform: state
+      entity_id: media_player.grote_slaapkamer
+      from: 'unavailable'
+  condition:
+    condition: template
+    value_template: '{{states.media_player.slaapkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
+  action:
+    - service: media_player.sonos_unjoin
+      entity_id: media_player.slaapkamer
+
+- alias: Muziek boven uit als iemand gaat slapen
+  trigger:
+    - platform: state
+      entity_id:
+        - input_boolean.nik_wakker
+        - input_boolean.dionne_wakker
+      to: 'off'
+  condition:
+    condition: state
+    entity_id: group.wakker
+    state: 'on'
+  action:
+    - service: media_player.sonos_unjoin
+      entity_id: media_player.strijkkamer
+    - service: media_player.sonos_unjoin
+      entity_id: media_player.slaapkamer
+    - delay:
+        seconds: 2
+    - service: media_player.media_stop
+      entity_id:
+        - media_player.strijkkamer
+        - media_player.slaapkamer
+
+- alias: Zet soundbar op tv
+  trigger:
+    platform: state
+    entity_id: media_player.philips_tv
+    to: 'on'
+  action:
+    service: remote.send_command
+    entity_id: remote.xiaomi_miio_192_168_31_26
+    data:
+      command:
+        - 'soundbar_tv'
+
+- alias: Zet soundbar op muziek
+  trigger:
+    platform: state
+    entity_id: media_player.philips_tv
+    to: 'off'
+  action:
+    service: remote.send_command
+    entity_id: remote.xiaomi_miio_192_168_31_26
+    data:
+      command:
+        - 'soundbar_music'
+
+- alias: Set Music Options
+  trigger:
+    - platform: time_pattern
+      hours: '/6'
+      minutes: '00'
+    - platform: homeassistant
+      event: start
+  action:
+    - service: input_select.set_options
+      entity_id:
+        - input_select.music_choice
+      data_template:
+        options:
+          - '{{states.media_player.woonkamer.attributes.source_list[0]}}'
+          - '{{states.media_player.woonkamer.attributes.source_list[1]}}'
+          - '{{states.media_player.woonkamer.attributes.source_list[2]}}'
+          - '{{states.media_player.woonkamer.attributes.source_list[3]}}'
+          - '{{states.media_player.woonkamer.attributes.source_list[4]}}'
+          - '{{states.media_player.woonkamer.attributes.source_list[5]}}'
+          - '{{states.media_player.woonkamer.attributes.source_list[6]}}'
+          - '{{states.media_player.woonkamer.attributes.source_list[7]}}'

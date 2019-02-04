@@ -1,0 +1,54 @@
+- alias: Alles uit indien van huis
+  trigger:
+    platform: state
+    entity_id: group.bewoners
+    from: 'home'
+    to: 'not_home'
+  action:
+    - service: light.turn_off
+      entity_id: group.all_lights
+#    - service: switch.turn_off
+#      entity_id: 
+#        - switch.hal_verlichting
+#        - switch.badkamer_verlichting
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'off'
+    - service: media_player.turn_off
+      entity_id:
+        - media_player.philips_tv
+        - media_player.slaapkamer
+        - media_player.woonkamer
+        - media_player.strijkkamer
+        - media_player.ziggo_mediabox
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.muziek_aan
+    - condition: state
+      entity_id: input_boolean.robbie
+      state: 'off'
+    - service: vacuum.start
+      entity_id: vacuum.robbie
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.robbie
+
+- alias: reset robbie
+  trigger:
+    platform: time
+    at: '04:59:00'
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.robbie
+
+- alias: Stekker auto zoetermeer
+  trigger:
+    platform: time
+    at: '12:00:00'
+  condition:
+    condition: zone
+    entity_id: device_tracker.nik_iphone_x
+    zone: zone.kpn_zoetermeer
+  action:
+    service: notify.ios_nik_iphone_x
+    data:
+      title: 'Stekker uit auto halen'
+      message: 'Je moet de stekker uit je auto halen'

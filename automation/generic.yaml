@@ -1,0 +1,20 @@
+- alias: Homeassistant start
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+    - service: notify.ios_nik_iphone_x
+      data:
+        title: 'Homeassistant start'
+        message: 'Homeassistant start'
+
+- alias: Homeassistant stopt
+  trigger:
+    platform: homeassistant
+    event: shutdown
+  action:
+    - service: notify.ios_nik_iphone_x
+      data:
+        title: 'Homeassistant stopt'
+        message: 'Homeassistant stopt'
+        

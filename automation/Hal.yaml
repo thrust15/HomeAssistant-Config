@@ -1,0 +1,40 @@
+- alias: Hal licht aan indien beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hal
+      from: 'off'
+      to: 'on'
+  condition:
+    condition: numeric_state
+    entity_id: sensor.hal_licht
+    below: 20
+  action: 
+    service: light.turn_on
+    entity_id:
+      - light.hal
+
+- alias: Hal licht uit geen beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hal
+      from: 'on'
+      to: 'off'
+  action: 
+    service: light.turn_off
+    entity_id:
+      - light.hal
+
+- alias: Deurbel
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.doorbell
+      from: 'off'
+      to: 'on'
+  action:
+    - service: tts.google_say
+      entity_id: media_player.googlehome2371
+      data:
+        message: 'Er staat iemand voor de deur'
+        language: 'nl'
+    - service: script.turn_on
+      entity_id: script.cameradoorbell

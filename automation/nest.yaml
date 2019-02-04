@@ -1,0 +1,95 @@
+- alias: Update nest online naar aan
+  trigger:
+    platform: state
+    entity_id: binary_sensor.living_room_thermostat_nest_online
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: group.actief
+    state: 'on'
+  action:
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'heat'
+
+- alias: Update nest online naar uit
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.living_room_thermostat_nest_online
+      to: 'on'
+    - platform: state
+      entity_id: climate.living_room_nest
+      to: 'heat'
+      for:
+        minutes: 20
+  condition:
+    condition: state
+    entity_id: group.actief
+    state: 'off'
+  action:
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'off'
+
+- alias: Temperatuur regeling
+  trigger:
+    - platform: state
+      entity_id: climate.living_room_nest
+      from: 'off'
+      to: 'heat'
+    - platform: time
+      at: '18:00:02'
+    - platform: time
+      at: '05:00:02'
+  action:
+    service: script.turn_on
+    entity_id: script.climate_temperature
+
+#- alias: Thermostaat uit indien achterdeur open
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.achterdeur
+#    from: 'off'
+#    to: 'on'
+#    for:
+#      minutes: 3
+#  action:
+#    - service: climate.set_operation_mode
+#      data:
+#        operation_mode: 'off'
+#
+#- alias: Thermostaat aan indien achterdeur dicht
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.achterdeur
+#    from: 'on'
+#    to: 'off'
+#    for:
+#      minutes: 3
+#  action:
+#    - service: script.turn_on
+#      entity_id: script.home_climate
+
+- alias: Bijna thuis thermostaat aan
+  trigger:
+    platform: numeric_state
+    entity_id: 
+      - sensor.nik_to_home
+      - sensor.dionne_to_home
+    below: 20
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: group.actief
+        state: 'off'
+      - condition: time
+        before: '21:30:00'
+        after: '09:00:00'
+  action:
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'heat'
+
+  
+

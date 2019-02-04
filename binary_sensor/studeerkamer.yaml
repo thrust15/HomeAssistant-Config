@@ -1,0 +1,5 @@
+- platform: mqtt
+  state_topic: 'bruh/sensornode1'
+  name: 'Beweging studeerkamer'
+  value_template: '{{ value_json.motion }}'
+  device_class: motion

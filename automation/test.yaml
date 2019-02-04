@@ -1,0 +1,77 @@
+- alias: Spin notifcation
+  trigger:
+    platform: event
+    event_type: spin_notification_received
+    event_data:
+      action: rotate_sideways_clockwise
+      entity_id: spin_remote.spin_1
+  action:
+    - service: notify.nik_telegram
+      data_template:
+        title: 'spin'
+        message: '{{trigger.event.data.action}}'
+    - service: climate.set_temperature
+      data_template:
+        temperature: '{{states.climate.living_room_nest.attributes.temperature + 1}}'
+
+- alias: Spin notifcation 2
+  trigger:
+    platform: event
+    event_type: spin_notification_received
+    event_data:
+      action: rotate_sideways_counterclockwise
+      entity_id: spin_remote.spin_1
+  action:
+    - service: notify.nik_telegram
+      data_template:
+        title: 'spin'
+        message: '{{trigger.event.data.action}}'
+    - service: climate.set_temperature
+      data_template:
+        temperature: '{{states.climate.living_room_nest.attributes.temperature - 1}}'
+
+- alias: Temperature
+  trigger:
+    platform: event
+    event_type: telegram_command
+    event_data:
+      text: '/temperature'
+  action:
+    - service: telegram_bot.send_message
+      data_template:
+        message: >
+          Current temperature is {{states.climate.living_room_nest.attributes.current_temperature}} degrees celcius.
+          The thermostat is currently {{states.climate.living_room_nest.attributes.operation_mode}}.
+          do you want to turn it on?
+        target: '{{ trigger.event.data.user_id }}'
+        inline_keyboard:
+          - "Yes:/turn_thermostat_on, No:/do_nothing"
+
+- alias: Turn on nest when on telegram callback
+  trigger: 
+    platform: event
+    event_type: telegram_callback
+    event_data:
+      data: '/turn_thermostat_on'
+  action:
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'heat'
+    - service: telegram_bot.send_message
+      data_template:
+        message: >
+          Cool demo huh? let's turn it off again
+        target: '{{ trigger.event.data.user_id }}'
+        inline_keyboard:
+          - "Yes:/turn_thermostat_off"
+
+- alias: Turn off nest when on telegram callback
+  trigger:
+    platform: event
+    event_type: telegram_callback
+    event_data:
+      data: '/turn_thermostat_off'
+  action:
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'off'

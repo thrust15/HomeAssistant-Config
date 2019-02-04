@@ -1,0 +1,17 @@
+sensor_node_1_card:  
+  name: Sensor Node 1  
+  entities:  
+    - sensor.sn1_temperature  
+    - sensor.sn1_humidity  
+    - sensor.sn1_ldr  
+    - binary_sensor.beweging_studeerkamer  
+    - light.sn1_led
+
+sensor_node_2_card:  
+  name: Sensor Node 2  
+  entities:  
+    - sensor.sn2_temperature  
+    - sensor.sn2_humidity  
+    - sensor.sn2_ldr  
+    - binary_sensor.beweging_strijkkamer  
+    - light.sn2_led

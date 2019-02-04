@@ -1,0 +1,116 @@
+- alias: 'Wasmachine draait'
+  hide_entity: True
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.zolder_stekker_wasmachine_power
+    above: 100
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.wasmachine_state
+      option: Draait
+
+- alias: 'Wasmachine Klaar'
+  hide_entity: True
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.zolder_stekker_wasmachine_power
+    below: 5
+  condition:
+    condition: state
+    entity_id: input_select.wasmachine_state
+    state: Draait
+  action: 
+    service: input_select.select_option
+    data:
+      entity_id: input_select.wasmachine_state
+      option: Klaar
+
+- alias: 'Wasmachine uit'
+  hide_entity: True
+  trigger:
+    platform: template
+    value_template: '{{states.sensor.zolder_stekker_wasmachine_power.state | float == 0.0}}'
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.wasmachine_state
+      option: Uit
+
+- alias: 'Wasmachine aan'
+  hide_entity: True
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.zolder_stekker_wasmachine_power
+    above: 0.1
+  condition:
+    condition: state
+    entity_id: input_select.wasmachine_state
+    state: Uit
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.wasmachine_state
+      option: Aan
+
+- alias: 'Wasmachine klaar'
+  trigger:
+    platform: state
+    entity_id: input_select.wasmachine_state
+    to: 'Klaar'
+    for:
+      minutes: 3
+  action:
+    service: script.turn_on
+    entity_id: script.wasmachine
+
+- alias: 'Reset wasmachine licht donker'
+  trigger:
+    platform: state
+    entity_id: input_select.wasmachine_state
+    from: 'Klaar'
+  condition:
+    condition: state
+    entity_id: light.bank
+    state: 'on'
+  action:
+    service: light.turn_on
+    entity_id: light.kast_spot
+    data_template:
+      brightness: '{{states.light.bank.attributes.brightness}}'
+      #color_temp: '{{states.light.bank.attributes.color_temp}}'
+      xy_color: ['{{states.light.bank.attributes.xy_color[0]|float}}','{{states.light.bank.attributes.xy_color[1]|float}}']
+
+- alias: 'Reset wasmachine licht niet donker'
+  trigger:
+    platform: state
+    entity_id: input_select.wasmachine_state
+    from: 'Klaar'
+  condition:
+    condition: state
+    entity_id: light.bank
+    state: 'off'
+  action:
+    service: light.turn_off
+    entity_id: light.kast_spot
+
+- alias: 'Bescherming overbelasting droger en wasmachine'
+  trigger:
+    platform: template 
+    value_template: '{{(states.sensor.zolder_stekker_wasmachine_power.state | float + states.sensor.zolder_droger_stekker_power.state | float) > 3680}}'
+  action:
+    service: switch.turn_off
+    entity_id: switch.droger_switch_16_0
+
+- alias: 'droger aan na overbelasting'
+  trigger:
+    platform: template
+    value_template: '{{(states.sensor.zolder_stekker_wasmachine_power.state | float + states.sensor.zolder_droger_stekker_power.state | float) < 3680}}'
+  condition:
+    condition: state
+    entity_id: switch.droger_switch_16_0
+    state: 'off'
+  action:
+    service: switch.turn_on
+    entity_id: switch.droger_switch_16_0
+

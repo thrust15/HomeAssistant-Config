@@ -1,0 +1,237 @@
+sensor.badkamer_beweging_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_beweging_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_beweging_burglar:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_beweging_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_beweging_ultraviolet:
+  ignored: true
+  polling_intensity: 0
+sensor.achterdeur_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.achterdeur_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.achterdeur_burglar:
+  ignored: true
+  polling_intensity: 0
+sensor.achterdeur_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.achterdeur_access_control:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_lamp_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_lamp_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_lamp_exporting:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_lamp_exporting_2:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_lamp_heat:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_lamp_power_management:
+  ignored: true
+  polling_intensity: 0
+sensor.badkamer_lamp_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_beweging_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_beweging_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_beweging_burglar:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_beweging_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_beweging_ultraviolet:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_verlichting_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_verlichting_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_verlichting_exporting:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_verlichting_exporting_2:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_verlichting_heat:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_verlichting_power_management:
+  ignored: true
+  polling_intensity: 0
+sensor.hal_verlichting_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.kast_beweging_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.kast_beweging_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.kast_beweging_burglar:
+  ignored: true
+  polling_intensity: 0
+sensor.kast_beweging_general:
+  ignored: true
+  polling_intensity: 0
+sensor.kast_beweging_seismic_intensity:
+  ignored: true
+  polling_intensity: 0
+sensor.kast_beweging_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.keuken_dimmer_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.keuken_dimmer_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.keuken_dimmer_exporting:
+  ignored: true
+  polling_intensity: 0
+sensor.keuken_dimmer_power_management:
+  ignored: true
+  polling_intensity: 0
+sensor.keuken_dimmer_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.overloop_beweging_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.overloop_beweging_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.overloop_beweging_burglar:
+  ignored: true
+  polling_intensity: 0
+sensor.overloop_beweging_general:
+  ignored: true
+  polling_intensity: 0
+sensor.overloop_beweging_seismic_intensity:
+  ignored: true
+  polling_intensity: 0
+sensor.overloop_beweging_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_beweging_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_beweging_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_beweging_burglar:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_beweging_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_raam_access_control:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_raam_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_raam_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_raam_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_stekker_dionne_current:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_stekker_dionne_voltage:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_stekker_nik_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_stekker_nik_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_stekker_nik_exporting:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_stekker_nik_power_management:
+  ignored: true
+  polling_intensity: 0
+sensor.slaapkamer_stekker_nik_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.ventilatie_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.ventilatie_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.ventilatie_exporting:
+  ignored: true
+  polling_intensity: 0
+sensor.ventilatie_heat:
+  ignored: true
+  polling_intensity: 0
+sensor.ventilatie_exporting_2:
+  ignored: true
+  polling_intensity: 0
+sensor.ventilatie_power_management:
+  ignored: true
+  polling_intensity: 0
+sensor.ventilatie_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.woonkamer_beweging_alarm_level:
+  ignored: true
+  polling_intensity: 0
+sensor.woonkamer_beweging_alarm_type:
+  ignored: true
+  polling_intensity: 0
+sensor.woonkamer_beweging_burglar:
+  ignored: true
+  polling_intensity: 0
+sensor.woonkamer_beweging_general:
+  ignored: true
+  polling_intensity: 0
+sensor.woonkamer_beweging_seismic_intensity:
+  ignored: true
+  polling_intensity: 0
+sensor.woonkamer_beweging_sourcenodeid:
+  ignored: true
+  polling_intensity: 0
+sensor.zolder_droger_stekker_current:
+  ignored: true
+  polling_intensity: 0
+sensor.zolder_droger_stekker_voltage:
+  ignored: true
+  polling_intensity: 0
+sensor.zolder_stekker_wasmachine_current:
+  ignored: true
+  polling_intensity: 0
+sensor.zolder_stekker_wasmachine_voltage:
+  ignored: true
+  polling_intensity: 0
+switch.hal_verlichting:
+  ignored: false
+  polling_intensity: 0

@@ -1,0 +1,17 @@
+- platform: template
+  sensors:
+    nik_actief:
+      value_template: '{{ (states.device_tracker.nik_iphone_x.state == "home") and (states.input_boolean.nik_wakker.state == "on") }}'
+      friendly_name: 'Nik actief thuis'
+      entity_id:
+        - device_tracker.nik_iphone_x
+        - input_boolean.nik_wakker
+
+- platform: template
+  sensors:
+    dionne_actief:
+      value_template: '{{ (states.device_tracker.dionne_dvh.state == "home") and (states.input_boolean.dionne_wakker.state == "on") }}'
+      friendly_name: 'Dionne actief thuis'
+      entity_id:
+        - device_tracker.dionne_dvh
+        - input_boolean.dionne_wakker

@@ -1,0 +1,23 @@
+- platform: waze_travel_time
+  name: Nik to Home
+  origin: device_tracker.nik_iphone_x
+  destination: zone.home
+  region: 'EU'
+
+- platform: waze_travel_time
+  name: Dionne to Home
+  origin: device_tracker.dionne_dvh
+  destination: zone.home
+  region: 'EU'
+
+- platform: waze_travel_time
+  name: Nik to Work
+  origin: device_tracker.nik_iphone_x
+  destination: zone.kpn_zoetermeer
+  region: 'EU'
+
+- platform: waze_travel_time
+  name: Dionne to Work
+  origin: device_tracker.dionne_dvh
+  destination: zone.kindergarden_haarlem
+  region: 'EU'

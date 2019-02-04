@@ -1,0 +1,71 @@
+home_climate:
+  sequence:
+#    - condition: state
+#      entity_id: binary_sensor.achterdeur
+#      state: 'off'
+    - condition: state
+      entity_id: group.actief
+      state: 'on'
+    - condition: time
+      before: '21:30:00'
+      after: '09:00:00'
+    - service: script.turn_on
+      entity_id: script.home_climate_off
+home_climate_on:
+  sequence:
+    - condition: state
+      entity_id: climate.living_room_nest
+      state: 'heat'
+    - service: script.turn_on
+      entity_id: script.climate_temperature
+home_climate_off:
+  sequence:
+    - condition: state
+      entity_id: climate.living_room_nest
+      state: 'off'
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'heat'
+climate_temperature:
+  sequence:
+    - service: script.turn_on
+      entity_id: 
+        - script.19_graden
+        - script.20_graden
+        - script.21_graden
+19_graden:
+  sequence:
+    - condition: state
+      entity_id: group.actief
+      state: 'off'
+    - condition: template
+      value_template: '{{states.climate.living_room_nest.attributes.temperature != 19.5}}'
+    - service: climate.set_temperature
+      data:
+        temperature: 19.5
+20_graden:
+  sequence:
+    - condition: time
+      before: '18:00:01'
+      after: '04:59:59'
+    - condition: state
+      entity_id: group.actief
+      state: 'on'
+    - condition: template
+      value_template: '{{states.climate.living_room_nest.attributes.temperature != 20.5}}'
+    - service: climate.set_temperature
+      data:
+        temperature: 20.5
+21_graden:
+  sequence:
+    - condition: time
+      after: '18:00:00'
+      before: '05:00:00'
+    - condition: state
+      entity_id: group.actief
+      state: 'on'
+    - condition: template
+      value_template: '{{states.climate.living_room_nest.attributes.temperature != 21.5}}'
+    - service: climate.set_temperature
+      data:
+        temperature: 21.5

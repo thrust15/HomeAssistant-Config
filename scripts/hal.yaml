@@ -1,0 +1,11 @@
+cameradoorbell:
+  sequence:
+    - service: notify.all_ios
+      data:
+        message: "Ding dong"
+        data:
+          attachment:
+            content-type: jpeg
+          push:
+            category: camera
+          entity_id: camera.frontdoorlowres

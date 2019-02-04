@@ -1,0 +1,61 @@
+- alias: Centrale ventilatie hoog indien vochtig in badkamer
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.badkamer_vochtigheid
+    above: 80
+  action: 
+    service: switch.turn_on
+    entity_id:
+      - switch.ventilatie_hoog
+
+- alias: Centrale ventilatie uit indien badkamer niet meer vochtig is
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.badkamer_vochtigheid
+      below: 65
+    - platform: numeric_state
+      entity_id: sensor.badkamer_vochtigheid
+      below: 80
+      for:
+        hours: 1
+    - platform: state
+      entity_id: switch.ventilatie_hoog
+      to: 'on'
+      for:
+        hours: 1
+        minutes: 30
+  action: 
+    service: switch.turn_off
+    entity_id:
+      - switch.ventilatie_hoog
+
+- alias: badkamer licht aan bij beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.badkamer
+      from: 'off'
+      to: 'on'
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: group.wakker
+        state: 'on'
+      - condition: time
+        after: '05:30:00'
+        before: '23:00:00'
+  action:
+    service: light.turn_on
+    entity_id: light.badkamer
+
+- alias: badkamer licht uit geen beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.badkamer
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 9
+  action:
+    service: light.turn_off
+    entity_id: light.badkamer

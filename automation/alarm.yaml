@@ -1,0 +1,89 @@
+- alias: Wekker
+  trigger:
+    platform: template
+    value_template: '{{states.sensor.time.state == states.sensor.alarm_time.state}}'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.alarm_all
+        state: 'on'
+      - condition: or
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: 'off'
+              - condition: state
+                entity_id: input_boolean.alarm_weekday
+                state: 'off'
+          - condition: state
+            entity_id: binary_sensor.workday_sensor
+            state: 'on'
+  action:
+    service: script.turn_on
+    entity_id: script.alarm
+    
+- alias: Wekker fade in
+  trigger:
+    platform: template
+    value_template: '{{states.sensor.time.state == states.sensor.alarm_fade.state}}'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.alarm_all
+        state: 'on'
+      - condition: or
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: 'off'
+              - condition: state
+                entity_id: input_boolean.alarm_weekday
+                state: 'off'
+          - condition: state
+            entity_id: binary_sensor.workday_sensor
+            state: 'on'
+  action:
+    service: script.turn_on
+    entity_id: script.alarm_fadein
+    data_template:
+      variables:
+        fadetime: '{{states.input_number.alarm_fade.state}}'
+
+- alias: Snooze
+  trigger:
+    - platform: state
+      entity_id: media_player.slaapkamer
+      from: 'playing'
+      to: 'paused'
+    - platform: event
+      event_type: ios.notification_action_fired
+      event_data:
+        actionName: SNOOZE
+  condition:
+    condition: state
+    entity_id: script.alarm
+    state: 'on'
+  action:
+    service: script.turn_on
+    entity_id: script.snooze
+
+- alias: Alarm off
+  trigger:
+    - platform: state
+      entity_id: input_boolean.stop_snooze
+      from: 'off'
+      to: 'on'
+    - platform: event
+      event_type: ios.notification_action_fired
+      event_data:
+        actionName: WEKKER_UIT
+  action:
+    service: script.turn_on
+    entity_id: script.stop_snooze
+

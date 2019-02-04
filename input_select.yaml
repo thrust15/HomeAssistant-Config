@@ -1,0 +1,14 @@
+wasmachine_state:
+  name: Wasmachine
+  options:
+    - Uit
+    - Aan
+    - Draait
+    - Klaar
+  initial: Uit
+  icon: mdi:washing-machine
+
+music_choice:
+  name: Muziek Keuze
+  options:
+    - Not set

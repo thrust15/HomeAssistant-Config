@@ -1,0 +1,8 @@
+home:
+  sequence:
+    - service: script.turn_on
+      entity_id:
+        - script.woonkamer_lights_on
+        - script.home_climate
+        - script.home_climate_on
+        - script.woonkamer_muziek_aan

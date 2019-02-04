@@ -1,0 +1,40 @@
+- alias: Thuiskomst Dionne
+  trigger:
+    platform: state
+    entity_id: device_tracker.dionne_dvh
+    from: 'not_home'
+    to: 'home'
+  condition: 
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.nik_actief
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.dionne_wakker
+        state: 'on'
+  action:
+    service: script.turn_on
+    entity_id:
+      - script.home
+      - script.all_notifiers
+
+- alias: Thuiskomst Nik
+  trigger:
+    platform: state
+    entity_id: device_tracker.nik_iphone_x
+    to: 'home'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.dionne_actief
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.nik_wakker
+        state: 'on' 
+  action:
+    service: script.turn_on
+    entity_id:
+      - script.home
+      - script.all_notifiers

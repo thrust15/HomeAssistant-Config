@@ -1,0 +1,21 @@
+- alias: Slaapkamerkast licht aan indien beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.kast
+      from: 'off'
+      to: 'on'
+  action: 
+    service: light.turn_on
+    entity_id:
+      - light.slaapkamer_kast
+
+- alias: Slaapkamerkast licht uit geen beweging
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.kast
+      from: 'on'
+      to: 'off'
+  action: 
+    service: light.turn_off
+    entity_id:
+      - light.slaapkamer_kast

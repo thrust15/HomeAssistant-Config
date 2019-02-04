@@ -1,0 +1,8 @@
+- platform: template
+  sensors:
+    woonkamer_donker:
+      value_template: '{{ (states.sensor.woonkamer_licht.state | float < 20) or ((states.sensor.woonkamer_licht.state | float < 40) and (states.light.woonkamer.state == "on")) }}'
+      friendly_name: 'Woonkamer Donker'
+      entity_id:
+        - sensor.woonkamer_licht
+        - light.woonkamer

@@ -1,0 +1,11 @@
+- alias: Iemand staat voor de deur
+  trigger:
+    - platform: state
+      entity_id: device_tracker.dyana
+      from: 'not_home'
+      to: 'home'
+  action:
+    - service: notify.nik_telegram
+      data_template:
+        title: '{{ trigger.to_state.object_id | capitalize }} staat voor de deur'
+        message: '{{ trigger.to_state.object_id | capitalize }} staat voor de deur'

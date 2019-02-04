@@ -1,0 +1,47 @@
+- alias: Licht slaapkamer
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.slaapkamer
+      from: 'off'
+      to: 'on'
+  condition: 
+    - condition: numeric_state
+      entity_id: sensor.slaapkamer_licht
+      below: 40
+    - condition: state
+      entity_id: light.slaapkamer
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.nik_wakker
+      state: 'on'
+      for:
+        minutes: 1
+    - condition: state
+      entity_id: input_boolean.dionne_wakker
+      state: 'on'
+      for:
+        minutes: 1
+  action:
+    service: light.turn_on
+    entity_id: light.slaapkamer
+    data:
+      profile: 'relax'
+
+- alias: Licht slaapkamer uit
+  trigger:
+    platform: state
+    entity_id: binary_sensor.slaapkamer
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+    - condition: state
+      entity_id: light.slaapkamer_kant_nik
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.fade_in
+      state: 'off'
+  action:
+    service: light.turn_off
+    entity_id: light.slaapkamer

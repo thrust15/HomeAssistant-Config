@@ -1,0 +1,51 @@
+- alias: Dionne slaapt
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.slaapkamer_stekker_dionne_power
+    above: 0.0
+    for:
+      seconds: 5
+  condition:
+    condition: state
+    entity_id: input_boolean.dionne_wakker
+    state: 'on'
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.dionne_wakker
+
+- alias: Dionne wakker 15 min
+  trigger:
+    platform: state
+    entity_id: sensor.slaapkamer_stekker_dionne_power
+    to: '0.0'
+    for:
+      minutes: 15
+  action:
+    service: input_boolean.turn_on
+    entity_id: input_boolean.dionne_wakker
+
+- alias: Nik slaapt
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.slaapkamer_stekker_nik_power
+    above: 0.0
+    for:
+      seconds: 5
+  condition:
+    condition: state
+    entity_id: input_boolean.nik_wakker
+    state: 'on'
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.nik_wakker
+
+- alias: Nik wakker 15 min
+  trigger:
+    platform: state
+    entity_id: sensor.slaapkamer_stekker_nik_power
+    to: '0.0'
+    for:
+      minutes: 15
+  action:
+    service: input_boolean.turn_on
+    entity_id: input_boolean.nik_wakker

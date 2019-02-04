@@ -1,0 +1,18 @@
+alarm_weekday:
+  name: Alleen werkdagen
+  icon: mdi:domain
+alarm_all:
+  name: Wekker aan
+  icon: mdi:alarm-check
+stop_snooze:
+  name: Stop Snoozing
+  icon: mdi:sleep-off
+lamp_dionne:
+  name: Lamp Dionne
+  icon: mdi:lamp
+lamp_nik:
+  name: Lamp Nik
+  icon: mdi:lamp
+fade_in:
+  name: Fade in loopt
+  icon: mdi:weather-sunset-up

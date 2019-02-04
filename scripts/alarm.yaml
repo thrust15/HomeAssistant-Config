@@ -1,0 +1,155 @@
+alarm_fadein:
+  sequence:
+    - service: script.turn_on
+      entity_id:
+        - script.lamp_nik
+        - script.lamp_dionne
+      data_template:
+        variables:
+          fadetime: '{{ fadetime }}'  
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.fade_in
+
+lamp_nik:
+  sequence:
+    - condition: state
+      entity_id: input_boolean.lamp_nik
+      state: 'on'
+    - service: light.turn_on
+      entity_id: light.slaapkamer_kant_nik
+      data:
+        profile: 'nightlight'
+    - delay:
+        seconds: 2
+    - service: light.turn_on
+      entity_id: light.slaapkamer_kant_nik
+      data:
+        profile: 'wakeup'
+      data_template:
+        transition: '{{ (fadetime | int) * 60 - 2 }}'
+
+lamp_dionne:
+  sequence:
+    - condition: state
+      entity_id: input_boolean.lamp_dionne
+      state: 'on'
+    - service: light.turn_on
+      entity_id: light.slaapkamer_kant_dionne
+      data:
+        profile: 'nightlight'
+    - delay:
+        seconds: 2
+    - service: light.turn_on
+      entity_id: light.slaapkamer_kant_dionne
+      data:
+        profile: 'wakeup'
+      data_template:
+        transition: '{{ (fadetime | int) * 60 - 2 }}'
+
+alarm:
+  sequence:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.fade_in
+    - service: notify.ios_nik_iphone_x
+      data:
+        title: 'Wekker'
+        data:
+          push:
+            category: 'wekker'
+            sound: "US-EN-Morgan-Freeman-Good-Morning.wav"
+      data_template:
+        message: '{{states.sensor.nik_to_work.state}} minuten naar werk'
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.01
+    - service: media_player.select_source
+      entity_id: media_player.slaapkamer
+      data:
+        source: 'Qmusic nonstop (Euro Hits)'
+    - service: media_player.media_play
+      entity_id: media_player.slaapkamer
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.02
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.03
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.04
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.05
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.06
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.07
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.08
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.09
+    - delay:
+        seconds: 30
+    - service: media_player.volume_set
+      entity_id: media_player.slaapkamer
+      data:
+        volume_level: 0.10
+
+snooze:
+  sequence:
+    - service: script.turn_off
+      entity_id: script.alarm
+    - service: script.turn_on
+      entity_id: script.alarm_fadein
+      data:
+        variables:
+          fadetime: '5'
+    - delay:
+        minutes: 5
+    - service: script.turn_on
+      entity_id: script.alarm
+
+stop_snooze:
+  sequence:
+    - service: script.turn_off
+      entity_id:
+        - script.alarm
+        - script.alarm_fadein
+        - script.snooze
+    - service: light.turn_off
+      entity_id: light.slaapkamer
+    - service: media_player.turn_off
+      entity_id: media_player.slaapkamer
+    - service: input_boolean.turn_off
+      entity_id:
+        - input_boolean.stop_snooze
+        - input_boolean.fade_in

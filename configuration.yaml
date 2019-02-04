@@ -1,0 +1,253 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longtitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Amsterdam
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+# Store changes in InfluxDB
+influxdb:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  #api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  base_url: !secret base_url
+  ssl_certificate: /config/ssl/certificate.pem
+  ssl_key: /config/ssl/privkey.pem
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.17.0.0/24
+  trusted_networks:
+    - !secret home_ip
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Recorder, keep 2 days in hass UI, rest is in grafana and influxDB
+recorder:
+  purge_keep_days: 2
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+sensor: !include_dir_merge_list sensor/
+
+# Enables the ios component
+ios:
+  push:
+    categories:
+      - name: Wekker
+        identifier: 'wekker'
+        actions:
+          - identifier: 'SNOOZE'
+            title: 'Snooze'
+          - identifier: 'WEKKER_UIT'
+            title: 'Wekker uit'
+            destructive: true
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+#cloud:
+
+#setting up MQTT
+mqtt:
+  broker: localhost
+  port: 1883
+  client_id: home-assistant-1
+  username: homeassistant
+  password: !secret mqtt_pw
+
+#Owntracks & unifi
+device_tracker:
+#  - platform: owntracks
+  - platform: unifi
+    host: localhost
+    username: !secret unifi_user
+    password: !secret unifi_pw
+    verify_ssl: false
+
+#owntracks in 0.83.1
+#owntracks:
+
+#setting up nest
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+
+climate:
+  platform: nest
+
+hue:
+  bridges:
+    - host: 192.168.31.10
+
+light:
+  - platform: mqtt
+    schema: json
+    name: "SN1 LED"  
+    state_topic: "bruh/sensornode1"  
+    command_topic: "bruh/sensornode1/set"  
+    brightness: true  
+    flash: true
+    rgb: true
+    optimistic: false  
+    qos: 0
+  - platform: mqtt
+    schema: json
+    name: "SN2 LED"  
+    state_topic: "bruh/sensornode2"  
+    command_topic: "bruh/sensornode2/set"  
+    brightness: true  
+    flash: true  
+    rgb: true  
+    optimistic: false  
+    qos: 0
+  - platform: switch
+    name: Voordeur
+    entity_id: switch.voordeur_verlichting
+  - platform: switch
+    name: Badkamer
+    entity_id: switch.badkamer_verlichting  
+  - platform: switch
+    name: Hal
+    entity_id: switch.hal_verlichting
+  - platform: group
+    name: licht groep woonkamer
+    entities:
+      - light.woonkamer
+      - light.keuken_dimmer
+
+#setting up sonos & tv
+media_player:
+  - platform: philips_js
+    host: 192.168.31.28
+    scan_interval: 5
+    turn_on_action:
+      service: remote.send_command
+      entity_id: remote.xiaomi_miio_192_168_31_26
+      data:
+        command:
+          - 'turn_on_tv'
+  - platform: ziggo_mediabox_xl
+    host: 192.168.31.3
+    name: Ziggo Mediabox
+  - platform: plex
+#  - platform: spotify
+#    client_id: !secret spotify_client_id
+#    client_secret: !secret spotify_client_secret
+
+#Robbie
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.31.33
+    token: !secret robbie_token
+    name: Robbie
+
+remote:
+  - platform: xiaomi_miio
+    host: 192.168.31.26
+    token: !secret remote_token
+    commands:
+      soundbar_tv: 
+        command:
+          - raw:Z6VLADECAACDBgAAswgAAIMRAAAWIwAAMSMAAAidAAAAdwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0AAAAEBAQEAAQEBAAAAAAEBAQEBAQABAQAAAAAAAQAABgJXAkAA==
+      soundbar_music:
+        command:
+          - raw:Z6VLADICAACBBgAAsggAAIQRAAAeIwAACJ0AAAB3AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0AAAAEBAQEAAQEBAAAAAAEAAQABAAABAAEAAQABAQABBQJGAkAA==
+      turn_on_tv:
+        command:
+          - raw:Z6VTAJ0BAADDAQAAbAMAAGgKAACwSQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjIQERIRIREREREBAREQERERIhEUEjIRERIRIREAEREQERERERERIgEQE=
+
+telegram_bot:
+  - platform: webhooks
+    api_key: !secret telegram_api_key
+    trusted_networks:
+      - 149.154.167.197/32
+      - 149.154.167.198/31
+      - 149.154.167.200/29
+      - 149.154.167.208/28
+      - 149.154.167.224/29
+      - 149.154.167.232/31
+    allowed_chat_ids:
+      - !secret telegram_chat_id
+
+#Setting up notifications
+notify:
+  - name: Nik telegram
+    platform: telegram
+    chat_id: !secret telegram_chat_id
+  - name: all ios
+    platform: group
+    services:
+      - service: ios_nik_iphone_x
+      - service: ios_dionne_dvh
+
+# Z-wave
+zwave:
+  usb_path: /dev/ttyACM0
+  device_config: !include zwave_device_config.yaml
+
+zoneminder:
+  host: localhost:2680
+
+camera:
+  - platform: zoneminder
+
+switch:
+  - platform: zoneminder
+    command_on: Modect
+    command_off: Monitor
+
+zone: !include zones.yaml
+input_select: !include input_select.yaml
+input_boolean: !include_dir_merge_named input_boolean/
+input_number: !include input_number.yaml
+binary_sensor: !include_dir_merge_list binary_sensor/
+group: !include_dir_merge_named group/
+automation: !include_dir_merge_list automation/
+script: !include_dir_merge_named scripts/

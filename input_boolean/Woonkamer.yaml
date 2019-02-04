@@ -1,0 +1,12 @@
+woonkamer_timer:
+  name: Woonkamer Timer 10 minuten
+  initial: off
+  icon: mdi:timer
+
+robbie:
+  name: Robbie klaar voor vandaag
+  icon: mdi:image-filter-tilt-shift
+
+muziek_aan:
+  name: Muziek aan bij beweging woonkamer
+  icon: mdi:music-circle-outline

@@ -1,0 +1,35 @@
+bedtime:
+  sequence:
+    - service: light.turn_off
+      entity_id:
+        - light.woonkamer
+        - light.zolder_overloop
+        - light.keuken_dimmer
+        - light.studeerkamer
+        - light.strijkkamer
+    - service: light.turn_off
+      entity_id: light.slaapkamer
+      data:
+        transition: 900
+    - service: climate.set_operation_mode
+      data:
+        operation_mode: 'off'
+    - service: media_player.turn_off
+      entity_id:
+        - media_player.philips_tv
+        - media_player.woonkamer
+        - media_player.ziggo_mediabox
+        - media_player.slaapkamer
+        - media_plauyer.strijkkamer
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.muziek_aan
+    - condition: state
+      entity_id: input_boolean.robbie
+      state: 'off'
+    - condition: time
+      before: '05:00:00'
+      after: '20:00:00'
+    - service: vacuum.start
+      entity_id: vacuum.robbie
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.robbie

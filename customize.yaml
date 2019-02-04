@@ -1,0 +1,80 @@
+binary_sensor.living_room_thermostat_nest_fan:
+  hidden: true
+binary_sensor.living_room_thermostat_nest_has_leaf:
+  hidden: true
+sensor.living_room_thermostat_nest_hvac_state:
+  hidden: true
+binary_sensor.living_room_thermostat_nest_is_locked:
+  hidden: true
+binary_sensor.living_room_thermostat_nest_is_using_emergency_heat:
+  hidden: true
+sensor.living_room_thermostat_nest_operation_mode:
+  hidden: true
+sensor.living_room_thermostat_nest_target:
+  hidden: true
+sensor.living_room_thermostat_nest_temperature:
+  hidden: true
+binary_sensor.heemskerk_away:
+  hidden: true
+binary_sensor.achterdeur:
+  device_class: door
+binary_sensor.badkamer:
+  device_class: motion
+binary_sensor.hal:
+  device_class: motion
+binary_sensor.overloop:
+  device_class: motion
+binary_sensor.woonkamer_donker:
+  device_class: light
+binary_sensor.kast:
+  device_class: motion
+binary_sensor.slaapkamer:
+  device_class: motion
+binary_sensor.slaapkamer_raam:
+  device_class: window
+binary_sensor.woonkamer:
+  device_class: motion
+sensor.sn1_humidity:
+  device_class: humidity
+sensor.sn1_ldr:
+  device_class: illuminance
+sensor.sn1_real_feel:
+  device_class: temperature
+sensor.sn1_temperature:
+  device_class: temperature
+sensor.sn2_humidity:
+  device_class: humidity
+sensor.sn2_ldr:
+  device_class: illuminance
+sensor.sn2_real_feel:
+  device_class: temperature
+sensor.sn2_temperature:
+  device_class: temperature
+sensor.badkamer_vochtigheid:
+  device_class: humidity
+sensor.badkamer_licht:
+  device_class: illuminance
+sensor.badkamer_temperatuur:
+  device_class: temperature
+sensor.hal_licht:
+  device_class: illuminance
+sensor.hal_temperatuur:
+  device_class: temperature
+sensor.hal_vochtigheid:
+  device_class: humidity
+sensor.kast_licht:
+  device_class: illuminance
+sensor.kast_temperatuur:
+  device_class: temperature
+sensor.overloop_licht:
+  device_class: illuminance
+sensor.overloop_temperatuur:
+  device_class: temperature
+sensor.slaapkamer_licht:
+  device_class: illuminance
+sensor.woonkamer_licht:
+  device_class: illuminance
+sensor.woonkamer_temperatuur:
+  device_class: temperature
+sensor.heemskerk_eta:
+  hidden: true

@@ -1,0 +1,50 @@
+- alias: beweging studeerkamer
+  trigger:
+    platform: state
+    entity_id: binary_sensor.beweging_studeerkamer
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: numeric_state
+    entity_id: sensor.sn1_ldr
+    above: 400
+  action:
+    service: light.turn_on
+    entity_id: light.studeerkamer
+
+- alias: geen beweging studeerkamer
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.beweging_studeerkamer
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 5
+    - platform: numeric_state
+      entity_id: sensor.sn1_ldr
+      below: 300
+  action:
+    service: light.turn_off
+    entity_id: light.studeerkamer
+
+- alias: Led studeerkamer aan
+  trigger:
+    platform: 'state'
+    entity_id: binary_sensor.beweging_studeerkamer
+    from: 'off'
+    to: 'on'
+  action:
+    service: light.turn_on
+    entity_id: light.sn1_led
+    data_template:
+      rgb_color: ['{{ range(0, 255) | random | int}}','{{ range(0, 255) | random | int }}','{{ range(0, 255) | random | int }}']
+
+- alias: Led studeerkamer uit
+  trigger:
+    platform: 'state'
+    entity_id: binary_sensor.beweging_studeerkamer
+    from: 'on'
+    to: 'off'
+  action:
+    service: light.turn_off
+    entity_id: light.sn1_led

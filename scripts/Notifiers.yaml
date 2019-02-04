@@ -1,0 +1,65 @@
+all_notifiers:
+  sequence:
+    service: script.turn_on
+    entity_id:
+      - script.afvalbak_notificatie
+      - script.wasmachine
+
+afvalbak_notificatie:
+  sequence:
+    - condition: time
+      before: '08:00:00'
+      weekday:
+        - mon
+    - service: script.turn_on
+      entity_id:
+        - script.grijze_bak_notificatie
+        - script.groene_bak_notificatie
+
+grijze_bak_notificatie:
+  sequence:
+    - condition: template
+      value_template: '{{(as_timestamp(now())|timestamp_custom("%W")|int) is even}}'
+    - service: light.turn_on
+      entity_id: light.haldeur
+      data:
+        color_name: 'Dark Slate Blue'
+        brightness: 150
+
+groene_bak_notificatie:
+  sequence:
+    - condition: template
+      value_template: '{{(as_timestamp(now())|timestamp_custom("%W")|int) is odd}}'
+    - service: light.turn_on
+      entity_id: light.haldeur
+      data:
+        color_name: 'Green'
+        brightness: 150
+
+wasmachine:
+  sequence:
+    - condition: state
+      entity_id: input_select.wasmachine_state
+      state: 'Klaar'
+      for:
+        minutes: 3
+    - service: notify.nik_telegram
+      data:
+        title: 'Wasmachine klaar'
+        message: 'De wasmachine is klaar'
+    - condition: state
+      entity_id: group.actief
+      state: 'on'
+    - service: light.turn_on
+      entity_id: light.kast_spot
+      data:
+        color_name: 'red'
+    - condition: state
+      entity_id: binary_sensor.woonkamer_donker
+      state: 'off'
+    - service: light.turn_on
+      entity_id: light.kast_spot
+      data:
+        brightness: 255
+
+

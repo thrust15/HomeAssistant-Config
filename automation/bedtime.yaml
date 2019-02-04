@@ -1,0 +1,36 @@
+- alias: Bedtijd
+  trigger:
+    - platform: state
+      entity_id: input_boolean.dionne_wakker
+      to: 'off'
+    - platform: state
+      entity_id: input_boolean.nik_wakker
+      to: 'off'
+  condition:
+    condition: or
+    conditions:
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: input_boolean.dionne_wakker
+            state: 'off'
+          - condition: state
+            entity_id: input_boolean.nik_wakker
+            state: 'off'
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: input_boolean.dionne_wakker
+            state: 'off'
+          - condition: template
+            value_template: '{{ states.device_tracker.nik_iphone_x.state != "home" }}'
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: input_boolean.nik_wakker
+            state: 'off'
+          - condition: template
+            value_template: '{{ states.device_tracker.dionne_dvh.state != "home" }}'
+  action:
+    service: script.turn_on
+    entity_id: script.bedtime
