@@ -148,9 +148,6 @@ light:
     optimistic: false  
     qos: 0
   - platform: switch
-    name: Voordeur
-    entity_id: switch.voordeur_verlichting
-  - platform: switch
     name: Badkamer
     entity_id: switch.badkamer_verlichting  
   - platform: switch
