@@ -1,0 +1,35 @@
+- name: !secret zone1
+  latitude: !secret lat1
+  longitude: !secret long1
+  radius: 500
+  icon: mdi:domain
+
+- name: !secret zone2
+  latitude: !secret lat2
+  longitude: !secret long2
+  radius: 500
+  icon: mdi:domain
+
+- name: !secret zone3
+  latitude: !secret lat3
+  longitude: !secret long3
+  radius: 500
+  icon: mdi:domain
+
+- name: !secret zone4
+  latitude: !secret lat4
+  longitude: !secret long4
+  radius: 500
+  icon: mdi:domain
+
+- name: !secret zone5
+  latitude: !secret lat5
+  longitude: !secret long5
+  radius: 1000
+  icon: mdi:castle
+  
+- name: !secret zone6
+  latitude: !secret lat6
+  longitude: !secret long6
+  radius: 150
+  icon: mdi:home
