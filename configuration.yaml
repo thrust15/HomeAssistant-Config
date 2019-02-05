@@ -12,6 +12,8 @@ homeassistant:
   time_zone: Europe/Amsterdam
   # Customization file
   customize: !include customize.yaml
+  whitelist_external_dirs:
+    - /tmp
 
 # Show links to resources in log and frontend
 introduction:

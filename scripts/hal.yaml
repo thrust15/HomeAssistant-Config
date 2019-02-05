@@ -1,11 +1,37 @@
 cameradoorbell:
   sequence:
+    - service: camera.snapshot
+      entity_id: camera.frontdoor
+      data:
+        filename: /config/www/frontdoor.jpg
     - service: notify.all_ios
       data:
         message: "Ding dong"
         data:
           attachment:
             content-type: jpeg
+            url: https://hass.nikdekker.nl/local/frontdoor.jpg
+
+camerapicture:
+  sequence:
+    - service: camera.snapshot
+      entity_id: camera.frontdoor
+      data:
+        filename: /tmp/frontdoor.jpg
+    - service: persistent_notification.create
+      data:
+        message: '![image](/tmp/frontdoor.jpg)'
+        title: Deurbel
+cameradoorbelltest:
+  sequence:
+    - service: notify.ios_nik_iphone_x
+      data:
+        message: "Ding dong"
+        data:
+          attachment:
+            content-type: jpeg
+            url: https://hass.nikdekker.nl/lovelace/hal
           push:
             category: camera
           entity_id: camera.frontdoorlowres
+
