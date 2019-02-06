@@ -31,10 +31,8 @@
       from: 'off'
       to: 'on'
   action:
-    - service: tts.google_say
-      entity_id: media_player.googlehome2371
-      data:
-        message: 'Er staat iemand voor de deur'
-        language: 'nl'
     - service: script.turn_on
-      entity_id: script.cameradoorbell
+      entity_id: 
+        - script.doorbellpause
+        - script.doorbellsound
+        - script.cameradoorbell

@@ -30,3 +30,4 @@ secrets.yaml
 ssl
 tts
 *.jpg
+*.mp3
