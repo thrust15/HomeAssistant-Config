@@ -20,7 +20,7 @@ cameradoorbell:
         data:
           attachment:
             content-type: jpeg
-            url: https://hass.nikdekker.nl/local/frontdoor.jpg
+            url: !secret frontdoorurl
 doorbellpause:
   sequence:
     - condition: state
