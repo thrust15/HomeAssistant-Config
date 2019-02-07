@@ -5,3 +5,7 @@
     - 'time'
 
 - platform: zoneminder
+
+- platform: hvc
+  postalcode: !secret postalcode
+  housenumber: !secret housenumber

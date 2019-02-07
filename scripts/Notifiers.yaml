@@ -19,7 +19,10 @@ afvalbak_notificatie:
 grijze_bak_notificatie:
   sequence:
     - condition: template
-      value_template: '{{(as_timestamp(now())|timestamp_custom("%W")|int) is even}}'
+      value_template: >-
+        {{(as_timestamp(states.sensor.trash_rest.state)) ==
+        (as_timestamp(strptime(now().strftime("%Y-%m-%d"),"%Y-%m-%d")))}}
+
     - service: light.turn_on
       entity_id: light.haldeur
       data:
@@ -29,7 +32,10 @@ grijze_bak_notificatie:
 groene_bak_notificatie:
   sequence:
     - condition: template
-      value_template: '{{(as_timestamp(now())|timestamp_custom("%W")|int) is odd}}'
+      value_template: >-
+        {{(as_timestamp(states.sensor.trash_gft.state)) ==
+        (as_timestamp(strptime(now().strftime("%Y-%m-%d"),"%Y-%m-%d")))}}
+        
     - service: light.turn_on
       entity_id: light.haldeur
       data:
