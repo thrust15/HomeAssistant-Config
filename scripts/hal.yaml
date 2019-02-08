@@ -32,13 +32,15 @@ doorbellpause:
         seconds: 5
     - service: media_player.media_play
       entity_id: media_player.woonkamer
-  pauseplex:
+pauseplex:
+  sequence:
     - condition: state
       entity_id: media_player.plexmediaplayer_2
       state: "playing"
     - service: media_player.media_pause
       entity_id: media_player.plexmediaplayer_2
-  pauseappletv:
+pauseappletv:
+  sequence:
     - condition: state
       entity_id: media_player.apple_tv
       state: "playing"
