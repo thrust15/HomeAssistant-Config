@@ -11,6 +11,7 @@
         title: 'spin'
         message: '{{trigger.event.data.action}}'
     - service: climate.set_temperature
+      entity_id: climate.living_room_nest
       data_template:
         temperature: '{{states.climate.living_room_nest.attributes.temperature + 1}}'
 
@@ -27,6 +28,7 @@
         title: 'spin'
         message: '{{trigger.event.data.action}}'
     - service: climate.set_temperature
+      entity_id: climate.living_room_nest
       data_template:
         temperature: '{{states.climate.living_room_nest.attributes.temperature - 1}}'
 
@@ -55,6 +57,7 @@
       data: '/turn_thermostat_on'
   action:
     - service: climate.set_operation_mode
+      entity_id: climate.living_room_nest
       data:
         operation_mode: 'heat'
     - service: telegram_bot.send_message
@@ -73,5 +76,6 @@
       data: '/turn_thermostat_off'
   action:
     - service: climate.set_operation_mode
+      entity_id: climate.living_room_nest
       data:
         operation_mode: 'off'

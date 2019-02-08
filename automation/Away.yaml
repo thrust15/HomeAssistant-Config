@@ -12,6 +12,7 @@
 #        - switch.hal_verlichting
 #        - switch.badkamer_verlichting
     - service: climate.set_operation_mode
+      entity_id: climate.living_room_nest
       data:
         operation_mode: 'off'
     - service: media_player.turn_off

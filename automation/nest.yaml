@@ -9,6 +9,7 @@
     state: 'on'
   action:
     - service: climate.set_operation_mode
+      entity_id: climate.living_room_nest
       data:
         operation_mode: 'heat'
 
@@ -28,6 +29,7 @@
     state: 'off'
   action:
     - service: climate.set_operation_mode
+      entity_id: climate.living_room_nest
       data:
         operation_mode: 'off'
 
@@ -88,6 +90,7 @@
         after: '09:00:00'
   action:
     - service: climate.set_operation_mode
+      entity_id: climate.living_room_nest
       data:
         operation_mode: 'heat'
 
