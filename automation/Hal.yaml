@@ -36,3 +36,5 @@
         - script.doorbellpause
         - script.doorbellsound
         - script.cameradoorbell
+        - script.pauseplex
+        - script.pauseappletv

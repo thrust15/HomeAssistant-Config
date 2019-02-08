@@ -9,3 +9,7 @@
 - platform: hvc
   postalcode: !secret postalcode
   housenumber: !secret housenumber
+
+- platform: postnl
+  username: !secret postnl_username
+  password: !secret postnl_password
