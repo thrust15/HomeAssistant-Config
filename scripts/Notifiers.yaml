@@ -8,9 +8,7 @@ all_notifiers:
 afvalbak_notificatie:
   sequence:
     - condition: time
-      before: '08:00:00'
-      weekday:
-        - mon
+      before: '09:00:00'
     - service: script.turn_on
       entity_id:
         - script.grijze_bak_notificatie
