@@ -102,7 +102,7 @@ class TrashCollectionSchedule(object):
 		self.garbageTypes = None
 	
 	@Throttle(MIN_TIME_BETWEEN_UPDATES)
-	def update(self):		
+	def update(self):	
 		year = date.today().year
 		kalenderUrl = (f"https://apps.hvcgroep.nl/rest/adressen/{self.bagId}/kalender/{year}")
 		_LOGGER.debug(f"Getting calendar data for {self.bagId} at: {kalenderUrl}")
@@ -115,7 +115,6 @@ class TrashCollectionSchedule(object):
 		self.data = {}
 		for trashDay in data:
 			afvalstroomId = trashDay['afvalstroom_id']
-			pickupDate = datetime.strptime(trashDay['ophaaldatum'], '%Y-%m-%d')
-
-			if afvalstroomId not in self.data and pickupDate > datetime.now():
+			pickupDate = datetime.strptime(trashDay['ophaaldatum'], '%Y-%m-%d').date()
+			if afvalstroomId not in self.data and pickupDate >= datetime.now().date():
 				self.data[afvalstroomId] = pickupDate
