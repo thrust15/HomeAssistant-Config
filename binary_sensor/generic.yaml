@@ -10,4 +10,9 @@
       delay_off:
         minutes: 5
 
+- platform: mqtt
+  name: Doorbell
+  state_topic: doorbell/binary_sensor/doorbell/state
+  availability_topic: doorbell/status
+
 
