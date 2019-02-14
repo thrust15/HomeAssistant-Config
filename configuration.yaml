@@ -234,6 +234,9 @@ zoneminder:
 
 camera:
   - platform: zoneminder
+  - platform: generic
+    name: doorbell
+    still_image_url: !secret frontdoorurl
 
 switch:
   - platform: zoneminder
