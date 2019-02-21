@@ -12,8 +12,8 @@ homeassistant:
   time_zone: Europe/Amsterdam
   # Customization file
   customize: !include customize.yaml
-  whitelist_external_dirs:
-    - /tmp
+  auth_providers:
+    - type: trusted_networks
 
 person:
 
@@ -207,13 +207,6 @@ remote:
 telegram_bot:
   - platform: webhooks
     api_key: !secret telegram_api_key
-    trusted_networks:
-      - 149.154.167.197/32
-      - 149.154.167.198/31
-      - 149.154.167.200/29
-      - 149.154.167.208/28
-      - 149.154.167.224/29
-      - 149.154.167.232/31
     allowed_chat_ids:
       - !secret telegram_chat_id
 
