@@ -27,7 +27,7 @@ grijze_bak_notificatie:
 groene_bak_notificatie:
   sequence:
     - condition: template
-      value_template: '{{now().strftime("%Y-%m-%d") == (states.sensor.trash_rest.state)}}'
+      value_template: '{{now().strftime("%Y-%m-%d") == (states.sensor.trash_gft.state)}}'
     - service: light.turn_on
       entity_id: light.haldeur
       data:
