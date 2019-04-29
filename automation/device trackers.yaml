@@ -9,3 +9,38 @@
       data_template:
         title: '{{ trigger.to_state.object_id | capitalize }} staat voor de deur'
         message: '{{ trigger.to_state.object_id | capitalize }} staat voor de deur'
+
+- alias: Jim standje koelkast
+  trigger:
+    - platform: state
+      entity_id: device_tracker.iphonevanjim
+      from: 'not_home'
+      to: 'home'
+      for:
+        minutes: 1
+  action:
+    - service: climate.set_temperature
+      entity_id: climate.living_room_nest
+      data:
+        temperature: 20
+    - service: tts.google_say
+      entity_id: media_player.googlehome2371
+      data:
+        message: "Jim is zojuist binnengekomen. Ik zet de thermostaat op standje koelkast. Welkom Jim!"
+        language: "nl"
+
+- alias: Welkom Jorrit
+  trigger:
+    - platform: state
+      entity_id: device_tracker.jorrit
+      from: 'not_home'
+      to: 'home'
+      #for:
+      #  minutes: 1
+  action:
+    - service: tts.google_say
+      entity_id: media_player.googlehome2371
+      data:
+        message: "Welkom Jorrit"
+        language: "nl"
+

@@ -23,14 +23,14 @@
             entity_id: input_boolean.dionne_wakker
             state: 'off'
           - condition: template
-            value_template: '{{ states.device_tracker.nik_iphone_x.state != "home" }}'
+            value_template: '{{ states.person.nik.state != "home" }}'
       - condition: and
         conditions:
           - condition: state
             entity_id: input_boolean.nik_wakker
             state: 'off'
           - condition: template
-            value_template: '{{ states.device_tracker.dionne_dvh.state != "home" }}'
+            value_template: '{{ states.person.dionne.state != "home" }}'
   action:
     service: script.turn_on
     entity_id: script.bedtime

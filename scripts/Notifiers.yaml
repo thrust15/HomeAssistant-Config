@@ -48,6 +48,11 @@ wasmachine:
     - condition: state
       entity_id: group.actief
       state: 'on'
+    - service: tts.google_say
+      entity_id: media_player.googlehome2371
+      data:
+        message: "De wasmachine is klaar"
+        language: "nl"
     - service: light.turn_on
       entity_id: light.kast_spot
       data:

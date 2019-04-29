@@ -1,7 +1,7 @@
 - alias: Thuiskomst Dionne
   trigger:
     platform: state
-    entity_id: device_tracker.dionne_dvh
+    entity_id: person.dionne
     from: 'not_home'
     to: 'home'
   condition: 
@@ -22,7 +22,7 @@
 - alias: Thuiskomst Nik
   trigger:
     platform: state
-    entity_id: device_tracker.nik_iphone_x
+    entity_id: person.nik
     to: 'home'
   condition:
     condition: and

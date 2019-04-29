@@ -46,7 +46,7 @@
     at: '12:00:00'
   condition:
     condition: zone
-    entity_id: device_tracker.nik_iphone_x
+    entity_id: person.nik
     zone: zone.kpn_zoetermeer
   action:
     service: notify.ios_nik_iphone_x

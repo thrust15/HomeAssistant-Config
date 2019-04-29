@@ -191,7 +191,7 @@
 - alias: Dim lights when plex plays
   trigger:
     platform: state
-    entity_id: media_player.plexmediaplayer_2
+    entity_id: media_player.plexmediaplayer
     to: 'playing'
   condition:
     condition: state
@@ -209,7 +209,7 @@
 - alias: undim lights when plex stops playing
   trigger:
     platform: state
-    entity_id: media_player.plexmediaplayer_2
+    entity_id: media_player.plexmediaplayer
     from: 'playing'
   condition:
     condition: state

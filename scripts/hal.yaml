@@ -35,10 +35,10 @@ doorbellpause:
 pauseplex:
   sequence:
     - condition: state
-      entity_id: media_player.plexmediaplayer_2
+      entity_id: media_player.plexmediaplayer
       state: "playing"
     - service: media_player.media_pause
-      entity_id: media_player.plexmediaplayer_2
+      entity_id: media_player.plexmediaplayer
 pauseappletv:
   sequence:
     - condition: state

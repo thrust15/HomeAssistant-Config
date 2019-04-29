@@ -32,3 +32,5 @@ ssl
 tts
 *.jpg
 *.mp3
+*.srt
+*.mkv

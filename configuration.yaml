@@ -12,15 +12,14 @@ homeassistant:
   time_zone: Europe/Amsterdam
   # Customization file
   customize: !include customize.yaml
-  auth_providers:
-    - type: trusted_networks
+  # auth_providers:
+  #  - type: trusted_networks
+
+default_config:
 
 person:
 
 hassio:
-
-# Show links to resources in log and frontend
-introduction:
 
 # Enables the frontend
 frontend:
@@ -41,10 +40,10 @@ http:
   use_x_forwarded_for: true
   trusted_proxies:
     - 172.17.0.0/24
-  trusted_networks:
-    - !secret home_ip
+      #  trusted_networks:
+      #    - !secret home_ip
   ip_ban_enabled: true
-  login_attempts_threshold: 5
+  #  login_attempts_threshold: 5
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -128,10 +127,6 @@ nest:
 climate:
   platform: nest
 
-hue:
-  bridges:
-    - host: 192.168.31.10
-
 light:
   - platform: mqtt
     schema: json
@@ -166,7 +161,7 @@ light:
 #setting up sonos & tv
 media_player:
   - platform: philips_js
-    host: 192.168.31.28
+    host: 192.168.1.32
     scan_interval: 5
     turn_on_action:
       service: remote.send_command
@@ -175,7 +170,7 @@ media_player:
         command:
           - 'turn_on_tv'
   - platform: ziggo_mediabox_xl
-    host: 192.168.31.3
+    host: 192.168.1.37
     name: Ziggo Mediabox
   - platform: plex
 #  - platform: spotify
@@ -185,13 +180,13 @@ media_player:
 #Robbie
 vacuum:
   - platform: xiaomi_miio
-    host: 192.168.31.33
+    host: 192.168.1.23
     token: !secret robbie_token
     name: Robbie
 
 remote:
   - platform: xiaomi_miio
-    host: 192.168.31.26
+    host: 192.168.1.21
     token: !secret remote_token
     commands:
       soundbar_tv: 
