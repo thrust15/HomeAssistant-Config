@@ -12,3 +12,19 @@ music_choice:
   name: Muziek Keuze
   options:
     - Not set
+
+nik_status:
+  name: Nik status
+  options:
+    - Wakker
+    - Slaapt
+    - Slaapt net
+    - Net wakker
+
+dionne_status:
+  name: Dionne status
+  options:
+    - Wakker
+    - Slaapt
+    - Slaapt net
+    - Net wakker

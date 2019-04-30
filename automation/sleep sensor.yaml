@@ -6,9 +6,14 @@
     for:
       seconds: 5
   condition:
-    condition: state
-    entity_id: input_boolean.dionne_wakker
-    state: 'on'
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.dionne_wakker
+        state: 'on'
+      - condition: time
+        after: '20:00:00'
+        before: '10:00:00'
   action:
     service: input_boolean.turn_off
     entity_id: input_boolean.dionne_wakker
@@ -32,9 +37,14 @@
     for:
       seconds: 5
   condition:
-    condition: state
-    entity_id: input_boolean.nik_wakker
-    state: 'on'
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.nik_wakker
+        state: 'on'
+      - condition: time
+        after: '20:00:00'
+        before: '10:00:00'
   action:
     service: input_boolean.turn_off
     entity_id: input_boolean.nik_wakker
