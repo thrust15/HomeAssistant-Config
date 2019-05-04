@@ -16,9 +16,11 @@ bedtime:
         operation_mode: 'off'
     - service: media_player.turn_off
       entity_id:
-        - media_player.philips_tv
-        - media_player.woonkamer
         - media_player.ziggo_mediabox
+        - media_player.philips_tv
+    - service: media_player.media_stop
+      entity_id:
+        - media_player.woonkamer
         - media_player.slaapkamer
         - media_plauyer.strijkkamer
     - service: input_boolean.turn_on
