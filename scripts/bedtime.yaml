@@ -22,7 +22,7 @@ bedtime:
       entity_id:
         - media_player.woonkamer
         - media_player.slaapkamer
-        - media_plauyer.strijkkamer
+        - media_player.strijkkamer
     - service: input_boolean.turn_on
       entity_id: input_boolean.muziek_aan
     - condition: state
