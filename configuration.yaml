@@ -214,7 +214,7 @@ notify:
   - name: all ios
     platform: group
     services:
-      - service: ios_nik_iphone_x
+      - service: ios_nik
       - service: ios_dionne_dvh
 
 # Z-wave
