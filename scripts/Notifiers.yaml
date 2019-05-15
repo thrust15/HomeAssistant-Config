@@ -41,10 +41,6 @@ wasmachine:
       state: 'Klaar'
       for:
         minutes: 3
-    - service: notify.nik_telegram
-      data:
-        title: 'Wasmachine klaar'
-        message: 'De wasmachine is klaar'
     - condition: state
       entity_id: group.actief
       state: 'on'
@@ -64,5 +60,10 @@ wasmachine:
       entity_id: light.kast_spot
       data:
         brightness: 255
-
-
+    - condition: state
+      entity_id: person.nik
+      state: 'home'
+    - service: notify.nik_telegram
+      data:
+        title: 'Wasmachine klaar'
+        message: 'De wasmachine is klaar'
