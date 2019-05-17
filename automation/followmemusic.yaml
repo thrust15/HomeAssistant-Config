@@ -24,7 +24,7 @@
       entity_id: media_player.strijkkamer
       data:
         volume_level: 0.05
-    - service: media_player.sonos_join
+    - service: sonos.join
       entity_id: media_player.strijkkamer
       data:
         master: media_player.woonkamer
@@ -74,7 +74,7 @@
       entity_id: media_player.slaapkamer
       data:
         volume_level: 0.10
-    - service: media_player.sonos_join
+    - service: sonos.join
       entity_id: media_player.slaapkamer
       data:
         master: media_player.woonkamer
