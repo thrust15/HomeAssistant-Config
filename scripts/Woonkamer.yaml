@@ -51,7 +51,7 @@ woonkamer_muziek_aan:
       entity_id: input_boolean.muziek_aan
     - condition: template
       value_template: "{{states.media_player.woonkamer.state != 'playing'}}"
-    - service: media_player.sonos_unjoin
+    - service: sonos.unjoin
       entity_id: media_player.woonkamer
     - service: media_player.volume_set
       entity_id: media_player.woonkamer

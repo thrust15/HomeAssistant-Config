@@ -40,7 +40,7 @@
     condition: template
     value_template: '{{states.media_player.strijkkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
   action:
-    - service: media_player.sonos_unjoin
+    - service: sonos.unjoin
       entity_id: media_player.strijkkamer
 
 - alias: Muziek slaapkamer aan
@@ -93,7 +93,7 @@
     condition: template
     value_template: '{{states.media_player.slaapkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
   action:
-    - service: media_player.sonos_unjoin
+    - service: sonos.unjoin
       entity_id: media_player.slaapkamer
 
 - alias: Muziek boven uit als iemand gaat slapen
@@ -108,9 +108,9 @@
     entity_id: group.wakker
     state: 'on'
   action:
-    - service: media_player.sonos_unjoin
+    - service: sonos.unjoin
       entity_id: media_player.strijkkamer
-    - service: media_player.sonos_unjoin
+    - service: sonos.unjoin
       entity_id: media_player.slaapkamer
     - delay:
         seconds: 2
