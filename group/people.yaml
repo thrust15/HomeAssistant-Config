@@ -1,8 +1,8 @@
 bewoners:
   name: Bewoners
   entities:
-    - device_tracker.dionne_dvh
-    - device_tracker.nik_iphone_x
+    - person.nik
+    - person.dionne
 wakker:
   name: Wie is wakker
   entities:

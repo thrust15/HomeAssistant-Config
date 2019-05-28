@@ -117,9 +117,6 @@ device_tracker:
     password: !secret unifi_pw
     verify_ssl: false
 
-#owntracks in 0.83.1
-#owntracks:
-
 #setting up nest
 nest:
   client_id: !secret nest_client_id
@@ -231,10 +228,13 @@ camera:
     name: doorbell
     still_image_url: !secret frontdoorurl
 
-switch:
-  - platform: zoneminder
-    command_on: Modect
-    command_off: Monitor
+alarm_control_panel:
+  - platform: manual
+    code: !secret alarm_panel_code
+    name: Home alarm
+    trigger_time: 60
+    pending_time: 0
+    delay_time: 0
 
 zone: !include zones.yaml
 input_select: !include input_select.yaml

@@ -23,7 +23,7 @@
   trigger:
     platform: state
     entity_id: person.nik
-    to: 'home'
+    to: home
   condition:
     condition: and
     conditions:
