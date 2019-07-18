@@ -11,10 +11,10 @@
 #      entity_id: 
 #        - switch.hal_verlichting
 #        - switch.badkamer_verlichting
-    - service: climate.set_operation_mode
+    - service: climate.set_hvac_mode
       entity_id: climate.living_room_nest
       data:
-        operation_mode: 'off'
+        hvac_mode: 'off'
     - service: media_player.turn_off
       entity_id:
         - media_player.philips_tv

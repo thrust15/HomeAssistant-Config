@@ -43,7 +43,7 @@
       data_template:
         message: >
           Current temperature is {{states.climate.living_room_nest.attributes.current_temperature}} degrees celcius.
-          The thermostat is currently {{states.climate.living_room_nest.attributes.operation_mode}}.
+          The thermostat is currently {{states.climate.living_room_nest.attributes.hvac_mode}}.
           do you want to turn it on?
         target: '{{ trigger.event.data.user_id }}'
         inline_keyboard:
@@ -56,10 +56,10 @@
     event_data:
       data: '/turn_thermostat_on'
   action:
-    - service: climate.set_operation_mode
+    - service: climate.set_hvac_mode
       entity_id: climate.living_room_nest
       data:
-        operation_mode: 'heat'
+        hvac_mode: 'heat'
     - service: telegram_bot.send_message
       data_template:
         message: >
@@ -75,7 +75,7 @@
     event_data:
       data: '/turn_thermostat_off'
   action:
-    - service: climate.set_operation_mode
+    - service: climate.set_hvac_mode
       entity_id: climate.living_room_nest
       data:
-        operation_mode: 'off'
+        hvac_mode: 'off'

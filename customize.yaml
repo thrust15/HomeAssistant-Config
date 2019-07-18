@@ -8,7 +8,7 @@ binary_sensor.living_room_thermostat_nest_is_locked:
   hidden: true
 binary_sensor.living_room_thermostat_nest_is_using_emergency_heat:
   hidden: true
-sensor.living_room_thermostat_nest_operation_mode:
+sensor.living_room_thermostat_nest_hvac_mode:
   hidden: true
 sensor.living_room_thermostat_nest_target:
   hidden: true

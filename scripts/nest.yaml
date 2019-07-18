@@ -23,10 +23,10 @@ home_climate_off:
     - condition: state
       entity_id: climate.living_room_nest
       state: 'off'
-    - service: climate.set_operation_mode
+    - service: climate.set_hvac_mode
       entity_id: climate.living_room_nest
       data:
-        operation_mode: 'heat'
+        hvac_mode: 'heat'
 climate_temperature:
   sequence:
     - service: script.turn_on

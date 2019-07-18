@@ -8,10 +8,10 @@
     entity_id: group.actief
     state: 'on'
   action:
-    - service: climate.set_operation_mode
+    - service: climate.set_hvac_mode
       entity_id: climate.living_room_nest
       data:
-        operation_mode: 'heat'
+        hvac_mode: 'heat'
 
 - alias: Update nest online naar uit
   trigger:
@@ -28,10 +28,10 @@
     entity_id: group.actief
     state: 'off'
   action:
-    - service: climate.set_operation_mode
+    - service: climate.set_hvac_mode
       entity_id: climate.living_room_nest
       data:
-        operation_mode: 'off'
+        hvac_mode: 'off'
 
 - alias: Temperatuur regeling
   trigger:
@@ -56,9 +56,9 @@
 #    for:
 #      minutes: 3
 #  action:
-#    - service: climate.set_operation_mode
+#    - service: climate.set_hvac_mode
 #      data:
-#        operation_mode: 'off'
+#        hvac_mode: 'off'
 #
 #- alias: Thermostaat aan indien achterdeur dicht
 #  trigger:
@@ -89,10 +89,10 @@
         before: '21:30:00'
         after: '09:00:00'
   action:
-    - service: climate.set_operation_mode
+    - service: climate.set_hvac_mode
       entity_id: climate.living_room_nest
       data:
-        operation_mode: 'heat'
+        hvac_mode: 'heat'
 
   
 
