@@ -79,3 +79,33 @@
       entity_id: climate.living_room_nest
       data:
         hvac_mode: 'off'
+
+- alias: 'test doorbell'
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.doorbell
+      from: 'off'
+      to: 'on'
+  action:
+    - service: script.sonos_say
+      data:
+        volume: 0.5
+        message: 'Deurbel!'
+        delay: '00:00:05'
+
+- alias: 'test webhook'
+  trigger:
+    - platform: webhook
+      webhook_id: webhooktest
+  action:
+    - service: camera.snapshot
+      entity_id: camera.frontdoor
+      data:
+        filename: /config/www/test.jpg
+    - service: notify.nik_telegram
+      data:
+        title: 'Webhook test'
+        message: 'Webhook test'
+        data:
+          photo:
+            url: !secret testurl
