@@ -236,6 +236,20 @@ alarm_control_panel:
     pending_time: 0
     delay_time: 0
 
+image_processing:
+  - platform: tensorflow
+    source:
+      - entity_id: camera.frontdoor
+    model:
+      graph: /config/tensorflow/frozen_inference_graph.pb
+      categories:
+        - person
+        - car
+        - cat
+    file_out:
+      - /config/www/tensorflow.jpg
+    scan_interval: 10000
+
 zone: !include zones.yaml
 input_select: !include input_select.yaml
 input_boolean: !include_dir_merge_named input_boolean/
