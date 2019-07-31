@@ -93,17 +93,26 @@
         message: 'Deurbel!'
         delay: '00:00:05'
 
-- alias: 'test webhook'
+- alias: 'test motion'
   trigger:
-    - platform: webhook
-      webhook_id: webhooktest
+    - platform: state
+      entity_id: binary_sensor.frontyard
+      to: 'on'
   action:
     - service: image_processing.scan
       entity_id: image_processing.tensorflow_frontdoor
+    - service: camera.snapshot
+      entity_id: camera.frontdoor
+      data:
+        filename: "/config/www/frontyard.jpg"
     - service: notify.nik_telegram
       data:
-        title: "webhook"
-        message: "webhook is getriggerd"
+        title: "beweging voortuin"
+        message: "beweging voortuin"
+        data:
+          photo: 
+            file: "/config/www/frontyard.jpg"
+            caption: "beweging is getriggerd"
 
 - alias: 'kat of persoon voor de deur'
   trigger:

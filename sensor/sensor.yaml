@@ -13,3 +13,8 @@
 - platform: postnl
   username: !secret postnl_username
   password: !secret postnl_password
+
+- platform: systemmonitor
+  resources:
+    - type: memory_use_percent
+    - type: processor_use
