@@ -238,6 +238,7 @@ alarm_control_panel:
 
 image_processing:
   - platform: tensorflow
+    confidence: 90
     source:
       - entity_id: camera.frontdoor
     model:

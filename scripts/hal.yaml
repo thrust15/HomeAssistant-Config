@@ -4,7 +4,7 @@ doorbellsound:
       entity_id: group.bewoners
       state: 'home'
     - service: media_player.play_media
-      entity_id: media_player.googlehome2371
+      entity_id: media_player.googlehomewoonkamer
       data_template:
         media_content_type: music
         media_content_id: !secret doorbellurl

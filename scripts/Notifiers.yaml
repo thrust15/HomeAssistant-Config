@@ -45,7 +45,7 @@ wasmachine:
       entity_id: group.actief
       state: 'on'
     - service: tts.google_say
-      entity_id: media_player.googlehome2371
+      entity_id: media_player.googlehomewoonkamer
       data:
         message: "De wasmachine is klaar"
         language: "nl"
