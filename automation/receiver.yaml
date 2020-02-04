@@ -56,7 +56,7 @@
       to: 'on'
   condition:
     - condition: template
-      value_template: '{{states.media_player.apple_tv.state != idle}}'
+      value_template: '{{states.media_player.apple_tv.state != "idle"}}'
     - condition: state
       entity_id: media_player.woonkamer_2
       state: 'on'
