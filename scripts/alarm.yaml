@@ -50,7 +50,7 @@ alarm:
   sequence:
     - service: input_boolean.turn_off
       entity_id: input_boolean.fade_in
-    - service: notify.ios_nik
+    - service: notify.mobile_app_iphone_van_nik
       data:
         title: 'Wekker'
         data:

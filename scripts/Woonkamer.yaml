@@ -61,8 +61,3 @@ woonkamer_muziek_aan:
       entity_id: media_player.woonkamer
       data:
         source: 'Sky Radio 101 FM 101.2 (Pop)'
-    - service: remote.send_command
-      entity_id: remote.xiaomi_miio_192_168_31_26
-      data:
-        command:
-          - 'soundbar_music'

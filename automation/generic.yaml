@@ -3,7 +3,7 @@
     platform: homeassistant
     event: start
   action:
-    - service: notify.ios_nik
+    - service: notify.mobile_app_iphone_van_nik
       data:
         title: 'Homeassistant start'
         message: 'Homeassistant start'
@@ -13,7 +13,7 @@
     platform: homeassistant
     event: shutdown
   action:
-    - service: notify.ios_nik
+    - service: notify.mobile_app_iphone_van_nik
       data:
         title: 'Homeassistant stopt'
         message: 'Homeassistant stopt'

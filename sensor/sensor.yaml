@@ -4,7 +4,7 @@
   display_options:
     - 'time'
 
-- platform: zoneminder
+#- platform: zoneminder
 
 - platform: hvc
   postalcode: !secret postalcode
@@ -18,3 +18,4 @@
   resources:
     - type: memory_use_percent
     - type: processor_use
+    

@@ -1,0 +1,110 @@
+- alias: Turn on armed home
+  trigger:
+    platform: state
+    entity_id: group.actief
+    from: 'on'
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: group.bewoners
+    state: 'home'
+  action:
+    service: alarm_control_panel.alarm_arm_home
+    entity_id: alarm_control_panel.home_alarm
+    data:
+      code: !secret alarm_control_panel_code
+
+- alias: turn off alarm
+  trigger:
+    platform: state
+    entity_id: group.actief
+    from: 'off'
+    to: 'on'
+  action:
+    service: alarm_control_panel.alarm_disarm
+    entity_id: alarm_control_panel.home_alarm
+    data:
+      code: !secret alarm_control_panel_code
+
+- alias: turn on armed away
+  trigger:
+    platform: state
+    entity_id: group.bewoners
+    from: 'home'
+  action:
+    service: alarm_control_panel.alarm_arm_away
+    entity_id: alarm_control_panel.home_alarm
+    data:
+      code: !secret alarm_control_panel_code
+
+- alias: Turn on alarm after temporary switch off
+  trigger:
+    platform: state
+    entity_id: alarm_control_panel.home_alarm
+    from: 'armed_home'
+    to: 'disarmed'
+    for:
+      minutes: 15
+  condition:
+    condition: state
+    entity_id: group.wakker
+    state: 'off'
+  action:
+    service: alarm_control_panel.alarm_arm_home
+    entity_id: alarm_control_panel.home_alarm
+    data:
+      code: !secret alarm_control_panel_code
+
+- alias: trigger alarm when home
+  trigger:
+    platform: state
+    entity_id:
+      - binary_sensor.hal
+      - binary_sensor.woonkamer
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state: armed_home
+  action:
+    service: alarm_control_panel.alarm_trigger
+    entity_id: alarm_control_panel.home_alarm
+
+- alias: trigger alarm when away
+  trigger:
+    platform: state
+    entity_id:
+      - binary_sensor.overloop
+      - binary_sensor.slaapkamer
+      - binary_sensor.slaapkamer_raam
+      - binary_sensor.overloop
+      - binary_sensor.badkamer
+      - binary_sensor.kast
+      - binary_sensor.woonkamer
+      - binary_sensor.hal
+    to: 'on'
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_away
+    - condition: template
+      value_template: >
+        {{not ((trigger.entity_id == 'binary_sensor.hal'
+        or
+          trigger.entity_id == 'binary_sensor.woonkamer')
+        and
+          states.vacuum.robbie.state == 'cleaning')}}
+  action:
+    service: alarm_control_panel.alarm_trigger
+    entity_id: alarm_control_panel.home_alarm
+
+- alias: sent notification when state changes
+  trigger:
+    platform: state
+    entity_id: alarm_control_panel.home_alarm
+  action:
+    service: notify.nik_telegram
+    data_template:
+      message: "alarm state changed to `{{trigger.to_state.state}}`"
+

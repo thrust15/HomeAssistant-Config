@@ -12,6 +12,7 @@ bedtime:
       data:
         transition: 900
     - service: climate.set_hvac_mode
+      entity_id: climate.living_room_nest
       data:
         hvac_mode: 'off'
     - service: media_player.turn_off

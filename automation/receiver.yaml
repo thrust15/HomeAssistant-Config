@@ -1,0 +1,114 @@
+- alias: receiver on
+  trigger:
+    - platform: state
+      entity_id: media_player.playstation_4
+      from: 'standby'
+    - platform: state
+      entity_id: media_player.apple_tv
+      from: 'idle'
+#    - platform: state
+#      entity_id: media_player.ziggo_mediabox
+#      from: 'off'
+    - platform: state
+      entity_id: media_player.woonkamer
+      to: 'playing'
+  condition:
+    condition: state
+    entity_id: media_player.woonkamer_2
+    state: 'off'
+  action:
+    service: media_player.turn_on
+    entity_id: media_player.woonkamer_2
+
+- alias: change receiver source for playstation
+  trigger:
+    - platform: state
+      entity_id: media_player.playstation_4
+      to: 'idle'
+    - platform: state
+      entity_id: media_player.woonkamer_2
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: media_player.playstation_4
+      state: 'idle'
+    - condition: state
+      entity_id: media_player.woonkamer_2
+      state: 'on'
+  action:
+    - service: media_player.select_source
+      entity_id: media_player.woonkamer_2
+      data:
+        source: 'PlayStation 4'
+    - condition: state
+      entity_id: media_player.philips_tv
+      state: 'off'
+    - service: media_player.turn_on
+      entity_id: media_player.philips_tv
+
+- alias: change receiver source for apple tv
+  trigger:
+    - platform: state
+      entity_id: media_player.apple_tv
+      from: 'idle'
+    - platform: state
+      entity_id: media_player.woonkamer_2
+      to: 'on'
+  condition:
+    - condition: template
+      value_template: '{{states.media_player.apple_tv.state != idle}}'
+    - condition: state
+      entity_id: media_player.woonkamer_2
+      state: 'on'
+  action:
+    - service: media_player.select_source
+      entity_id: media_player.woonkamer_2
+      data:
+        source: 'APPLE TV'
+    - condition: state
+      entity_id: media_player.philips_tv
+      state: 'off'
+    - service: media_player.turn_on
+      entity_id: media_player.philips_tv
+
+- alias: Change source to music
+  trigger:
+    - platform: state
+      entity_id: media_player.playstation_4
+      to: 'standby'
+    - platform: state
+      entity_id: media_player.apple_tv
+      to: 'idle'
+      for:
+        minutes: 2
+    - platform: state
+      entity_id: media_player.woonkamer
+      to: 'playing'
+    - platform: state
+      entity_id: media_player.woonkamer_2
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: media_player.playstation_4
+      state: 'standby'
+    - condition: state
+      entity_id: media_player.apple_tv
+      state: 'idle'
+    - condition: state
+      entity_id: media_player.woonkamer
+      state: 'playing'
+    - condition: state
+      entity_id: media_player.woonkamer_2
+      state: 'on'
+  action:
+    - service: media_player.select_source
+      entity_id: media_player.woonkamer_2
+      data:
+        source: SONOS
+    - condition: state
+      entity_id: media_player.philips_tv
+      state: 'on'
+    - service: media_player.turn_off
+      entity_id: media_player.philips_tv
+
+

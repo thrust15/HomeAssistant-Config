@@ -13,7 +13,7 @@
 - alias: Jim standje koelkast
   trigger:
     - platform: state
-      entity_id: device_tracker.iphonevanjim
+      entity_id: device_tracker.iphone_van_jim
       from: 'not_home'
       to: 'home'
       for:
@@ -24,7 +24,7 @@
       data:
         temperature: 20
     - service: tts.google_say
-      entity_id: media_player.googlehomewoonkamer
+      entity_id: media_player.woonkamer_google_home
       data:
         message: "Jim is zojuist binnengekomen. Ik zet de thermostaat op standje koelkast. Welkom Jim!"
         language: "nl"
@@ -39,7 +39,7 @@
       #  minutes: 1
   action:
     - service: tts.google_say
-      entity_id: media_player.googlehomewoonkamer
+      entity_id: media_player.woonkamer_google_home
       data:
         message: "Welkom Jorrit"
         language: "nl"

@@ -100,15 +100,42 @@
       to: 'on'
   action:
     - service: image_processing.scan
-      entity_id: image_processing.tensorflow_frontdoor
+      entity_id: image_processing.tensorflow_frontyard
 
 - alias: 'kat of persoon voor de deur'
   trigger:
     - platform: numeric_state
-      entity_id: image_processing.tensorflow_frontdoor
+      entity_id: image_processing.tensorflow_frontyard
       above: 0
   action:
-    - service: notify.nik_telegram
+    - service: camera.record
+      entity_id: camera.frontyard
+      data:
+        duration: 60
+        lookback: 30
+        filename: '/share/motioneye/tensorflow/{{ entity_id.entity_id }}_{{ now().strftime("%Y%m%d-%H%M%S") }}.mp4'
+    - service: notify.security_telegram
+      data:
+        title: "Tensorflow"
+        message: "Tensorflow"
+        data:
+          photo:
+            file: "/config/www/tensorflow.jpg"
+            caption: "Tensorflow heeft iets gedetecteerd"
+
+- alias: 'kat of persoon in achtertuin'
+  trigger:
+    - platform: numeric_state
+      entity_id: image_processing.tensorflow_backyard
+      above: 0
+  action:
+    - service: camera.record
+      entity_id: camera.backyard
+      data:
+        duration: 60
+        lookback: 30
+        filename: '/share/motioneye/tensorflow/{{ entity_id.entity_id }}_{{ now().strftime("%Y%m%d-%H%M%S") }}.mp4'
+    - service: notify.security_telegram
       data:
         title: "Tensorflow"
         message: "Tensorflow"

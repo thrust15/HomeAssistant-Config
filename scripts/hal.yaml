@@ -4,14 +4,14 @@ doorbellsound:
       entity_id: group.bewoners
       state: 'home'
     - service: media_player.play_media
-      entity_id: media_player.googlehomewoonkamer
+      entity_id: media_player.woonkamer_google_home
       data_template:
         media_content_type: music
         media_content_id: !secret doorbellurl
 cameradoorbell:
   sequence:
     - service: camera.snapshot
-      entity_id: camera.frontdoor
+      entity_id: camera.frontyard
       data:
         filename: /config/www/frontdoor.jpg
     - service: notify.all_ios
