@@ -1,73 +1,78 @@
-- alias: Woonkamer beweging
-  trigger: 
-    - platform: state
-      entity_id: binary_sensor.woonkamer
-      from: 'off'
-      to: 'on'
-  condition:
-    condition: state
-    entity_id: group.bewoners
-    state: 'home'
-  action:
-    service: script.turn_on
-    # In het script wordt voor 09:00 en na 21:30 input_boolean.woonkamer_timer aangezet
-    # welke in de volgende automation wordt gebruikt, alleen als licht uit staat
-    entity_id:
-      - script.woonkamer_bewegingsensor
-      - script.home_climate
-      - script.all_notifiers
-      - script.woonkamer_muziek_aan
+# this part is moved to node red
+# - alias: Woonkamer beweging
+#   trigger: 
+#     - platform: state
+#       entity_id: binary_sensor.woonkamer
+#       from: 'off'
+#       to: 'on'
+#   condition:
+#     condition: state
+#     entity_id: group.bewoners
+#     state: 'home'
+#   action:
+#     service: script.turn_on
+#     # In het script wordt voor 09:00 en na 21:30 input_boolean.woonkamer_timer aangezet
+#     # welke in de volgende automation wordt gebruikt, alleen als licht uit staat
+#     entity_id:
+#       - script.woonkamer_bewegingsensor
+#       - script.home_climate
+#       - script.all_notifiers
+#       - script.woonkamer_
 
-- alias: Woonkamer licht uit na 10 min
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.woonkamer
-      from: 'on'
-      to: 'off'
-      for:
-        minutes: 10
-  condition:
-    condition: state
-    entity_id: input_boolean.woonkamer_timer
-    state: 'on'
-  action:
-    service: script.turn_on
-    entity_id: script.woonkamer_lights_off
+# This part is moved to alarm control panel
+# - alias: Woonkamer licht uit na 10 min
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.woonkamer
+#       from: 'on'
+#       to: 'off'
+#       for:
+#         minutes: 10
+#   condition:
+#     condition: state
+#     entity_id: input_boolean.woonkamer_timer
+#     state: 'on'
+#   action:
+#     service: script.turn_on
+#     entity_id: script.woonkamer_lights_off
 
-- alias: Woonkamer Timer uit indien actief
-  trigger:
-    platform: state
-    entity_id: group.actief
-    to: 'on'
-  action:
-    service: input_boolean.turn_off
-    entity_id: input_boolean.woonkamer_timer
+# This part is moved to alarm control panel
+# - alias: Woonkamer Timer uit indien actief
+#   trigger:
+#     platform: state
+#     entity_id: group.actief
+#     to: 'on'
+#   action:
+#     service: input_boolean.turn_off
+#     entity_id: input_boolean.woonkamer_timer
 
-- alias: Woonkamer donker licht aan
-  trigger:
-    platform: state
-    entity_id: binary_sensor.woonkamer_donker
-    from: 'off'
-    to: 'on'
-  condition:
-    condition: state
-    entity_id: group.actief
-    state: 'on'
-  action: 
-    service: script.turn_on
-    entity_id:
-      - script.woonkamer_lights_on
-      - script.all_notifiers
+# this part is moved to node-red
+# - alias: Woonkamer donker licht aan
+#   trigger:
+#     platform: state
+#     entity_id: binary_sensor.woonkamer_donker
+#     from: 'off'
+#     to: 'on'
+#   condition:
+#     condition: state
+#     entity_id: alarm_control_panel.home_alarm
+#     state: 'disarmed'
+#   action: 
+#     service: script.turn_on
+#     entity_id:
+#       - script.woonkamer_lights_on
+#       - script.all_notifiers
 
-- alias: Woonkamer niet donker licht uit
-  trigger:
-    platform: state
-    entity_id: binary_sensor.woonkamer_donker
-    from: 'on'
-    to: 'off'
-  action: 
-    service: script.turn_on
-    entity_id: script.woonkamer_lights_off
+# this part is moved to node-red
+# - alias: Woonkamer niet donker licht uit
+#   trigger:
+#     platform: state
+#     entity_id: binary_sensor.woonkamer_donker
+#     from: 'on'
+#     to: 'off'
+#   action: 
+#     service: script.turn_on
+#     entity_id: script.woonkamer_lights_off
     
 - alias: Dim lights when apple tv playing
   trigger:
@@ -133,34 +138,21 @@
     data:
       transition: 4
 
-- alias: achterdeur
-  trigger:
-    platform: state
-    entity_id: binary_sensor.achterdeur
-  condition:
-    condition: state
-    entity_id: group.actief
-    state: 'off'
-  action:
-    service: notify.nik_telegram
-    data_template:
-      title: "Achterdeur {% if trigger.to_state.state == 'on' %}open{% else %}dicht{% endif %}"
-      message: "Achterdeur {% if is_state('trigger.to_state', 'on') %}open{% else %}dicht{% endif %}"
-
-- alias: beweging beneden
-  trigger:
-    platform: state
-    entity_id:
-      - binary_sensor.hal
-      - binary_sensor.woonkamer
-    from: 'off'
-    to: 'on'
-  action:
-    service: script.turn_on
-    entity_id: script.beweging_beneden
-    data_template:
-      variables:
-        location: '{{trigger.to_state.name}}'
+# This part is replaced by alarm control panel
+# - alias: beweging beneden
+#   trigger:
+#     platform: state
+#     entity_id:
+#       - binary_sensor.hal
+#       - binary_sensor.woonkamer
+#     from: 'off'
+#     to: 'on'
+#   action:
+#     service: script.turn_on
+#     entity_id: script.beweging_beneden
+#     data_template:
+#       variables:
+#         location: '{{trigger.to_state.name}}'
 
 - alias: ziggo box aan als tv aan
   trigger:
@@ -191,7 +183,7 @@
 - alias: Dim lights when plex plays
   trigger:
     platform: state
-    entity_id: media_player.plexmediaplayer
+    entity_id: media_player.plex_playstation_4
     to: 'playing'
   condition:
     condition: state
@@ -209,7 +201,7 @@
 - alias: undim lights when plex stops playing
   trigger:
     platform: state
-    entity_id: media_player.plexmediaplayer
+    entity_id: media_player.plex_playstation_4
     from: 'playing'
   condition:
     condition: state

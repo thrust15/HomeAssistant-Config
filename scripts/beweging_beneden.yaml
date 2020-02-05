@@ -1,52 +1,53 @@
-beweging_beneden:
-  sequence:
-    service: script.turn_on
-    data_template:
-      entity_id: >
-        {% if states.binary_sensor.overloop.state == 'on' %}
-        script.wakker
-        {% else %}
-        script.beweging_gesignaleerd
-        {% endif %}
-      variables:
-        location: '{{ location }}'
-
-wakker:
-  sequence:
-    - service: script.turn_on
-      entity_id:
-        - script.nik_wakker
-        - script.dionne_wakker
-    - service: alarm_control_panel.alarm_disarm
-      entity_id: alarm_control_panel.home_alarm
-      data:
-        code: !secret alarm_control_panel_code
-
-nik_wakker:
-  sequence:
-    - condition: template
-      value_template: '{{states.sensor.slaapkamer_stekker_nik_power.state | float == 0.0}}'
-    - service: input_boolean.turn_on
-      entity_id:
-        - input_boolean.nik_wakker
-
-dionne_wakker:
-  sequence:
-    - condition: template
-      value_template: '{{states.sensor.slaapkamer_stekker_dionne_power.state | float == 0.0}}'
-    - service: input_boolean.turn_on
-      entity_id:
-        - input_boolean.dionne_wakker
-
-beweging_gesignaleerd:
-  sequence:
-    - condition: state
-      entity_id: group.actief
-      state: 'off'
-    - condition: state
-      entity_id: vacuum.robbie
-      state: 'docked'
-    - service: notify.nik_telegram
-      data_template:
-        message: '{{ location }} gesignaleerd!' 
-        title: '{{ location }} gesignaleerd!' 
+# this part is moved to node-red
+# beweging_beneden:
+#   sequence:
+#     service: script.turn_on
+#     data_template:
+#       entity_id: >
+#         {% if states.binary_sensor.overloop.state == 'on' %}
+#         script.wakker
+#         {% else %}
+#         script.beweging_gesignaleerd
+#         {% endif %}
+#       variables:
+#         location: '{{ location }}'
+#
+# wakker:
+#   sequence:
+#     - service: script.turn_on
+#       entity_id:
+#         - script.nik_wakker
+#         - script.dionne_wakker
+#     - service: alarm_control_panel.alarm_disarm
+#       entity_id: alarm_control_panel.home_alarm
+#       data:
+#         code: !secret alarm_control_panel_code
+#
+# nik_wakker:
+#   sequence:
+#     - condition: template
+#       value_template: '{{states.sensor.slaapkamer_stekker_nik_power.state | float == 0.0}}'
+#     - service: input_boolean.turn_on
+#       entity_id:
+#         - input_boolean.nik_wakker
+#
+# dionne_wakker:
+#   sequence:
+#     - condition: template
+#       value_template: '{{states.sensor.slaapkamer_stekker_dionne_power.state | float == 0.0}}'
+#     - service: input_boolean.turn_on
+#       entity_id:
+#         - input_boolean.dionne_wakker
+#
+# beweging_gesignaleerd:
+#   sequence:
+#     - condition: state
+#       entity_id: group.actief
+#       state: 'off'
+#     - condition: state
+#       entity_id: vacuum.robbie
+#       state: 'docked'
+#     - service: notify.nik_telegram
+#       data_template:
+#         message: '{{ location }} gesignaleerd!' 
+#         title: '{{ location }} gesignaleerd!' 

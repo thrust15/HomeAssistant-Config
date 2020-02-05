@@ -1,40 +1,41 @@
-- alias: Alles uit indien van huis
-  trigger:
-    platform: state
-    entity_id: group.bewoners
-    from: 'home'
-    to: 'not_home'
-  action:
-    - service: light.turn_off
-      entity_id: all
-#    - service: switch.turn_off
-#      entity_id: 
-#        - switch.hal_verlichting
-#        - switch.badkamer_verlichting
-    - service: climate.set_hvac_mode
-      entity_id: climate.living_room_nest
-      data:
-        hvac_mode: 'off'
-    - service: media_player.turn_off
-      entity_id:
-        - media_player.philips_tv
-        - media_player.ziggo_mediabox
-        - media_player.woonkamer_2
-        - media_player.playstation_4
-    - service: media_player.media_stop
-      entity_id:
-        - media_player.slaapkamer
-        - media_player.woonkamer
-        - media_player.strijkkamer
-    - service: input_boolean.turn_on
-      entity_id: input_boolean.muziek_aan
-    - condition: state
-      entity_id: input_boolean.robbie
-      state: 'off'
-    - service: vacuum.start
-      entity_id: vacuum.robbie
-    - service: input_boolean.turn_on
-      entity_id: input_boolean.robbie
+# This part is moved to node-red
+# - alias: Alles uit indien van huis
+#   trigger:
+#     platform: state
+#     entity_id: group.bewoners
+#     from: 'home'
+#     to: 'not_home'
+#   action:
+#     - service: light.turn_off
+#       entity_id: all
+# #    - service: switch.turn_off
+# #      entity_id: 
+# #        - switch.hal_verlichting
+# #        - switch.badkamer_verlichting
+#     - service: climate.set_hvac_mode
+#       entity_id: climate.living_room_nest
+#       data:
+#         hvac_mode: 'off'
+#     - service: media_player.turn_off
+#       entity_id:
+#         - media_player.philips_tv
+#         - media_player.ziggo_mediabox
+#         - media_player.woonkamer_2
+#         - media_player.playstation_4
+#     - service: media_player.media_stop
+#       entity_id:
+#         - media_player.slaapkamer
+#         - media_player.woonkamer
+#         - media_player.strijkkamer
+#     - service: input_boolean.turn_on
+#       entity_id: input_boolean.muziek_aan
+#     - condition: state
+#       entity_id: input_boolean.robbie
+#       state: 'off'
+#     - service: vacuum.start
+#       entity_id: vacuum.robbie
+#     - service: input_boolean.turn_on
+#       entity_id: input_boolean.robbie
 
 - alias: reset robbie
   trigger:

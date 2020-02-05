@@ -60,7 +60,7 @@
     platform: state
     entity_id:
       - binary_sensor.hal
-      - binary_sensor.woonkamer
+#      - binary_sensor.woonkamer
     from: 'off'
     to: 'on'
   condition:
