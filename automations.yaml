@@ -22,19 +22,6 @@
     data: {}
     entity_id: light.achtertuin
   mode: single
-- id: '1613035005351'
-  alias: Motion-activated WC light
-  description: ''
-  use_blueprint:
-    path: homeassistant/motion_light_illuminance.yaml
-    input:
-      high_illuminance_threshold: '40'
-      motion_entity: binary_sensor.wc
-      light_target:
-        entity_id: light.wc
-      no_motion_wait: '3'
-      illuminance_entity: sensor.lumi_lumi_sensor_motion_aq2_illuminance
-      low_illuminance_threshold: 20
 - id: '1613331598319'
   alias: Bak notificatie om half 9
   description: Om half 9 een trigger om te checken of de bak naar buiten moet
@@ -46,3 +33,16 @@
   - service: script.afvalbak_notificatie
     data: {}
   mode: single
+- id: '1613681970688'
+  alias: WC Light motion sensor
+  description: Turns WC light on and off on the basis of Illuminance and motion
+  use_blueprint:
+    path: homeassistant/motion_light_illuminance.yaml
+    input:
+      light_brightness: 70
+      motion_entity: binary_sensor.wc
+      light_target:
+        entity_id: light.wc
+      no_motion_wait: 3
+      illuminance_entity: sensor.illuminance_wc
+      light_color_temperature: '400'

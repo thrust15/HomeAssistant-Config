@@ -48,6 +48,33 @@ blueprint:
           min: 0
           max: 200
           unit_of_measurement: lx
+    light_color_temperature:
+      name: Color Temperature
+      description: 'Choose the color temperature. Examples: Cool White: 154; Daylight
+        White: 181; White: 250; Soft White: 370; Warm White: 454'
+      default: 370
+      selector:
+        number:
+          min: 154.0
+          max: 500.0
+          unit_of_measurement: mireds
+          mode: slider
+          step: 1.0
+    light_brightness:
+      name: Brightness
+      description: Choose the brightness.
+      default: 100
+      selector:
+        number:
+          min: 1.0
+          max: 100.0
+          mode: slider
+          step: 1.0
+          unit_of_measurement: '%'
+
+variables:
+  light_brightness_var: !input light_brightness
+  light_brightness_int: '{{(light_brightness_var | float * 2.55) | round(0) }}'
 
 mode: queued
 
@@ -96,3 +123,6 @@ action:
       sequence:
         - service: light.turn_on
           target: !input light_target
+          data:
+            color_temp: !input 'light_color_temperature'
+            brightness: "{{light_brightness_int}}"
