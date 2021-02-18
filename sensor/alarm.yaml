@@ -13,9 +13,6 @@
         {%-endif-%}
         {{states.input_number.alarm_minute.state | int}}
       icon_template: mdi:alarm
-      entity_id:
-        - input_number.alarm_hour
-        - input_number.alarm_minute
     alarm_fade:
       friendly_name: Start fade-in
       value_template: >
@@ -40,7 +37,3 @@
         {{states.input_number.alarm_minute.state | int - states.input_number.alarm_fade.state|int}}
         {%-endif-%}
       icon_template: mdi:weather-sunset
-      entity_id:
-        - input_number.alarm_hour
-        - input_number.alarm_minute
-        - input_number.alarm_fade

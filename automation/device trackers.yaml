@@ -1,3 +1,4 @@
+#clean up device trackers
 - alias: Iemand staat voor de deur
   trigger:
     - platform: state
@@ -23,7 +24,7 @@
       entity_id: climate.living_room_nest
       data:
         temperature: 20
-    - service: tts.google_say
+    - service: tts.google_translate_say
       entity_id: media_player.woonkamer_google_home
       data:
         message: "Jim is zojuist binnengekomen. Ik zet de thermostaat op standje koelkast. Welkom Jim!"
@@ -38,7 +39,7 @@
       #for:
       #  minutes: 1
   action:
-    - service: tts.google_say
+    - service: tts.google_translate_say
       entity_id: media_player.woonkamer_google_home
       data:
         message: "Welkom Jorrit"

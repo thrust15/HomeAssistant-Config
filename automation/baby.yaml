@@ -1,0 +1,21 @@
+- alias: baby huilt
+  trigger:
+    platform: state
+    entity_id: binary_sensor.ffmpeg_noise
+    from: 'off'
+    to: 'on'
+  action:
+    - service: notify.mobile_app_iphone_van_nik
+      data:
+        message: 'Baby Huilt!: vlc-x-callback://x-callback-url/stream?url=rtsp://192.168.1.227:8554/unicast'
+        data:
+          attachment:
+            content-type: jpeg
+          push:
+            category: camera
+          entity_id: camera.babymonitor
+    - service: media_player.play_media
+      entity_id: media_player.woonkamer_google_home
+      data:
+        media_content_type: music
+        media_content_id: 'http://192.168.1.15:8000/babyphone.mp3'

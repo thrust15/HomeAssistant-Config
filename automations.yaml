@@ -1,1 +1,48 @@
-[]
+- id: '1611471967240'
+  alias: bij zonsopkomst tuinverlichting uit
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.achtertuin
+  mode: single
+- id: '1611472021768'
+  alias: bij zonsondergang tuinverlichting aan
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.achtertuin
+  mode: single
+- id: '1613035005351'
+  alias: Motion-activated WC light
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light_illuminance.yaml
+    input:
+      high_illuminance_threshold: '40'
+      motion_entity: binary_sensor.wc
+      light_target:
+        entity_id: light.wc
+      no_motion_wait: '3'
+      illuminance_entity: sensor.lumi_lumi_sensor_motion_aq2_illuminance
+      low_illuminance_threshold: 20
+- id: '1613331598319'
+  alias: Bak notificatie om half 9
+  description: Om half 9 een trigger om te checken of de bak naar buiten moet
+  trigger:
+  - platform: time
+    at: '20:30:01'
+  condition: []
+  action:
+  - service: script.afvalbak_notificatie
+    data: {}
+  mode: single

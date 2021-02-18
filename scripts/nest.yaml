@@ -4,8 +4,8 @@ home_climate:
 #      entity_id: binary_sensor.achterdeur
 #      state: 'off'
     - condition: state
-      entity_id: group.actief
-      state: 'on'
+      entity_id: alarm_control_panel.home_alarm
+      state: 'disarmed'
     - condition: time
       before: '21:30:00'
       after: '09:00:00'
@@ -37,8 +37,8 @@ climate_temperature:
 19_graden:
   sequence:
     - condition: state
-      entity_id: group.actief
-      state: 'off'
+      entity_id: alarm_control_panel.home_alarm
+      state: 'armed_away'
     - condition: template
       value_template: '{{states.climate.living_room_nest.attributes.temperature != 19.5}}'
     - service: climate.set_temperature
@@ -51,8 +51,8 @@ climate_temperature:
       before: '18:00:01'
       after: '04:59:59'
     - condition: state
-      entity_id: group.actief
-      state: 'on'
+      entity_id: alarm_control_panel.home_alarm
+      state: 'disarmed'
     - condition: template
       value_template: '{{states.climate.living_room_nest.attributes.temperature != 20.5}}'
     - service: climate.set_temperature
@@ -65,8 +65,8 @@ climate_temperature:
       after: '18:00:00'
       before: '05:00:00'
     - condition: state
-      entity_id: group.actief
-      state: 'on'
+      entity_id: alarm_control_panel.home_alarm
+      state: 'disarmed'
     - condition: template
       value_template: '{{states.climate.living_room_nest.attributes.temperature != 21.5}}'
     - service: climate.set_temperature

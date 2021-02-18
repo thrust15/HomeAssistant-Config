@@ -46,6 +46,7 @@ lamp_dionne:
       data_template:
         transition: '{{ (fadetime | int) * 60 - 2 }}'
 
+# Make a repeat until with new functionality from https://www.home-assistant.io/docs/scripts/#repeat-until
 alarm:
   sequence:
     - service: input_boolean.turn_off

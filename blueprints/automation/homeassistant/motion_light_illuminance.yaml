@@ -1,0 +1,98 @@
+blueprint:
+  name: Motion-activated Light with illuminance
+  description: Turn on and off a light when motion is detected and it's dark in the room
+  domain: automation
+  input:
+    motion_entity:
+      name: Motion Sensor
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+    light_target:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+    no_motion_wait:
+      name: Wait time
+      description: Time to leave the light on after last motion is detected.
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 60
+          unit_of_measurement: minutes
+    illuminance_entity:
+      name: Light sensor
+      selector:
+        entity:
+          domain: sensor
+          device_class: illuminance
+    low_illuminance_threshold:
+      name: Low light
+      description: When the light is lower then this threshold, the light will turn on
+      default: 20
+      selector:
+        number:
+          min: 0
+          max: 200
+          unit_of_measurement: lx
+    high_illuminance_threshold:
+      name: Enough light
+      description: If the light is on and is higher than this value, the light will turn off.
+      default: 40
+      selector:
+        number:
+          min: 0
+          max: 200
+          unit_of_measurement: lx
+
+mode: queued
+
+trigger:
+  - platform: state
+    entity_id: !input motion_entity
+    from: "off"
+    to: "on"
+  - platform: state
+    entity_id: !input motion_entity
+    from: "on"
+    to:  "off"
+    for:
+      minutes: !input no_motion_wait
+  - platform: numeric_state
+    entity_id: !input illuminance_entity 
+    below: !input low_illuminance_threshold
+  - platform: numeric_state
+    entity_id: !input illuminance_entity 
+    above: !input high_illuminance_threshold
+  - platform: homeassistant
+    event: start
+
+action:
+  - choose:
+    - conditions:
+        - condition: state
+          entity_id: !input motion_entity
+          state: "off"
+          for:
+            minutes: !input no_motion_wait
+      sequence:
+        - service: light.turn_off
+          target: !input light_target
+    - conditions:
+        - condition: numeric_state
+          entity_id: !input illuminance_entity
+          above: !input high_illuminance_threshold
+      sequence:
+        - service: light.turn_off
+          target: !input light_target
+    - conditions:
+      - condition: numeric_state
+        entity_id: !input illuminance_entity
+        below: !input low_illuminance_threshold
+      sequence:
+        - service: light.turn_on
+          target: !input light_target

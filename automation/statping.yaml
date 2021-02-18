@@ -1,0 +1,8 @@
+- alias: Mart server offline
+  trigger:
+    platform: webhook
+    webhook_id: !secret statping_webhook
+  action:
+    service: notify.nik_telegram
+    data:
+      message: "{{trigger.json.name}} is {{trigger.json.status}}"

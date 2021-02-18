@@ -1,0 +1,41 @@
+- alias: 'Persoon voor de deur'
+  trigger:
+    - platform: numeric_state
+      entity_id: image_processing.voortuin
+      above: 0
+  action:
+    - service: camera.record
+      entity_id: camera.frontyard
+      data:
+        duration: 60
+        lookback: 30
+        filename: '/media/security/tensorflow/voortuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
+    - service: notify.security_telegram
+      data_template:
+        title: "Tensorflow"
+        message: "Tensorflow"
+        data:
+          photo:
+            file: "/config/www/tensorflow.jpg"
+            caption: "Persoon in voortuin gedetecteerd {{states.image_processing.voortuin.attributes.matches.person[0].score}}%"
+
+- alias: 'Persoon in achtertuin'
+  trigger:
+    - platform: numeric_state
+      entity_id: image_processing.achtertuin
+      above: 0
+  action:
+    - service: camera.record
+      entity_id: camera.backyard
+      data:
+        duration: 60
+        lookback: 30
+        filename: '/media/security/tensorflow/achtertuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
+    - service: notify.security_telegram
+      data:
+        title: "Tensorflow"
+        message: "Tensorflow"
+        data:
+          photo:
+            file: "/config/www/tensorflow.jpg"
+            caption: "Persoon in achtertuin gedetecteerd {{states.image_processing.achtertuin.attributes.matches.person[0].score}}%"

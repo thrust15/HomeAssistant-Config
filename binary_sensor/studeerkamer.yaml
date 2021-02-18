@@ -1,5 +1,5 @@
-- platform: mqtt
-  state_topic: 'bruh/sensornode1'
-  name: 'Beweging studeerkamer'
-  value_template: '{{ value_json.motion }}'
-  device_class: motion
+- platform: template
+  sensors:
+    studeerkamer_donker:
+      value_template: '{{ (states.sensor.studeerkamer_illuminance.state | float < 8) or ((states.sensor.studeerkamer_illuminance.state | float < 25) and (states.light.zolder_kantoor.state == "on")) }}'
+      friendly_name: 'Studeerkamer Donker'

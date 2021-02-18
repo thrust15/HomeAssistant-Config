@@ -1,0 +1,8 @@
+- platform: ffmpeg_noise
+  input: !secret BabyMonitorStreamUrl
+  extra_arguments: -filter:a highpass=f=300,lowpass=f=2500,volume=volume=2 #-codec:a libmp3lame -ar 16000
+  output: -fflags nobuffer -flags low_delay -f mp3 icecast://source:aaa@127.0.0.1:8000/babyphone.mp3
+  initial_state: false
+  duration: 2
+  reset: 20
+  peak: -32

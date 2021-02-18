@@ -1,79 +1,4 @@
-# this part is moved to node red
-# - alias: Woonkamer beweging
-#   trigger: 
-#     - platform: state
-#       entity_id: binary_sensor.woonkamer
-#       from: 'off'
-#       to: 'on'
-#   condition:
-#     condition: state
-#     entity_id: group.bewoners
-#     state: 'home'
-#   action:
-#     service: script.turn_on
-#     # In het script wordt voor 09:00 en na 21:30 input_boolean.woonkamer_timer aangezet
-#     # welke in de volgende automation wordt gebruikt, alleen als licht uit staat
-#     entity_id:
-#       - script.woonkamer_bewegingsensor
-#       - script.home_climate
-#       - script.all_notifiers
-#       - script.woonkamer_
-
-# This part is moved to alarm control panel
-# - alias: Woonkamer licht uit na 10 min
-#   trigger:
-#     - platform: state
-#       entity_id: binary_sensor.woonkamer
-#       from: 'on'
-#       to: 'off'
-#       for:
-#         minutes: 10
-#   condition:
-#     condition: state
-#     entity_id: input_boolean.woonkamer_timer
-#     state: 'on'
-#   action:
-#     service: script.turn_on
-#     entity_id: script.woonkamer_lights_off
-
-# This part is moved to alarm control panel
-# - alias: Woonkamer Timer uit indien actief
-#   trigger:
-#     platform: state
-#     entity_id: group.actief
-#     to: 'on'
-#   action:
-#     service: input_boolean.turn_off
-#     entity_id: input_boolean.woonkamer_timer
-
-# this part is moved to node-red
-# - alias: Woonkamer donker licht aan
-#   trigger:
-#     platform: state
-#     entity_id: binary_sensor.woonkamer_donker
-#     from: 'off'
-#     to: 'on'
-#   condition:
-#     condition: state
-#     entity_id: alarm_control_panel.home_alarm
-#     state: 'disarmed'
-#   action: 
-#     service: script.turn_on
-#     entity_id:
-#       - script.woonkamer_lights_on
-#       - script.all_notifiers
-
-# this part is moved to node-red
-# - alias: Woonkamer niet donker licht uit
-#   trigger:
-#     platform: state
-#     entity_id: binary_sensor.woonkamer_donker
-#     from: 'on'
-#     to: 'off'
-#   action: 
-#     service: script.turn_on
-#     entity_id: script.woonkamer_lights_off
-    
+#todo fix this shit
 - alias: Dim lights when apple tv playing
   trigger:
     - platform: state
@@ -138,48 +63,6 @@
     data:
       transition: 4
 
-# This part is replaced by alarm control panel
-# - alias: beweging beneden
-#   trigger:
-#     platform: state
-#     entity_id:
-#       - binary_sensor.hal
-#       - binary_sensor.woonkamer
-#     from: 'off'
-#     to: 'on'
-#   action:
-#     service: script.turn_on
-#     entity_id: script.beweging_beneden
-#     data_template:
-#       variables:
-#         location: '{{trigger.to_state.name}}'
-
-- alias: ziggo box aan als tv aan
-  trigger:
-    platform: template
-    value_template: '{{states.media_player.philips_tv.attributes.source == "HDMI 2"}}'
-  condition:
-    condition: state
-    entity_id: media_player.ziggo_mediabox
-    state: 'off'
-  action:
-    - service: media_player.turn_on
-      entity_id: media_player.ziggo_mediabox
-
-- alias: ziggo box uit als tv uit
-  trigger:
-    platform: state
-    entity_id: media_player.philips_tv
-    from: 'on'
-    to: 'off'
-  condition:
-    condition: state
-    entity_id: media_player.ziggo_mediabox
-    state: 'on'
-  action:
-    - service: media_player.turn_off
-      entity_id: media_player.ziggo_mediabox
-
 - alias: Dim lights when plex plays
   trigger:
     platform: state
@@ -216,4 +99,13 @@
       transition: 4
     data_template:
       brightness: '{{states.light.eettafel.attributes.brightness}}'
+
+- alias: reset robbie
+  trigger:
+    platform: time
+    at: '04:59:00'
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.robbie
+
 

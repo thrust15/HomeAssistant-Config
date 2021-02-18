@@ -1,58 +1,18 @@
-# This part is moved to node-red
-# woonkamer_bewegingsensor:
-#   sequence:
-#     - condition: state
-#       entity_id: light.woonkamer
-#       state: 'off' 
-#     - service: script.turn_on
-#       entity_id:
-#         - script.woonkamer_lights_on
-# woonkamer_lights_on:
-#   sequence:
-#     - condition: state
-#       entity_id: binary_sensor.woonkamer_donker
-#       state: 'on'
-#     - service: light.turn_on
-#       entity_id: light.woonkamer
-#       data:
-#         profile: 'relax'
-#     - service: light.turn_on
-#       entity_id: light.keuken_dimmer
-#       data:
-#         brightness: 50
-# woonkamer_lights_off:
-#   sequence:
-#     - service: light.turn_off
-#       entity_id:
-#         - light.woonkamer
-#         - light.keuken_dimmer
-#     - condition: state
-#       entity_id: group.actief
-#       state: 'on'
-#     - service: script.turn_on
-#       entity_id: script.all_notifiers
-# woonkamer_muziek_aan:
-#   sequence:
-#     - condition: state
-#       entity_id: input_boolean.muziek_aan
-#       state: 'on'
-#     - condition: state
-#       entity_id: media_player.philips_tv
-#       state: 'off'
-#     - condition: state
-#       entity_id: group.wakker
-#       state: 'on'
-#     - service: input_boolean.turn_off
-#       entity_id: input_boolean.muziek_aan
-#     - condition: template
-#       value_template: "{{states.media_player.woonkamer.state != 'playing'}}"
-#     - service: sonos.unjoin
-#       entity_id: media_player.woonkamer
-#     - service: media_player.volume_set
-#       entity_id: media_player.woonkamer
-#       data:
-#         volume_level: 0.6
-#     - service: media_player.select_source
-#       entity_id: media_player.woonkamer
-#       data:
-#         source: 'Sky Radio 101 FM 101.2 (Pop)'
+# Turn on TV
+turn_on_tv:
+  sequence:
+    - choose:
+      - conditions:
+          - condition: state
+            entity_id: media_player.android_tv
+            state: 'unavailable'
+        sequence:
+          - service: wake_on_lan.send_magic_packet
+            data:
+              mac: 70:af:24:be:89:b8
+          - wait_for_trigger:
+            - platform: state
+              entity_id: media_player.android_tv
+              from: "unavailable"  
+    - service: media_player.turn_on
+      entity_id: media_player.android_tv

@@ -34,7 +34,7 @@
     from: 'on'
     to: 'off'
     for:
-      minutes: 5
+      minutes: 15
   condition:
     - condition: state
       entity_id: light.slaapkamer_kant_nik

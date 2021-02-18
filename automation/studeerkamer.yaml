@@ -1,50 +1,48 @@
 - alias: beweging studeerkamer
   trigger:
-    platform: state
-    entity_id: binary_sensor.beweging_studeerkamer
-    from: 'off'
-    to: 'on'
+    - platform: state
+      entity_id: binary_sensor.studeerkamer
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.studeerkamer_donker
+      from: 'off'
+      to: 'on'
   condition:
-    condition: numeric_state
-    entity_id: sensor.sn1_ldr
-    above: 400
+    - condition: state
+      entity_id: binary_sensor.studeerkamer_donker
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.studeerkamer
+      state: 'on'
   action:
     service: light.turn_on
-    entity_id: light.studeerkamer
+    entity_id: light.zolder_kantoor
 
 - alias: geen beweging studeerkamer
   trigger:
     - platform: state
-      entity_id: binary_sensor.beweging_studeerkamer
+      entity_id: binary_sensor.studeerkamer
       from: 'on'
       to: 'off'
       for:
-        minutes: 5
-    - platform: numeric_state
-      entity_id: sensor.sn1_ldr
-      below: 300
+        minutes: 15
+    - platform: state
+      entity_id: binary_sensor.studeerkamer_donker
+      from: 'on'
+      to: 'off'
+  condition:
+  - condition: not
+    conditions:
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.niks_macbook_pro_active
+            state: 'on'
+          - condition: state
+            entity_id: device_tracker.niks_mbp_wifi
+            attribute: ap_mac
+            state: 'e0:63:da:ac:35:75'
   action:
     service: light.turn_off
-    entity_id: light.studeerkamer
-
-- alias: Led studeerkamer aan
-  trigger:
-    platform: 'state'
-    entity_id: binary_sensor.beweging_studeerkamer
-    from: 'off'
-    to: 'on'
-  action:
-    service: light.turn_on
-    entity_id: light.sn1_led
-    data_template:
-      rgb_color: ['{{ range(0, 255) | random | int}}','{{ range(0, 255) | random | int }}','{{ range(0, 255) | random | int }}']
-
-- alias: Led studeerkamer uit
-  trigger:
-    platform: 'state'
-    entity_id: binary_sensor.beweging_studeerkamer
-    from: 'on'
-    to: 'off'
-  action:
-    service: light.turn_off
-    entity_id: light.sn1_led
+    entity_id: light.zolder_kantoor

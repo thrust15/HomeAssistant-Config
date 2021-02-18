@@ -13,6 +13,7 @@ cameradoorbell:
     - service: camera.snapshot
       entity_id: camera.frontyard
       data:
+        #move to media folder for security
         filename: /config/www/frontdoor.jpg
     - service: notify.all_ios
       data:
@@ -32,6 +33,7 @@ doorbellpause:
         seconds: 5
     - service: media_player.media_play
       entity_id: media_player.woonkamer
+#Pausing other applications
 pauseplex:
   sequence:
     - condition: state
@@ -63,7 +65,7 @@ sonos_say:
         - media_player.strijkkamer
       data_template:
         volume_level: "{{ volume }}"
-    - service: tts.google_say
+    - service: tts.google_translate_say
       entity_id:
         - media_player.slaapkamer
         - media_player.strijkkamer

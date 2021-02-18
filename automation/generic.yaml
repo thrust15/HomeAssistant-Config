@@ -18,3 +18,13 @@
         title: 'Homeassistant stopt'
         message: 'Homeassistant stopt'
         
+- alias: IP changed
+  trigger:
+    platform: state
+    entity_id: sensor.myip
+  action:
+    - service: notify.nik_telegram
+      data:
+        title: 'Thuis IP veranderd'
+      data_template:
+        message: 'Het ip is veranderd van {{trigger.from_state.state}} to {{trigger.to_state.state}}'

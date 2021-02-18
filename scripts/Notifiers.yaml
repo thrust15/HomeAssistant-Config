@@ -8,30 +8,41 @@ all_notifiers:
 afvalbak_notificatie:
   sequence:
     - condition: time
-      before: '09:00:00'
+      after: '20:30:00'
     - service: script.turn_on
       entity_id:
-        - script.grijze_bak_notificatie
+        - script.papier_bak_notificatie
         - script.groene_bak_notificatie
+        - script.plastic_bak_notificatie
 
-grijze_bak_notificatie:
+papier_bak_notificatie:
   sequence:
     - condition: template
-      value_template: '{{now().strftime("%Y-%m-%d") == (states.sensor.trash_rest.state)}}'
+      value_template: '{{(now() + timedelta( days = 1)).strftime("%Y-%m-%d") == (states.sensor.trash_papier.state)}}'
     - service: light.turn_on
       entity_id: light.haldeur
       data:
-        color_name: 'Dark Slate Blue'
+        color_name: 'Blue'
         brightness: 150
 
 groene_bak_notificatie:
   sequence:
     - condition: template
-      value_template: '{{now().strftime("%Y-%m-%d") == (states.sensor.trash_gft.state)}}'
+      value_template: '{{(now() + timedelta( days = 1)).strftime("%Y-%m-%d") == (states.sensor.trash_gft.state)}}'
     - service: light.turn_on
       entity_id: light.haldeur
       data:
         color_name: 'Green'
+        brightness: 150
+
+plastic_bak_notificatie:
+  sequence:
+    - condition: template
+      value_template: '{{(now() + timedelta( days = 1)).strftime("%Y-%m-%d") == (states.sensor.trash_plastic.state)}}'
+    - service: light.turn_on
+      entity_id: light.haldeur
+      data:
+        color_name: 'orangered'
         brightness: 150
 
 wasmachine:
@@ -40,11 +51,11 @@ wasmachine:
       entity_id: input_select.wasmachine_state
       state: 'Klaar'
       for:
-        minutes: 3
+        minutes: 1
     - condition: state
       entity_id: group.actief
       state: 'on'
-    - service: tts.google_say
+    - service: tts.google_translate_say
       entity_id: media_player.woonkamer_google_home
       data:
         message: "De wasmachine is klaar"
@@ -52,7 +63,11 @@ wasmachine:
     - service: light.turn_on
       entity_id: light.kast_spot
       data:
-        color_name: 'red'
+        color_name: 'magenta'
+    - service: telegram_bot.send_message
+      data:
+        message: 'De wasmachine is klaar'
+        target: !secret telegram_notification_chat_id
     - condition: state
       entity_id: binary_sensor.woonkamer_donker
       state: 'off'
@@ -60,10 +75,5 @@ wasmachine:
       entity_id: light.kast_spot
       data:
         brightness: 255
-    - condition: state
-      entity_id: person.nik
-      state: 'home'
-    - service: notify.nik_telegram
-      data:
-        title: 'Wasmachine klaar'
-        message: 'De wasmachine is klaar'
+
+

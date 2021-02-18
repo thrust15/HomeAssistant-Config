@@ -89,14 +89,19 @@
     - platform: state
       entity_id: media_player.grote_slaapkamer
       from: 'unavailable'
-  condition:
-    condition: template
-    value_template: '{{states.media_player.slaapkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
   action:
-    - service: sonos.unjoin
-      entity_id: media_player.slaapkamer
-    - service: media_player.media_pause
-      entity_id: media_player.slaapkamer
+    - choose:
+        # IF player is grouped
+        - conditions:
+            - condition: template
+              value_template: '{{states.media_player.slaapkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
+          sequence:
+            - service: sonos.unjoin
+              entity_id: media_player.slaapkamer
+      # ELSE (Player not grouped)
+      default:
+        - service: media_player.media_pause
+          entity_id: media_player.slaapkamer
 
 - alias: Muziek boven uit als iemand gaat slapen
   trigger:
@@ -120,49 +125,3 @@
       entity_id:
         - media_player.strijkkamer
         - media_player.slaapkamer
-
-- alias: Zet soundbar op tv
-  trigger:
-    platform: state
-    entity_id: media_player.philips_tv
-    to: 'on'
-  action:
-    service: remote.send_command
-    entity_id: remote.xiaomi_miio_192_168_31_26
-    data:
-      command:
-        - 'soundbar_tv'
-
-- alias: Zet soundbar op muziek
-  trigger:
-    platform: state
-    entity_id: media_player.philips_tv
-    to: 'off'
-  action:
-    service: remote.send_command
-    entity_id: remote.xiaomi_miio_192_168_31_26
-    data:
-      command:
-        - 'soundbar_music'
-
-- alias: Set Music Options
-  trigger:
-    - platform: time_pattern
-      hours: '/6'
-      minutes: '00'
-    - platform: homeassistant
-      event: start
-  action:
-    - service: input_select.set_options
-      entity_id:
-        - input_select.music_choice
-      data_template:
-        options:
-          - '{{states.media_player.woonkamer.attributes.source_list[0]}}'
-          - '{{states.media_player.woonkamer.attributes.source_list[1]}}'
-          - '{{states.media_player.woonkamer.attributes.source_list[2]}}'
-          - '{{states.media_player.woonkamer.attributes.source_list[3]}}'
-          - '{{states.media_player.woonkamer.attributes.source_list[4]}}'
-          - '{{states.media_player.woonkamer.attributes.source_list[5]}}'
-          - '{{states.media_player.woonkamer.attributes.source_list[6]}}'
-          - '{{states.media_player.woonkamer.attributes.source_list[7]}}'

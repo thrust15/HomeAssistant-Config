@@ -31,6 +31,10 @@
     platform: state
     entity_id: group.bewoners
     from: 'home'
+  condition:
+    condition: state
+    entity_id: input_boolean.oppas_modus
+    state: 'off'
   action:
     service: alarm_control_panel.alarm_arm_away
     entity_id: alarm_control_panel.home_alarm
@@ -60,7 +64,7 @@
     platform: state
     entity_id:
       - binary_sensor.hal
-#      - binary_sensor.woonkamer
+#      - binary_sensor.woonkamer this is in Node-red in the motion sensor living room flow
     from: 'off'
     to: 'on'
   condition:
@@ -107,4 +111,5 @@
     service: notify.nik_telegram
     data_template:
       message: "alarm state changed to `{{trigger.to_state.state}}`"
+
 

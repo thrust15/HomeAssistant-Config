@@ -3,15 +3,10 @@
     nik_actief:
       value_template: '{{ (states.person.nik.state == "home") and (states.input_boolean.nik_wakker.state == "on") }}'
       friendly_name: 'Nik actief thuis'
-      entity_id:
-        - person.nik
-        - input_boolean.nik_wakker
 
 - platform: template
   sensors:
     dionne_actief:
       value_template: '{{ (states.person.dionne.state == "home") and (states.input_boolean.dionne_wakker.state == "on") }}'
       friendly_name: 'Dionne actief thuis'
-      entity_id:
-        - person.dionne
-        - input_boolean.dionne_wakker
+

@@ -28,3 +28,24 @@ dionne_status:
     - Slaapt
     - Slaapt net
     - Net wakker
+
+tv_activity:
+  name: TV Activiteit
+  options:
+    - Uit
+    - Playstation 4
+    - Nintendo Switch
+    - Netflix
+    - Videoland
+    - Plex
+    - Apple TV
+    - Sonos
+    - TV kijken
+    - Google Cast
+    - RTL XL
+    - NPO
+    - NPO/RTL
+    - YouTube
+    - Kijk
+    - Home
+    - NLZiet

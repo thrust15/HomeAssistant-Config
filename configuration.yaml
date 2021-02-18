@@ -12,10 +12,13 @@ homeassistant:
   time_zone: Europe/Amsterdam
   # Customization file
   customize: !include customize.yaml
-  # auth_providers:
-  #  - type: trusted_networks
-  whitelist_external_dirs:
-    - /share/motioneye
+  external_url: !secret base_url
+  internal_url: http://192.168.1.15:8123
+  allowlist_external_dirs:
+    - /media/security
+
+logger:
+  default: info
 
 default_config:
 
@@ -25,23 +28,31 @@ hassio:
 
 # Enables the frontend
 frontend:
+  themes: !include_dir_merge_named themes
 
 # Enables configuration UI
 config:
 
+wake_on_lan:
+
 # Store changes in InfluxDB
 influxdb:
+  host: a0d7b954-influxdb
+  port: 8086
+  database: home_assistant
+  username: !secret influxdb_username
+  password: !secret influxdb_password
+  max_retries: 3
+  default_measurement: state
 
 http:
   # Secrets are defined in the file secrets.yaml
   #api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-  base_url: !secret base_url
-  ssl_certificate: /config/ssl/certificate.pem
-  ssl_key: /config/ssl/privkey.pem
   use_x_forwarded_for: true
   trusted_proxies:
-    - 172.17.0.0/24
+    - 172.16.0.0/12
+    - 192.168.1.0/24
       #  trusted_networks:
       #    - !secret home_ip
   ip_ban_enabled: true
@@ -62,9 +73,9 @@ discovery:
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
 
-# Recorder, keep 2 days in hass UI, rest is in grafana and influxDB
+# Recorder, keep 14 days in hass UI, rest is in grafana and influxDB
 recorder:
-  purge_keep_days: 2
+  purge_keep_days: 14
 
 # Enables support for tracking state changes over time
 history:
@@ -97,46 +108,17 @@ ios:
 # Text to speech
 tts:
   - platform: google_translate
-    service_name: google_say
+    language: 'nl'
 
 # Cloud
 #cloud:
-
-#setting up MQTT
-mqtt:
-  broker: localhost
-  port: 1883
-  client_id: home-assistant-1
-  username: homeassistant
-  password: !secret mqtt_pw
 
 #setting up nest
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
 
-climate:
-  platform: nest
-
 light:
-  - platform: mqtt
-    schema: json
-    name: "SN1 LED"  
-    state_topic: "bruh/sensornode1"  
-    command_topic: "bruh/sensornode1/set"  
-    brightness: true  
-    rgb: true
-    optimistic: false  
-    qos: 0
-  - platform: mqtt
-    schema: json
-    name: "SN2 LED"  
-    state_topic: "bruh/sensornode2"  
-    command_topic: "bruh/sensornode2/set"  
-    brightness: true  
-    rgb: true  
-    optimistic: false  
-    qos: 0
   - platform: switch
     name: Badkamer
     entity_id: switch.badkamer_verlichting  
@@ -154,23 +136,48 @@ media_player:
   - platform: philips_js
     host: 192.168.1.32
     scan_interval: 5
-    turn_on_action:
-      service: remote.send_command
-      entity_id: remote.xiaomi_miio_192_168_31_26
-      data:
-        command:
-          - 'turn_on_tv'
   - platform: ziggo_mediabox_xl
     host: 192.168.1.37
     name: Ziggo Mediabox
-  - platform: plex
-  - platform: denonavr
-    host: 192.168.1.110
-    name: Woonkamer
-    #show_all_sources: true
-#  - platform: spotify
-#    client_id: !secret spotify_client_id
-#    client_secret: !secret spotify_client_secret
+  - platform: androidtv
+    name: Android TV
+    host: 192.168.1.178
+    exclude_unnamed_apps: true
+    apps:
+      nl.rtl.videoland: "Videoland"
+      nl.nlziet: "NLZIET"
+      org.droidtv.nettvbrowser: "RTL/NPO"
+      com.talpa.kijk: "Kijk"
+      org.droidtv.playtv: "TV"
+      com.netflix.ninja: "Netflix"
+      com.plexapp.android: "Plex"
+      com.google.android.youtube.tv: "YouTube"
+      org.droidtv.nettvapp2512: "RTL XL"
+      org.droidtv.nettvapp2786: "NPO"
+      com.google.android.tvlauncher: "Android TV Launcher"
+    state_detection_rules:
+      'nl.rtl.videoland':
+        - 'paused':
+            'wake_lock_size': 1
+        - 'playing':
+            'wake_lock_size': 2
+        - 'idle':
+            'wake_lock_size': 0
+      'com.talpa.kijk':
+        - 'paused':
+            'wake_lock_size': 0
+        - 'playing':
+            'wake_lock_size': 2
+      'org.droidtv.playtv':
+        - 'playing'
+      'com.google.android.tvlauncher':
+        - 'standby'
+      'org.droidtv.nettvapp2512':
+        - 'idle'
+      'org.droidtv.nettvapp2786':
+        - 'idle'
+      'org.droidtv.nettvbrowser':
+        - 'playing'
 
 #Robbie
 vacuum:
@@ -200,6 +207,8 @@ telegram_bot:
     allowed_chat_ids:
       - !secret telegram_chat_id
       - !secret telegram_security_chat_id
+      - !secret telegram_notification_chat_id
+      - !secret telegram_dionne_chat_id
 
 #Setting up notifications
 notify:
@@ -220,14 +229,6 @@ zwave:
   usb_path: /dev/ttyACM0
   device_config: !include zwave_device_config.yaml
 
-#zoneminder:
-#  host: localhost:2680
-
-#camera:
-#  - platform: zoneminder
-#  - platform: generic
-#    name: doorbell
-#    still_image_url: !secret frontdoorurl
 stream:
 
 camera:
@@ -239,29 +240,36 @@ camera:
     still_image_url: !secret BackCameraStillUrl
     stream_source: !secret BackCameraStreamUrl
     name: Backyard
+  - platform: generic
+    name: BabyMonitor
+    still_image_url: !secret BabyMonitorStillUrl
+    stream_source: !secret BabyMonitorStreamUrl
 
 alarm_control_panel:
   - platform: manual
-    code: !secret alarm_panel_code
+    code: !secret alarm_control_panel_code
     name: Home alarm
     trigger_time: 60
-    pending_time: 0
+    arming_time: 0
     delay_time: 0
 
 image_processing:
-  - platform: tensorflow
-    confidence: 90
+  - platform: doods
+    url: "http://127.0.0.1:8085"
+    detector: tensorflow
+    auth_key: !secret DoodsAuthKey
     source:
       - entity_id: camera.frontyard
+        name: Voortuin
       - entity_id: camera.backyard
-    model:
-      graph: /config/tensorflow/frozen_inference_graph.pb
-      categories:
-        - person
-        - cat
+        name: Achtertuin
     file_out:
-      - /config/www/tensorflow.jpg
+      - "/config/www/tensorflow.jpg"
+     # - "/camera/doods/{{camera_entity.split('.')[1]}}_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+    labels:
+      - person
     scan_interval: 10000
+    confidence: 60
 
 tesla:
   username: !secret tesla_username
@@ -274,5 +282,7 @@ input_boolean: !include_dir_merge_named input_boolean/
 input_number: !include input_number.yaml
 binary_sensor: !include_dir_merge_list binary_sensor/
 group: !include_dir_merge_named group/
-automation: !include_dir_merge_list automation/
+automation old: !include_dir_merge_list automation/
+automation: !include automations.yaml
 script: !include_dir_merge_named scripts/
+switch: !include switch.yaml

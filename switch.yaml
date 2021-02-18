@@ -1,0 +1,12 @@
+- platform: template
+  switches:
+    babyfoon:
+      value_template: "{{not is_state('binary_sensor.ffmpeg_noise', 'unavailable') }}"
+      turn_on:
+        service: ffmpeg.start
+        data:
+          entity_id: binary_sensor.ffmpeg_noise
+      turn_off:
+        service: ffmpeg.stop
+        data:
+          entity_id: binary_sensor.ffmpeg_noise
