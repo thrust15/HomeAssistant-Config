@@ -24,6 +24,12 @@ blueprint:
           min: 0
           max: 60
           unit_of_measurement: minutes
+    turn_light_off:
+      name: turn light off
+      description: Set this to true if you want the light to turn off with this automation
+      default: true
+      selector:
+        boolean:
     illuminance_entity:
       name: Light sensor
       selector:
@@ -75,6 +81,7 @@ blueprint:
 variables:
   light_brightness_var: !input light_brightness
   light_brightness_int: '{{(light_brightness_var | float * 2.55) | round(0) }}'
+  turn_light_off: !input turn_light_off
 
 mode: queued
 
@@ -101,6 +108,8 @@ trigger:
 action:
   - choose:
     - conditions:
+        - condition: template
+          value_template: "{{ turn_light_off }}"
         - condition: state
           entity_id: !input motion_entity
           state: "off"
