@@ -43,9 +43,9 @@
       motion_entity: binary_sensor.wc
       light_target:
         entity_id: light.wc
-      no_motion_wait: '0'
+      no_motion_wait: '3'
       illuminance_entity: sensor.illuminance_wc
       light_color_temperature: '400'
       high_illuminance_threshold: '40'
-      turn_light_off: false
+      turn_light_off: true
       low_illuminance_threshold: '20'

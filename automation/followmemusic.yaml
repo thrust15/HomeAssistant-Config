@@ -57,7 +57,7 @@
           or 
           states.media_player.grote_slaapkamer.state == 'unavailable'}}
       - condition: template
-        value_template: "{{(states.media_player.slaapkamer.state) != ('playing')}}"
+        value_template: '{{(states.media_player.slaapkamer.state) != ("playing")}}'
       - condition: state
         entity_id: input_boolean.nik_wakker
         state: 'on'

@@ -79,3 +79,20 @@
       entity_id: climate.living_room_nest
       data:
         hvac_mode: 'off'
+
+- alias: Tuin timelapse
+  trigger:
+    - platform: time_pattern
+      seconds: "/10"
+  condition:
+    - condition: state
+      entity_id: input_boolean.tuin_timelapse
+      state: "on"
+  action:
+    service: camera.snapshot
+    target:
+      entity_id: camera.backyard
+    data:
+      filename: '/media/timelapse/achtertuin_{{ now().strftime("%Y%m%d-%H%M%S") }}.jpg'
+
+      

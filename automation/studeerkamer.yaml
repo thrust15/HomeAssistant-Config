@@ -37,12 +37,12 @@
       - condition: and
         conditions:
           - condition: state
-            entity_id: binary_sensor.niks_macbook_pro_active
+            entity_id: binary_sensor.macbook_pro_active
             state: 'on'
           - condition: state
-            entity_id: device_tracker.niks_mbp_wifi
+            entity_id: device_tracker.macbook_pro
             attribute: ap_mac
-            state: 'e0:63:da:ac:35:75'
+            state: '68:d7:9a:45:d8:35'
   action:
     service: light.turn_off
     entity_id: light.zolder_kantoor
