@@ -1,5 +1,9 @@
+#Changelog
+#V1.0 Initial version
+#V2.0 Added optional blocker entities which when turned off prevent light from turning on, useful when using in the bedroom.
+
 blueprint:
-  name: Motion-activated Light with illuminance
+  name: Motion-activated Light with illuminance v2.0
   description: Turn on and off a light when motion is detected and it's dark in the room
   domain: automation
   input:
@@ -77,21 +81,25 @@ blueprint:
           mode: slider
           step: 1.0
           unit_of_measurement: '%'
-    awake_entity_1:
-      name: awake entity one
+    blocker_entity_1:
+      name: Blocker entity 1
+      description: Optional entity which blocks lights from turning on, useful for using in the bedroom when you have a sleep entity. should be an entity with a on or off state. Off means light won't turn on.
+      default:
       selector:
         entity:
-          domain: input_boolean
-    awake_entity_2:
-      name: awake entity two
+    blocker_entity_2:
+      name: Blocker entity 2
+      description: Optional entity which blocks lights from turning on, useful for using in the bedroom when you have a sleep entity. should be an entity with a on or off state. Off means light won't turn on.
+      default:
       selector:
         entity:
-          domain: input_boolean
       
 variables:
   light_brightness_var: !input light_brightness
   light_brightness_int: '{{(light_brightness_var | float * 2.55) | round(0) }}'
   turn_light_off: !input turn_light_off
+  blocker_entity_1: !input blocker_entity_1
+  blocker_entity_2: !input blocker_entity_2
 
 mode: queued
 
@@ -140,14 +148,14 @@ action:
         entity_id: !input illuminance_entity
         below: !input low_illuminance_threshold
       sequence:
-        - condition: state
-          entity_id:
-            - !input awake_entity_1
-          state: 'on'
-        - condition: state
-          entity_id:
-            - !input awake_entity_2
-          state: 'on'
+        - condition: or
+          conditions:
+            - "{{ blocker_entity_1 == none }}"
+            - "{{ states[blocker_entity_1].state == 'on' }}"
+        - condition: or
+          conditions:
+            - "{{ blocker_entity_2 == none }}"
+            - "{{ states[blocker_entity_2].state == 'on' }}"
         - service: light.turn_on
           target: !input light_target
           data:

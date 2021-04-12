@@ -49,3 +49,41 @@
       high_illuminance_threshold: '40'
       turn_light_off: true
       low_illuminance_threshold: '20'
+- id: '1618228226567'
+  alias: Nik telefoon in oplader
+  description: ''
+  trigger:
+  - platform: webhook
+    webhook_id: nik_in_oplader
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.nik_opladen
+  mode: single
+- id: '1618228257268'
+  alias: Nik telefoon van oplader
+  description: ''
+  trigger:
+  - platform: webhook
+    webhook_id: nik_van_oplader
+  condition: []
+  action:
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.nik_opladen
+  mode: single
+- id: '1618231318276'
+  alias: New Automation
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light_illuminance_slaap.yaml
+    input:
+      motion_entity: binary_sensor.studeerkamer
+      light_target:
+        area_id: zolder_kantoor
+      no_motion_wait: 0
+      illuminance_entity: sensor.studeerkamer_illuminance
+      low_illuminance_threshold: 133
+      high_illuminance_threshold: 200
+      blocker_entity_1: input_boolean.nik_opladen
