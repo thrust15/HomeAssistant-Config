@@ -1,0 +1,141 @@
+#Changelog
+#V1.0 Initial version
+
+blueprint:
+  name: Turn the right things off when you're away or when you're sleeping
+  description: When you're sleeping turn off these lights
+  domain: automation
+  input:
+    person_1:
+      name: Person 1
+      description: The first person we need to track the location off. This should be from the person component.
+      selector:
+        entity:
+    person_2:
+      name: Person 2
+      description: The seconds person we need to track the location off. This should be from the person component.
+      selector:
+        entity:
+    sleep_entity_1:
+      name: sleep entity 1
+      description: Entity that needs to be in a on or off state where off means sleeping
+      selector:
+        entity:
+    sleep_entity_2:
+      name: sleep entity 2
+      description: Entity that needs to be in a on or off state where off means sleeping
+      selector:
+        entity:
+    turn_off_always:
+      name: Turn off always
+      description: These are the entities that turn off if you're away or if you're sleeping
+      default: {}
+      selector:
+        target:
+    turn_on_always:
+      name: Turn on always
+      description: These are the entities that turn on if you're away or if you're sleeping (vacuums for instance)
+      default: {}
+      selector:
+        target:
+    turn_off_sleeping:
+      name: Turn off sleeping
+      description: These are the entities that turn off only if you're sleeping not when you're leaving home
+      default: {}
+      selector:
+        target:
+    turn_on_sleeping:
+      name: Turn on sleeping
+      description: These are the entities that turn on only if you're sleeping not when you're leaving home
+      default: {}
+      selector:
+        target:
+    turn_off_away:
+      name: Turn off away
+      description: These are the entities that turn off only if you're leaving home, not when you're sleeping
+      default: {}
+      selector:
+        target:
+    turn_on_away:
+      name: Turn on away
+      description: These are the entities that turn on only if you're leaving home, not when you're sleeping
+      default: {}
+      selector:
+        target:
+
+mode: queued
+
+variables:
+  sleep_entity_1: !input sleep_entity_1
+  sleep_entity_2: !input sleep_entity_2
+  person_1: !input person_1
+  person_2: !input person_2
+  turn_off_always: !input turn_off_always
+  turn_on_always: !input turn_on_always
+  turn_off_away: !input turn_off_away
+  turn_on_away: !input turn_on_away
+  turn_off_sleeping: !input turn_off_sleeping
+  turn_on_sleeping: !input turn_on_sleeping
+
+trigger:
+  - platform: state
+    entity_id: !input person_1
+    from: "home"
+  - platform: state
+    entity_id: !input person_2
+    from: "home"
+  - platform: state
+    entity_id: !input sleep_entity_1
+    from: "on"
+    to: "off"
+  - platform: state
+    entity_id: !input sleep_entity_2
+    from: "on"
+    to: "off"
+  - platform: homeassistant
+    event: start
+
+action:
+  - choose:
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: or
+          conditions:
+            - "{{ person_1 == {} }}"
+            - "{{ states[person_1].state != 'home' }}"
+        - condition: or
+          conditions:
+            - "{{ person_2 == {} }}"
+            - "{{ states[person_2].state != 'home' }}"
+      sequence:
+        - service: homeassistant.turn_off
+          target: !input turn_off_always
+        - service: homeassistant.turn_off
+          target: !input turn_off_away
+        - service: homeassistant.turn_on
+          target: !input turn_on_always
+        - service: homeassistant.turn_on
+          target: !input turn_on_away
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: or
+          conditions:
+            - "{{(person_1 == {}) and (sleep_entity_1 == {})}}"
+            - "{{ states[person_1].state != 'home' }}"
+            - "{{ states[sleep_entity_1].state == 'off'}}"
+        - condition: or
+          conditions:
+            - "{{(person_2 == {}) and (sleep_entity_2 == {})}}"
+            - "{{ states[person_2].state != 'home' }}"
+            - "{{ states[sleep_entity_2].state == 'off'}}"
+      sequence:
+        - service: homeassistant.turn_off
+          target: !input turn_off_always
+        - service: homeassistant.turn_off
+          target: !input turn_off_sleeping
+        - service: homeassistant.turn_on
+          target: !input turn_on_always
+        - service: homeassistant.turn_on
+          target: !input turn_on_sleeping

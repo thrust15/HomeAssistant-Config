@@ -3,11 +3,19 @@ doorbellsound:
     - condition: state
       entity_id: group.bewoners
       state: 'home'
+    - service: sonos.snapshot
+      entity_id: media_player.studeerkamer
     - service: media_player.play_media
-      entity_id: media_player.woonkamer_google_home
+      entity_id:
+        - media_player.woonkamer_google_home
+        - media_player.studeerkamer
       data_template:
         media_content_type: music
         media_content_id: !secret doorbellurl
+    - delay:
+        seconds: 5
+    - service: sonos.restore
+      entity_id: media_player.studeerkamer
 cameradoorbell:
   sequence:
     - service: camera.snapshot

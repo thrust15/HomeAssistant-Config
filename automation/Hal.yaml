@@ -25,6 +25,7 @@
       - light.hal
 
 - alias: Deurbel
+  id: deurbel
   trigger:
     - platform: state
       entity_id: binary_sensor.doorbell
