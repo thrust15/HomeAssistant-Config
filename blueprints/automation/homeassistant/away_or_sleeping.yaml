@@ -3,7 +3,10 @@
 
 blueprint:
   name: Turn the right things off when you're away or when you're sleeping
-  description: When you're sleeping turn off these lights
+  description: >
+    This automation ensures that when you're away or sleeping or a combination of both stuff turns off (or on, like vacuums).
+    It is also split out into always, when away or when sleeping. In case you don't want the tv in the bedroom to turn off when you go to bed or similar
+    In case one person goes away and the other is sleeping, then the automations for sleeping will be ran.
   domain: automation
   input:
     person_1:

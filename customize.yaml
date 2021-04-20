@@ -78,3 +78,5 @@ sensor.woonkamer_temperatuur:
   device_class: temperature
 sensor.heemskerk_eta:
   hidden: true
+sensor.zolder_stekker_wasmachine_power:
+  device_class: power

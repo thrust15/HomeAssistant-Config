@@ -1,0 +1,199 @@
+blueprint:
+  name: Wasmachine is klaar
+  description: >
+    Deze automatisering laat weten wanneer je wasmachine klaar is. Het enige wat je nodig hebt is een deursensor op de wasmachine deur en een energiemeter aan de wasmachine.
+    Om deze automatisering te laten werken moet je een 'helper' aanmaken van het type dropdown met de opties: Uit, Klaar en Draait.
+  domain: automation
+  input:
+    door_sensor:
+      name: Deur sensor voor op de wasmachine
+      description: Deze sensor plak je op je wasmachine deur om te detecteren of deze open of dicht
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: opening
+    power_sensor:
+      name: stroom sensor wasmachine
+      description: Deze sensor moet het actuele verbruik van de wasmachine kunnen meten. 
+      selector:
+        entity:
+          domain: sensor
+          device_class: power
+    power_when_done:
+      name: Stroomverbruik wanneer klaar
+      description: >
+        stel deze in zo laag als je kan. Deze waarde moet net boven het stroomverbruik zitten wat je machine verbruikt op het moment dat hij klaar is.
+      selector:
+        number:
+          min: 0.1
+          max: 10
+          step: 0.1 
+    input_helper:
+      name: Helper dropdown
+      description: 'Dit is de helper dropdown welke je moet aanmaken. Deze moet de volgende opties hebben: Uit, Klaar en Draait'
+      selector:
+        entity:
+          domain: input_select
+    target_light:
+      name: Lampen
+      description: De lampen welke je wilt gebruiken voor de notificatie
+      selector:
+        target:
+          entity:
+            domain: light
+    target_color:
+      name: kleur
+      description: welke kleur de lamp moet hebben
+      selector:
+        select:
+          options:
+            - red
+            - blue
+            - green
+            - magenta
+    reference_light:
+      name: Referentie lamp
+      description: Een lamp in de zelfde kamer waar de staat van gekopierd wordt nadat de wasmachine is uitgeruimd, zodat hij weer gelijk staat met andere lampen in de kamer.
+      selector:
+        entity:
+          domain: light
+    target_media_player:
+      name: Audio notificatie
+      description: Welke media_player moet aankondigen dat de wasmachine klaar is
+      selector:
+        target:
+          entity:
+            domain: media_player
+
+trigger:
+  - platform: numeric_state
+    entity_id: !input power_sensor
+    above: 100
+  - platform: numeric_state
+    entity_id: !input power_sensor
+    below: !input power_when_done
+  - platform: numeric_state
+    entity_id: !input power_sensor
+    below: !input power_when_done
+  - platform: state
+    entity_id: !input door_sensor
+    to: 'on'
+  - platform: numeric_state
+    entity_id: !input power_sensor
+    above: !input power_when_done
+  - platform: state
+    entity_id: !input input_helper
+  - platform: state
+    entity_id: !input input_helper
+    to: Klaar
+    for:
+      minutes: 2
+
+mode: restart
+
+variables:
+  reference_light: !input reference_light
+
+action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: !input door_sensor
+        state: 'on'
+      sequence:
+        - condition: not
+          conditions:
+            - condition: state
+              entity_id:
+                - !input input_helper
+              state: Uit
+        - service: input_select.select_option
+          entity_id: !input input_helper
+          data:
+            option: Uit
+        - choose:
+          - conditions:
+              - condition: state
+                entity_id: !input reference_light
+                state: 'off'
+            sequence:
+              - service: light.turn_off
+                target: !input target_light
+          default:
+            - service: light.turn_on
+              target: !input target_light
+              data:
+                brightness: '{{states[reference_light].attributes.brightness}}'
+                xy_color: ['{{states[reference_light].attributes.xy_color[0]|float}}','{{states[reference_light].attributes.xy_color[1]|float}}']  
+    - conditions:
+        - condition: numeric_state
+          entity_id: !input power_sensor
+          above: 100
+      sequence:
+        - service: input_select.select_option
+          data:
+            entity_id: !input input_helper
+            option: Draait
+    - conditions:
+      - condition: numeric_state
+        entity_id: !input power_sensor
+        above: !input power_when_done
+      - condition: state
+        entity_id: !input input_helper
+        state: Klaar
+      sequence:
+        - service: input_select.select_option
+          entity_id: !input input_helper
+          data:
+            option: Draait
+    - conditions:
+        - condition: state
+          entity_id: !input input_helper
+          state: Klaar
+      sequence:
+        - choose:
+          - conditions:
+            - condition: state
+              entity_id: !input input_helper
+              state: Klaar
+              for:
+                minutes: 2
+            sequence:
+              - repeat:
+                  while: 
+                    - condition: state
+                      entity_id: !input input_helper
+                      state: Klaar
+                  sequence:
+                    - service: light.turn_on
+                      target: !input target_light
+                      data:
+                        brightness: 255
+                        color_name: !input target_color
+                    - service: tts.google_translate_say
+                      target: !input target_media_player
+                      data:
+                        message: "de wasmachine is klaar"
+                        language: 'nl'
+                    - delay:
+                        minutes: 10
+    - conditions:
+      - condition: numeric_state
+        entity_id: !input power_sensor
+        below: !input power_when_done
+      sequence:
+        - choose:
+          - conditions:
+            - condition: state
+              entity_id: !input input_helper
+              state: Draait
+            sequence:
+              - service: input_select.select_option
+                data:
+                  entity_id: !input input_helper
+                  option: Klaar
+          default:
+            - service: input_select.select_option
+              data:
+                entity_id: !input input_helper
+                option: Uit
