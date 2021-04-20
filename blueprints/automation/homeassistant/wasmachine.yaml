@@ -61,9 +61,8 @@ blueprint:
       name: Audio notificatie
       description: Welke media_player moet aankondigen dat de wasmachine klaar is
       selector:
-        target:
-          entity:
-            domain: media_player
+        entity:
+          domain: media_player
 
 trigger:
   - platform: numeric_state
@@ -171,7 +170,7 @@ action:
                         brightness: 255
                         color_name: !input target_color
                     - service: tts.google_translate_say
-                      target: !input target_media_player
+                      entity_id: !input target_media_player
                       data:
                         message: "de wasmachine is klaar"
                         language: 'nl'
