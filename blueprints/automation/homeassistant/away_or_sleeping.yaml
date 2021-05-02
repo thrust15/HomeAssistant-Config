@@ -1,6 +1,7 @@
 #Changelog
 #V1.0 Initial version
 #V1.1 Added climate as separate entity
+#V1.1.1 Bugfix: added person domain to person selector
 
 blueprint:
   name: Turn the right things off when you're away or when you're sleeping
@@ -15,11 +16,13 @@ blueprint:
       description: The first person we need to track the location off. This should be from the person component.
       selector:
         entity:
+          domain: person
     person_2:
       name: Person 2
       description: The seconds person we need to track the location off. This should be from the person component.
       selector:
         entity:
+          domain: person
     sleep_entity_1:
       name: sleep entity 1
       description: Entity that needs to be in a on or off state where off means sleeping
