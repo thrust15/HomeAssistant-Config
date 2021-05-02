@@ -1,5 +1,6 @@
 #Changelog
 #V1.0 Initial version
+#V1.1 Added climate as separate entity
 
 blueprint:
   name: Turn the right things off when you're away or when you're sleeping
@@ -24,6 +25,20 @@ blueprint:
       description: Entity that needs to be in a on or off state where off means sleeping
       selector:
         entity:
+    climate_entity:
+      name: climate entity
+      description: the climate entity to set the temperature on
+      selector:
+        entity:
+          domain: climate
+    climate_temperature:
+      name: climate temperature when you're sleeping or away from home
+      default: 15
+      selector:
+        number:
+          min: 4
+          max: 21
+          unit_of_measurement: degrees celcius
     sleep_entity_2:
       name: sleep entity 2
       description: Entity that needs to be in a on or off state where off means sleeping
@@ -65,6 +80,7 @@ blueprint:
       default: {}
       selector:
         target:
+    
 
 mode: queued
 
@@ -120,6 +136,10 @@ action:
           target: !input turn_on_always
         - service: homeassistant.turn_on
           target: !input turn_on_away
+        - service: climate.set_temperature
+          entity_id: !input climate_entity
+          data:
+            temperature: !input climate_temperature
     - conditions:
       - condition: and
         conditions:
@@ -142,3 +162,7 @@ action:
           target: !input turn_on_always
         - service: homeassistant.turn_on
           target: !input turn_on_sleeping
+        - service: climate.set_temperature
+          entity_id: !input climate_entity
+          data:
+            temperature: !input climate_temperature

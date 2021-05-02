@@ -49,33 +49,3 @@
       high_illuminance_threshold: '40'
       turn_light_off: true
       low_illuminance_threshold: '20'
-- id: '1618605439620'
-  alias: Wasmachine is klaar
-  description: ''
-  use_blueprint:
-    path: homeassistant/wasmachine.yaml
-    input:
-      door_sensor: binary_sensor.wasmachine_deur
-      power_sensor: sensor.shellyplug_s_df754b_power
-      power_when_done: 1.1
-      input_helper: input_select.wasmachine_state
-      target_light:
-        entity_id: light.kast_spot
-      target_color: magenta
-      reference_light: light.bank
-      target_media_player: media_player.woonkamer_google_home
-- id: '1618947534773'
-  alias: Wasmachine is klaar
-  description: ''
-  use_blueprint:
-    path: homeassistant/wasmachine.yaml
-    input:
-      door_sensor: binary_sensor.wasmachine_deur
-      power_sensor: sensor.shellyplug_s_df754b_power
-      power_when_done: 2
-      input_helper: input_select.wasmachine_status
-      target_light:
-        entity_id: light.bank
-      target_color: magenta
-      reference_light: light.eettafel
-      target_media_player: media_player.woonkamer_google_home

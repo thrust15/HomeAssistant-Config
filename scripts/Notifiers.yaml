@@ -3,7 +3,7 @@ all_notifiers:
     service: script.turn_on
     entity_id:
       - script.afvalbak_notificatie
-#      - script.wasmachine
+      - script.wasmachine
 
 afvalbak_notificatie:
   sequence:
