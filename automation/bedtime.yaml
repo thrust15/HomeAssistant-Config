@@ -1,4 +1,43 @@
 - alias: Bedtijd
+  id: bedtijd
+  trigger:
+    - platform: state
+      entity_id: input_boolean.dionne_wakker
+      to: 'off'
+    - platform: state
+      entity_id: input_boolean.nik_wakker
+      to: 'off'
+  # condition:
+  #   condition: or
+  #   conditions:
+  #     - condition: and
+  #       conditions:
+  #         - condition: state
+  #           entity_id: input_boolean.dionne_wakker
+  #           state: 'off'
+  #         - condition: state
+  #           entity_id: input_boolean.nik_wakker
+  #           state: 'off'
+  #     - condition: and
+  #       conditions:
+  #         - condition: state
+  #           entity_id: input_boolean.dionne_wakker
+  #           state: 'off'
+  #         - condition: template
+  #           value_template: '{{ states.person.nik.state != "home" }}'
+  #     - condition: and
+  #       conditions:
+  #         - condition: state
+  #           entity_id: input_boolean.nik_wakker
+  #           state: 'off'
+  #         - condition: template
+  #           value_template: '{{ states.person.dionne.state != "home" }}'
+  action:
+    service: script.turn_on
+    entity_id: script.bedtime
+
+- id: lichtuitalsslapen
+  alias: Licht uit als iemand gaat slapen
   trigger:
     - platform: state
       entity_id: input_boolean.dionne_wakker
@@ -7,30 +46,14 @@
       entity_id: input_boolean.nik_wakker
       to: 'off'
   condition:
-    condition: or
-    conditions:
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: input_boolean.dionne_wakker
-            state: 'off'
-          - condition: state
-            entity_id: input_boolean.nik_wakker
-            state: 'off'
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: input_boolean.dionne_wakker
-            state: 'off'
-          - condition: template
-            value_template: '{{ states.person.nik.state != "home" }}'
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: input_boolean.nik_wakker
-            state: 'off'
-          - condition: template
-            value_template: '{{ states.person.dionne.state != "home" }}'
+    - alias: "licht is aan"
+      condition: state
+      entity_id: light.slaapkamer
+      state: "on"
   action:
-    service: script.turn_on
-    entity_id: script.bedtime
+    - alias: "licht uit"
+      service: light.turn_off
+      target:
+        entity_id: light.slaapkamer
+      data:
+        transition: 600

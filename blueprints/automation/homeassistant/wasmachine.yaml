@@ -1,3 +1,6 @@
+# Changelog
+# V1.1 Add check if person is home before calling the notification
+
 blueprint:
   name: Wasmachine is klaar
   description: >
@@ -63,6 +66,33 @@ blueprint:
       selector:
         entity:
           domain: media_player
+    person_1:
+      name: persoon 1
+      description: Deze persoon moet thuis zijn om de notficatie te geven
+      default:
+      selector:
+        entity:
+          domain: person
+    person_2:
+      name: persoon 2
+      description: Deze persoon moet thuis zijn om de notficatie te geven
+      default:
+      selector:
+        entity:
+          domain: person
+    blocker_entity_1:
+      name: Blocker entity 1
+      description: Optional entity which blocks lights from turning on, useful for using in the bedroom when you have a sleep entity. should be an entity with a on or off state. Off means light won't turn on.
+      default:
+      selector:
+        entity:
+    blocker_entity_2:
+      name: Blocker entity 2
+      description: Optional entity which blocks lights from turning on, useful for using in the bedroom when you have a sleep entity. should be an entity with a on or off state. Off means light won't turn on.
+      default:
+      selector:
+        entity:
+    
 
 trigger:
   - platform: numeric_state
@@ -92,6 +122,10 @@ mode: restart
 
 variables:
   reference_light: !input reference_light
+  person_1: !input person_1
+  person_2: !input person_2
+  blocker_entity_1: !input blocker_entity_1
+  blocker_entity_2: !input blocker_entity_2
 
 action:
   - choose:
@@ -164,6 +198,36 @@ action:
                       entity_id: !input input_helper
                       state: Klaar
                   sequence:
+                    - condition: or
+                      conditions:
+                      - condition: and
+                        conditions:
+                        - condition: or
+                          conditions:
+                          - condition: template
+                            value_template: "{{ states[blocker_entity_1].state == 'on' }}"
+                          - condition: template
+                            value_template: "{{ blocker_entity_1 == none }}"
+                        - condition: or
+                          conditions:
+                          - condition: template
+                            value_template: "{{ states[person_1].state == 'home' }}"
+                          - condition: template
+                            value_template: "{{ person_1 == none }}"
+                      - condition: and
+                        conditions:
+                        - condition: or
+                          conditions:
+                          - condition: template
+                            value_template: "{{ states[blocker_entity_2].state == 'on' }}"
+                          - condition: template
+                            value_template: "{{ blocker_entity_2 == none }}"
+                        - condition: or
+                          conditions:
+                          - condition: template
+                            value_template: "{{ states[person_2].state == 'home' }}"
+                          - condition: template
+                            value_template: "{{ person_2 == none }}"
                     - service: light.turn_on
                       target: !input target_light
                       data:

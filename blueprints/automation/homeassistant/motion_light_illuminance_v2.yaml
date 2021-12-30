@@ -1,6 +1,7 @@
 #Changelog
 #V1.0 Initial version
 #V2.0 Added optional blocker entities which when turned off prevent light from turning on, useful when using in the bedroom.
+#V2.0.1 Added person to be home to turn on light, in some scenarios light turned on while noone was home.
 
 blueprint:
   name: Motion-activated Light with illuminance v2.0
@@ -93,13 +94,29 @@ blueprint:
       default:
       selector:
         entity:
-      
+    person_1:
+      name: persoon 1
+      description: Deze persoon moet thuis zijn om de notficatie te geven
+      default:
+      selector:
+        entity:
+          domain: person
+    person_2:
+      name: persoon 2
+      description: Deze persoon moet thuis zijn om de notficatie te geven
+      default:
+      selector:
+        entity:
+          domain: person
+
 variables:
   light_brightness_var: !input light_brightness
   light_brightness_int: '{{(light_brightness_var | float * 2.55) | round(0) }}'
   turn_light_off: !input turn_light_off
   blocker_entity_1: !input blocker_entity_1
   blocker_entity_2: !input blocker_entity_2
+  person_1: !input person_1
+  person_2: !input person_2
 
 mode: queued
 
@@ -150,12 +167,34 @@ action:
       sequence:
         - condition: or
           conditions:
-            - "{{ blocker_entity_1 == none }}"
-            - "{{ states[blocker_entity_1].state == 'on' }}"
-        - condition: or
-          conditions:
-            - "{{ blocker_entity_2 == none }}"
-            - "{{ states[blocker_entity_2].state == 'on' }}"
+          - condition: and
+            conditions:
+            - condition: or
+              conditions:
+              - condition: template
+                value_template: "{{ states[blocker_entity_1].state == 'on' }}"
+              - condition: template
+                value_template: "{{ blocker_entity_1 == none }}"
+            - condition: or
+              conditions:
+              - condition: template
+                value_template: "{{ states[person_1].state == 'home' }}"
+              - condition: template
+                value_template: "{{ person_1 == none }}"
+          - condition: and
+            conditions:
+            - condition: or
+              conditions:
+              - condition: template
+                value_template: "{{ states[blocker_entity_2].state == 'on' }}"
+              - condition: template
+                value_template: "{{ blocker_entity_2 == none }}"
+            - condition: or
+              conditions:
+              - condition: template
+                value_template: "{{ states[person_2].state == 'home' }}"
+              - condition: template
+                value_template: "{{ person_2 == none }}"
         - service: light.turn_on
           target: !input light_target
           data:

@@ -1,0 +1,204 @@
+- id: '1622521114737'
+  alias: Overkapping verlichting
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: elevation
+    above: '10'
+    id: sun_up
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: elevation
+    below: '10'
+    id: sun_down
+  - platform: state
+    entity_id: alarm_control_panel.home_alarm
+    id: alarm_panel
+  - platform: state
+    entity_id: sensor.back_person
+    id: back_person_detected
+  - platform: state
+    entity_id: sensor.back_person
+    to: '0'
+    for:
+      minutes: 5
+    id: no_back_person_detected
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        above: '10'
+      sequence:
+      - condition: not
+        conditions:
+          condition: trigger
+          id:
+            - back_person_detected
+            - no_back_person_detected
+      - service: light.turn_off
+        target:
+          entity_id: light.overkapping
+        data:
+          transition: 5
+    - conditions:
+      - condition: not
+        conditions:
+          - alias: "alarm not off"
+            condition: state
+            entity_id: alarm_control_panel.home_alarm
+            state: "disarmed"
+      sequence:
+      - alias: "person detected or not?"
+        choose:
+        - conditions:
+          - condition: not
+            conditions:  
+            - alias: "Person in backyard"
+              condition: state
+              entity_id: sensor.back_person
+              state: '0'
+              for:
+                minutes: 5
+          sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.overkapping
+            data:
+              transition: 1
+              color_temp: 370
+              brightness_pct: 100
+        default:
+        - alias: "turn light off"
+          service: light.turn_off
+          target:
+            entity_id: light.overkapping
+          data:
+            transition: 5
+    default:
+    - service: light.turn_on
+      target:
+        entity_id: light.overkapping
+      data:
+        transition: 5
+        color_temp: 370
+        brightness_pct: 100
+  mode: single
+
+- id: '161147196724'
+  alias: Achtertuin verlichting
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: elevation
+    above: '0'
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: elevation
+    below: '0'
+  - platform: state
+    entity_id: alarm_control_panel.home_alarm
+  - platform: state
+    entity_id: sensor.back_person
+  - platform: state
+    entity_id: sensor.back_person
+    to: '0'
+    for:
+      minutes: 5
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        above: '0'
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.achtertuin
+        data:
+          transition: 5
+      - service: light.turn_off
+        target:
+          entity_id: light.kerstverlichting_achtertuin
+    - conditions:
+      - condition: not
+        conditions:
+          - alias: "alarm not off"
+            condition: state
+            entity_id: alarm_control_panel.home_alarm
+            state: "disarmed"
+      sequence:
+      - alias: "person detected or not?"
+        choose:
+        - conditions:
+          - condition: not
+            conditions:  
+            - alias: "Person in backyard"
+              condition: state
+              entity_id: sensor.back_person
+              state: '0'
+              for:
+                minutes: 5
+          sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.achtertuin
+            data:
+              transition: 1
+              color_temp: 370
+              brightness_pct: 100
+          - service: light.turn_on
+            target:
+              entity_id: light.kerstverlichting_achtertuin
+        default:
+          - service: light.turn_off
+            target:
+              entity_id: light.achtertuin
+            data:
+              transition: 5
+          - service: light.turn_off
+            target:
+              entity_id: light.kerstverlichting_achtertuin
+    default:
+    - service: light.turn_on
+      target:
+        entity_id: light.achtertuin
+      data:
+        transition: 5
+        color_temp: 370
+        brightness_pct: 60
+    - service: light.turn_on
+      target:
+        entity_id: light.kerstverlichting_achtertuin
+  mode: single
+
+# - id: '1611471967240'
+#   alias: bij zonsopkomst tuinverlichting uit
+#   description: ''
+#   trigger:
+#   - platform: sun
+#     event: sunrise
+#   condition: []
+#   action:
+#   - service: light.turn_off
+#     data: {}
+#     entity_id: light.achtertuin
+#   mode: single
+# - id: '1611472021768'
+#   alias: bij zonsondergang tuinverlichting aan
+#   description: ''
+#   trigger:
+#   - platform: sun
+#     event: sunset
+#   condition: []
+#   action:
+#   - service: light.turn_on
+#     data: {}
+#     entity_id: light.achtertuin
+#   mode: single

@@ -1,27 +1,3 @@
-- id: '1611471967240'
-  alias: bij zonsopkomst tuinverlichting uit
-  description: ''
-  trigger:
-  - platform: sun
-    event: sunrise
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
-    entity_id: light.achtertuin
-  mode: single
-- id: '1611472021768'
-  alias: bij zonsondergang tuinverlichting aan
-  description: ''
-  trigger:
-  - platform: sun
-    event: sunset
-  condition: []
-  action:
-  - service: light.turn_on
-    data: {}
-    entity_id: light.achtertuin
-  mode: single
 - id: '1613331598319'
   alias: Bak notificatie om half 9
   description: Om half 9 een trigger om te checken of de bak naar buiten moet
@@ -49,3 +25,258 @@
       high_illuminance_threshold: '40'
       turn_light_off: true
       low_illuminance_threshold: '20'
+- id: '1630429802366'
+  alias: Zonnescherm
+  description: ''
+  trigger:
+  - device_id: bcfc8af6de85e13c9943ec9327a6e949
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_on
+    id: 'on'
+  - device_id: bcfc8af6de85e13c9943ec9327a6e949
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: turn_off
+    id: 'off'
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: device
+            device_id: 6193b9b3a3a052873c5530ce93afb3eb
+            domain: cover
+            entity_id: cover.zonnescherm
+            type: is_opening
+          sequence:
+          - service: cover.stop_cover
+            target:
+              device_id: 6193b9b3a3a052873c5530ce93afb3eb
+        default:
+        - service: cover.open_cover
+          target:
+            device_id: 6193b9b3a3a052873c5530ce93afb3eb
+    - conditions:
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: device
+            device_id: 6193b9b3a3a052873c5530ce93afb3eb
+            domain: cover
+            entity_id: cover.zonnescherm
+            type: is_closing
+          sequence:
+          - service: cover.stop_cover
+            target:
+              device_id: 6193b9b3a3a052873c5530ce93afb3eb
+        default:
+        - service: cover.close_cover
+          target:
+            device_id: 6193b9b3a3a052873c5530ce93afb3eb
+    default: []
+  mode: single
+- id: '1632132698565'
+  alias: Zonnescherm afstandbediening batterij
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.zonnescherm_afstandbediening_power
+  condition: []
+  action:
+  - service: notify.nik_telegram
+    data:
+      message: Batterij zonnescherm is nu {{states.sensor.zonnescherm_afstandbediening_power.state}}%
+  mode: single
+- id: '1634834046131'
+  alias: Bas high memory usage
+  description: ''
+  trigger:
+  - platform: webhook
+    webhook_id: bashighmemoryusage
+  condition: []
+  action:
+  - service: notify.nik_telegram
+    data:
+      message: Bas high memory usage
+  mode: single
+- id: '1637938739076'
+  alias: Babykamer licht uit indien geen beweging
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 3978a19b701f4163ea44d277b358a148
+    entity_id: binary_sensor.babykamer
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: device
+    type: is_on
+    device_id: b24c2edb85764923846a3bd10ebe9dbb
+    entity_id: light.babykamer
+    domain: light
+  action:
+  - type: turn_off
+    device_id: b24c2edb85764923846a3bd10ebe9dbb
+    entity_id: light.babykamer
+    domain: light
+  mode: single
+- id: '1639153587015'
+  alias: Directus notification
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.directus_production
+    from: ok
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: rest_command.directus_notification
+  mode: single
+- id: '1640192373877'
+  alias: Speurtocht
+  description: ''
+  trigger:
+  - platform: webhook
+    webhook_id: start_speurtocht
+  condition: []
+  action:
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.woonkamer_google_home
+      language: nl
+      message: Van mij krijg je geen gedicht, er is een speurtocht in het vooruitzicht,
+        volg daarom het licht, dat is nu even je plicht, zorg dat je de telefoon in
+        je hand vind, dan mis je geen hint
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - repeat:
+      until:
+      - condition: state
+        entity_id: binary_sensor.woonkamer
+        state: 'on'
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 0
+      sequence:
+      - service: light.turn_on
+        data:
+          flash: short
+        target:
+          entity_id: light.kast_spot
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+  - repeat:
+      until:
+      - condition: state
+        entity_id: binary_sensor.overloop
+        state: 'on'
+      sequence:
+      - service: light.turn_on
+        data:
+          flash: short
+        target:
+          entity_id: light.overloop_lamp
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+  - service: notify.mobile_app_iphone_van_nik
+    data:
+      message: Hij ligt niet in de kelder, denk je wel helemaal helder?
+  - repeat:
+      until:
+      - condition: state
+        entity_id: binary_sensor.slaapkamer
+        state: 'on'
+      sequence:
+      - service: light.turn_on
+        data:
+          flash: short
+        target:
+          entity_id:
+          - light.slaapkamer_kant_nik
+          - light.slaapkamer_kant_dionne
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+  - service: notify.mobile_app_iphone_van_nik
+    data:
+      message: Ach klussen kan die Jorrit zo goed, maakt een kast in een halve dag
+        als het moet. De speurtocht is nog niet geëindigd, zie jij het volgende licht?
+  - repeat:
+      until:
+      - condition: state
+        entity_id: binary_sensor.studeerkamer
+        state: 'on'
+      sequence:
+      - service: light.turn_on
+        data:
+          flash: short
+        target:
+          entity_id:
+          - light.zolder_kantoor_1
+          - light.zolder_kantoor_2
+          - light.zolder_kantoor_3
+          - light.zolder_kantoor_4
+          - light.hue_ambiance_spot_1
+          - light.hue_ambiance_spot_2
+          - light.hue_ambiance_spot_5
+          - light.hue_ambiance_spot_6
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 10
+          milliseconds: 0
+  - service: notify.mobile_app_iphone_van_nik
+    data:
+      message: 'Het einde is in zicht, maar dit keer is het geen licht. Het cadeau
+        ligt verstopt, op een plek waarin kleren worden gepropt '
+  - wait_for_trigger:
+    - platform: state
+      entity_id: binary_sensor.wasmachine_deur
+      from: 'off'
+      to: 'on'
+  - service: notify.mobile_app_iphone_van_nik
+    data:
+      message: Je hebt het cadeau, dat ging makkelijk zo. We kunnen weer naar beneden,
+        klaar met deze gekkigheden
+  - wait_for_trigger:
+    - platform: state
+      entity_id: binary_sensor.woonkamer
+      from: 'off'
+      to: 'on'
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.woonkamer_google_home
+      message: Ik hoop dat je heb genoten. Je kan wel raden wie jou heeft getrokken
+        tussen de loten.
+      language: nl
+  mode: single

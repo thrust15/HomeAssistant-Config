@@ -1,7 +1,9 @@
 - alias: 'Persoon voor de deur'
+  id: persoon-in-voortuin
   trigger:
     - platform: numeric_state
-      entity_id: image_processing.voortuin
+      # entity_id: image_processing.voortuin
+      entity_id: sensor.front_person
       above: 0
   action:
     - service: camera.record
@@ -10,19 +12,26 @@
         duration: 60
         lookback: 30
         filename: '/media/security/tensorflow/voortuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
+    - service: camera.snapshot
+      target:
+        entity_id: camera.front_person
+      data:
+        filename: /media/frigate/front_latest.jpg
     - service: notify.security_telegram
-      data_template:
+      data:
         title: "Tensorflow"
         message: "Tensorflow"
         data:
           photo:
-            file: "/config/www/tensorflow.jpg"
-            caption: "Persoon in voortuin gedetecteerd {{states.image_processing.voortuin.attributes.matches.person[0].score}}%"
+            file: /media/frigate/front_latest.jpg
+            caption: "Persoon in voortuin gedetecteerd"
 
 - alias: 'Persoon in achtertuin'
+  id: persoon-in-achtertuin
   trigger:
     - platform: numeric_state
-      entity_id: image_processing.achtertuin
+      # entity_id: image_processing.achtertuin
+      entity_id: sensor.back_person
       above: 0
   action:
     - service: camera.record
@@ -31,11 +40,16 @@
         duration: 60
         lookback: 30
         filename: '/media/security/tensorflow/achtertuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
+    - service: camera.snapshot
+      target:
+        entity_id: camera.back_person
+      data:
+        filename: /media/frigate/back_latest.jpg
     - service: notify.security_telegram
       data:
         title: "Tensorflow"
         message: "Tensorflow"
         data:
           photo:
-            file: "/config/www/tensorflow.jpg"
-            caption: "Persoon in achtertuin gedetecteerd {{states.image_processing.achtertuin.attributes.matches.person[0].score}}%"
+            file: /media/frigate/back_latest.jpg
+            caption: "Persoon in achtertuin gedetecteerd"

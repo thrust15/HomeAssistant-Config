@@ -1,4 +1,5 @@
-- alias: Mart server offline
+- alias: Statping server offline
+  id: statping
   trigger:
     platform: webhook
     webhook_id: !secret statping_webhook

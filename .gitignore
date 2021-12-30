@@ -37,3 +37,5 @@ tts
 *.mp4
 custom_components/hacs
 zigbee.db
+frigate.yml
+*.log.*

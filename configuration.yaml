@@ -18,7 +18,7 @@ homeassistant:
     - /media/security
 
 logger:
-  default: info
+  default: warning
 
 default_config:
 
@@ -73,9 +73,9 @@ discovery:
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
 
-# Recorder, keep 14 days in hass UI, rest is in grafana and influxDB
+# Recorder, keep 7 days in hass UI, rest is in grafana and influxDB
 recorder:
-  purge_keep_days: 14
+  purge_keep_days: 7
 
 # Enables support for tracking state changes over time
 history:
@@ -120,11 +120,14 @@ nest:
 
 light:
   - platform: switch
-    name: Badkamer
-    entity_id: switch.badkamer_verlichting  
-  - platform: switch
     name: Hal
     entity_id: switch.hal_verlichting
+  - platform: switch
+    name: Kerstboom
+    entity_id: switch.kerstboom
+  - platform: switch
+    name: Kerstverlichting Achtertuin
+    entity_id: switch.kerstverlichting_achtertuin
   - platform: group
     name: licht groep woonkamer
     entities:
@@ -179,13 +182,6 @@ media_player:
       'org.droidtv.nettvbrowser':
         - 'playing'
 
-#Robbie
-vacuum:
-  - platform: xiaomi_miio
-    host: 192.168.1.23
-    token: !secret robbie_token
-    name: Robbie
-
 remote:
   - platform: xiaomi_miio
     host: 192.168.1.21
@@ -225,9 +221,9 @@ notify:
       - service: mobile_app_iphone_van_dionne
 
 # Z-wave
-zwave:
-  usb_path: /dev/ttyACM0
-  device_config: !include zwave_device_config.yaml
+# zwave:
+#   usb_path: /dev/ttyACM0
+#   device_config: !include zwave_device_config.yaml
 
 stream:
 
@@ -269,12 +265,7 @@ image_processing:
     labels:
       - person
     scan_interval: 10000
-    confidence: 60
-
-tesla:
-  username: !secret tesla_username
-  password: !secret tesla_password
-  scan_interval: 3600
+    confidence: 80
 
 zone: !include zones.yaml
 input_select: !include input_select.yaml
@@ -286,3 +277,54 @@ automation old: !include_dir_merge_list automation/
 automation: !include automations.yaml
 script: !include_dir_merge_named scripts/
 switch: !include switch.yaml
+
+rest_command:
+  directus_notification:
+    url: !secret directus_notification_webhook
+    method: post
+    payload: >
+      {
+          "attachments": [
+              {
+                  "content": {
+                      "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                      "body": [
+                          {
+                              "size": "Medium",
+                              "style": "heading",
+                              "text": "Directus in status {{states.sensor.directus_production.state}}",
+                              "type": "TextBlock",
+                              "weight": "Bolder"
+                          },
+                          {
+                              "facts": [
+                                  {
+                                      "title": "Database: ",
+                                      "value": "{{states.sensor.directus_pg_response_time_status.state}} {{states.sensor.directus_pg_response_time.state}}ms"
+                                  },
+                                  {
+                                      "title": "Storage:",
+                                      "value": "{{states.sensor.directus_storage_response_status.state}} {{states.sensor.directus_storage_response_time.state}}ms"
+                                  },
+                                  {
+                                      "title": "Cache:",
+                                      "value": "{{states.sensor.directus_cache_response_status.state}} {{states.sensor.directus_cache_response_time.state}}ms"
+                                  },
+                                  {
+                                      "title": "Ratelimiter:",
+                                      "value": "{{states.sensor.directus_ratelimiter_response_status.state}} {{states.sensor.directus_ratelimiter_response_time.state}}ms"
+                                  }
+                              ],
+                              "type": "FactSet"
+                          }
+                      ],
+                      "type": "AdaptiveCard",
+                      "version": "1.5"
+                  },
+                  "contentType": "application/vnd.microsoft.card.adaptive",
+                  "contentUrl": null
+              }
+          ],
+          "type": "message"
+      }
+    content_type: "application/json"

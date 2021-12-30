@@ -4,9 +4,13 @@
 
 #- platform: zoneminder
 
-- platform: hvc
-  postalcode: !secret postalcode
-  housenumber: !secret housenumber
+- platform: hvcgroep
+  postcode: !secret postalcode
+  huisnummer: !secret housenumber
+  resources:
+    - gft
+    - plastic
+    - papier
 
 - platform: systemmonitor
   resources:
@@ -14,3 +18,121 @@
     - type: processor_use
     
 - platform: dnsip
+
+- platform: rest
+  resource: !secret directus_prod_health_url
+  name: Directus production
+  value_template: "{{ value_json.status }}"
+  timeout: 30
+  scan_interval: 60
+  headers:
+    Authorization: !secret directus_prod_token
+  json_attributes:
+    - checks
+    - releaseId
+
+- platform: template
+  sensors:
+    directus_pg_response_time:
+      friendly_name: Directus Database Response Time
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['pg:responseTime'][0]['observedValue'] }}"
+      unit_of_measurement: "ms"
+    directus_pg_response_time_status:
+      friendly_name: Directus Database Status
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['pg:responseTime'][0]['status'] }}"
+    directus_cache_response_time:
+      friendly_name: Directus Cache Response Time
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['cache:responseTime'][0]['observedValue'] }}"
+      unit_of_measurement: "ms"
+    directus_cache_response_status:
+      friendly_name: Directus Cache Status
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['cache:responseTime'][0]['status'] }}"
+    directus_ratelimiter_response_time:
+      friendly_name: Directus Ratelimiter Response Time
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['rateLimiter:responseTime'][0]['observedValue'] }}"
+      unit_of_measurement: "ms"
+    directus_ratelimiter_response_status:
+      friendly_name: Directus Ratelimiter Status
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['rateLimiter:responseTime'][0]['status'] }}"
+    directus_storage_response_time:
+      friendly_name: Directus Storage Response Time
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['storage:cloud:responseTime'][0]['observedValue'] }}"
+      unit_of_measurement: "ms"
+    directus_storage_response_status:
+      friendly_name: Directus Storage Status
+      value_template: "{{ state_attr('sensor.directus_production', 'checks') ['storage:cloud:responseTime'][0]['status'] }}"
+    directus_version:
+      friendly_name: Directus Version
+      value_template: "{{ state_attr('sensor.directus_production', 'releaseId')}}"
+
+- platform: template
+  sensors:
+    afval_vandaag:
+      friendly_name: "Vandaag"
+      value_template: >-
+        {% set afval = '' %}
+        {% if is_state_attr('sensor.hvc_groep_gft', 'day', 'Vandaag') %}
+        {% set afval = 'Groene Bak' %}
+        {% endif %}
+        {% if is_state_attr('sensor.hvc_groep_papier', 'day', 'Vandaag') %}
+          {% if afval|length %}
+            {% set afval = afval + ' + Blauwe Bak' %}
+          {% else %}
+            {% set afval = 'Blauwe Bak' %}
+          {% endif %}
+        {% endif %}
+        {% if is_state_attr('sensor.hvc_groep_plastic', 'day', 'Vandaag') %}
+          {% if afval|length %}
+            {% set afval = afval + ' + Plastic' %}
+          {% else %}
+            {% set afval = 'Plastic' %}
+          {% endif %}
+        {% endif %}
+        {% if is_state_attr('sensor.hvc_groep_restafval', 'day', 'Vandaag') %}
+          {% if afval|length %}
+            {% set afval = afval + ' + Grijze Bak' %}
+          {% else %}
+            {% set afval = 'Grijze Bak' %}
+          {% endif %}
+        {% endif %}
+        {% if afval|length %}
+          {{afval}}
+        {% else %}
+          Geen
+        {% endif %}
+
+- platform: template
+  sensors:
+    afval_morgen:
+      friendly_name: "Morgen"
+      value_template: >-
+        {% set afval = '' %}
+        {% if is_state_attr('sensor.hvc_groep_gft', 'day', 'Morgen') %}
+        {% set afval = 'Groene Bak' %}
+        {% endif %}
+        {% if is_state_attr('sensor.hvc_groep_papier', 'day', 'Morgen') %}
+          {% if afval|length %}
+            {% set afval = afval + ' + Blauwe Bak' %}
+          {% else %}
+            {% set afval = 'Blauwe Bak' %}
+          {% endif %}
+        {% endif %}
+        {% if is_state_attr('sensor.hvc_groep_plastic', 'day', 'Morgen') %}
+          {% if afval|length %}
+            {% set afval = afval + ' + Plastic' %}
+          {% else %}
+            {% set afval = 'Plastic' %}
+          {% endif %}
+        {% endif %}
+        {% if is_state_attr('sensor.hvc_groep_restafval', 'day', 'Morgen') %}
+          {% if afval|length %}
+            {% set afval = afval + ' + Grijze Bak' %}
+          {% else %}
+            {% set afval = 'Grijze Bak' %}
+          {% endif %}
+        {% endif %}
+        {% if afval|length %}
+          {{afval}}
+        {% else %}
+          Geen
+        {% endif %}

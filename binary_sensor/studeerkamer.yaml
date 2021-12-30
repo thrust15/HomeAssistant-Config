@@ -1,5 +1,5 @@
 - platform: template
   sensors:
     studeerkamer_donker:
-      value_template: '{{ (states.sensor.studeerkamer_illuminance.state | float < 8) or ((states.sensor.studeerkamer_illuminance.state | float < 25) and (states.light.zolder_kantoor.state == "on")) }}'
+      value_template: '{{ (states.sensor.studeerkamer_illuminance.state | float < 10) or ((states.sensor.studeerkamer_illuminance.state | float < 15) and (states.light.zolder_kantoor.state == "on")) }}'
       friendly_name: 'Studeerkamer Donker'

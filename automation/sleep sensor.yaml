@@ -24,7 +24,7 @@
   trigger:
     platform: numeric_state
     entity_id: sensor.slaapkamer_stekker_nik_power
-    above: 0.0
+    above: 0.5
     for:
       seconds: 5
   action:
@@ -33,9 +33,9 @@
 
 - alias: Nik wakker 15 min
   trigger:
-    platform: state
+    platform: numeric_state
     entity_id: sensor.slaapkamer_stekker_nik_power
-    to: '0.0'
+    below: 0.5
     for:
       minutes: 15
   action:

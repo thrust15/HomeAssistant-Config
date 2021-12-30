@@ -1,4 +1,4 @@
-id,x,y,brightness,transition
+profile,color_x,color_y,brightness,transition
 relax,0.5119,0.4147,144,1
 concentrate,0.5119,0.4147,219,1
 energize,0.368,0.3686,203,1

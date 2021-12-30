@@ -115,20 +115,20 @@
 - alias: 'Bescherming overbelasting droger en wasmachine'
   trigger:
     platform: template 
-    value_template: '{{(states.sensor.zolder_stekker_wasmachine_power.state | float + states.sensor.zolder_droger_stekker_power.state | float) > 3680}}'
+    value_template: '{{(states.sensor.zolder_stekker_wasmachine_power.state | float + states.sensor.droger_power.state | float) > 3680}}'
   action:
     service: switch.turn_off
-    entity_id: switch.droger_switch_16_0
+    entity_id: switch.droger
 
 - alias: 'droger aan na overbelasting'
   trigger:
     platform: template
-    value_template: '{{(states.sensor.zolder_stekker_wasmachine_power.state | float + states.sensor.zolder_droger_stekker_power.state | float) < 3680}}'
+    value_template: '{{(states.sensor.zolder_stekker_wasmachine_power.state | float + states.sensor.droger_power.state | float) < 3680}}'
   condition:
     condition: state
-    entity_id: switch.droger_switch_16_0
+    entity_id: switch.droger
     state: 'off'
   action:
     service: switch.turn_on
-    entity_id: switch.droger_switch_16_0
+    entity_id: switch.droger
 

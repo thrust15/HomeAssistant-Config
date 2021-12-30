@@ -17,8 +17,10 @@ afvalbak_notificatie:
 
 papier_bak_notificatie:
   sequence:
-    - condition: template
-      value_template: '{{(now() + timedelta( days = 1)).strftime("%Y-%m-%d") == (states.sensor.trash_papier.state)}}'
+    - alias: papierbak
+      condition: state
+      entity_id: sensor.afval_morgen
+      state: "Blauwe Bak"
     - service: light.turn_on
       entity_id: light.haldeur
       data:
@@ -27,8 +29,10 @@ papier_bak_notificatie:
 
 groene_bak_notificatie:
   sequence:
-    - condition: template
-      value_template: '{{(now() + timedelta( days = 1)).strftime("%Y-%m-%d") == (states.sensor.trash_gft.state)}}'
+    - alias: groene bak
+      condition: state
+      entity_id: sensor.afval_morgen
+      state: "Groene Bak"
     - service: light.turn_on
       entity_id: light.haldeur
       data:
@@ -37,8 +41,10 @@ groene_bak_notificatie:
 
 plastic_bak_notificatie:
   sequence:
-    - condition: template
-      value_template: '{{(now() + timedelta( days = 1)).strftime("%Y-%m-%d") == (states.sensor.trash_plastic.state)}}'
+    - alias: plastic bak
+      condition: state
+      entity_id: sensor.afval_morgen
+      state: "Plastic"
     - service: light.turn_on
       entity_id: light.haldeur
       data:

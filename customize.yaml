@@ -80,3 +80,7 @@ sensor.heemskerk_eta:
   hidden: true
 sensor.zolder_stekker_wasmachine_power:
   device_class: power
+sensor.zolder_stekker_wasmachine_energy:
+  state_class: measurement
+  last_reset: '0'
+

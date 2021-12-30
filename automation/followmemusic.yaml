@@ -80,6 +80,7 @@
         master: media_player.woonkamer
 
 - alias: Muziek slaapkamer uit
+  id: muziek_slaapkamer_uit
   trigger:
     - platform: state
       entity_id: binary_sensor.slaapkamer
