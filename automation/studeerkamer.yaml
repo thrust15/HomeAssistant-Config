@@ -1,4 +1,5 @@
 - alias: beweging studeerkamer
+  id: beweging studeerkamer
   trigger:
     - platform: state
       entity_id: binary_sensor.studeerkamer
@@ -20,6 +21,7 @@
     entity_id: light.zolder_kantoor
 
 - alias: geen beweging studeerkamer
+  id: geen_beweging_studeerkamer
   trigger:
     - platform: state
       entity_id: binary_sensor.studeerkamer
@@ -43,6 +45,9 @@
             entity_id: device_tracker.macbook_pro
             attribute: ap_mac
             state: '68:d7:9a:45:d8:35'
+          - condition: state
+            entity_id: binary_sensor.studeerkamer_donker
+            state: 'on'
   action:
     service: light.turn_off
     entity_id: light.zolder_kantoor

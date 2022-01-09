@@ -24,6 +24,16 @@
     for:
       minutes: 5
     id: no_back_person_detected
+  - platform: state
+    entity_id: binary_sensor.overkapping
+    from: "off"
+    to: "on"
+  - platform: state
+    entity_id: binary_sensor.overkapping
+    from: "on"
+    to: "off"
+    for:
+      minutes: 15
   condition: []
   action:
   - choose:
@@ -79,13 +89,31 @@
           data:
             transition: 5
     default:
-    - service: light.turn_on
-      target:
-        entity_id: light.overkapping
-      data:
-        transition: 5
-        color_temp: 370
-        brightness_pct: 100
+    - alias: "Full strength or half"
+      choose:
+      - conditions:
+          - alias: "no motion"
+            condition: state
+            entity_id: binary_sensor.overkapping
+            state: "off"
+            for:
+              minutes: 15
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.overkapping
+            data:
+              transition: 5
+              color_temp: 370
+              brightness_pct: 50
+      default:
+        - service: light.turn_on
+          target:
+            entity_id: light.overkapping
+          data:
+            transition: 5
+            color_temp: 370
+            brightness_pct: 100
   mode: single
 
 - id: '161147196724'
@@ -123,9 +151,9 @@
           entity_id: light.achtertuin
         data:
           transition: 5
-      - service: light.turn_off
-        target:
-          entity_id: light.kerstverlichting_achtertuin
+      # - service: light.turn_off
+      #   target:
+      #     entity_id: light.kerstverlichting_achtertuin
     - conditions:
       - condition: not
         conditions:
@@ -153,18 +181,18 @@
               transition: 1
               color_temp: 370
               brightness_pct: 100
-          - service: light.turn_on
-            target:
-              entity_id: light.kerstverlichting_achtertuin
+          # - service: light.turn_on
+          #   target:
+          #     entity_id: light.kerstverlichting_achtertuin
         default:
           - service: light.turn_off
             target:
               entity_id: light.achtertuin
             data:
               transition: 5
-          - service: light.turn_off
-            target:
-              entity_id: light.kerstverlichting_achtertuin
+          # - service: light.turn_off
+          #   target:
+          #     entity_id: light.kerstverlichting_achtertuin
     default:
     - service: light.turn_on
       target:
@@ -173,9 +201,9 @@
         transition: 5
         color_temp: 370
         brightness_pct: 60
-    - service: light.turn_on
-      target:
-        entity_id: light.kerstverlichting_achtertuin
+    # - service: light.turn_on
+    #   target:
+    #     entity_id: light.kerstverlichting_achtertuin
   mode: single
 
 # - id: '1611471967240'

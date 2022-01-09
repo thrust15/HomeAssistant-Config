@@ -82,7 +82,54 @@
     service: script.turn_on
     entity_id: script.wasmachine
 
+- alias: 'Reset wasmachine'
+  id: reset_wasmachine
+  trigger:
+    platform: state
+    entity_id: input_select.wasmachine_state
+    from: 'Klaar'
+  action:
+    - alias: "hoe kopieer ik de lamp"
+      choose:
+      - conditions:
+          - condition: state
+            entity_id: light.bank
+            state: 'off'
+        sequence:
+          - service: light.turn_off
+            entity_id: light.kast_spot
+      - conditions:
+          - condition: state
+            entity_id: light.bank
+            state: 'on'
+        sequence:
+          - alias: "choose alias (name)"
+            choose:
+            - conditions:
+                  condition: state
+                  entity_id: light.bank
+                  attribute: color_mode
+                  state: color_temp
+              sequence:
+                    service: light.turn_on
+                    entity_id: light.kast_spot
+                    data_template:
+                      brightness: '{{state_attr("light.bank", "brightness")}}'
+                      color_temp: '{{state_attr("light.bank", "color_temp")}}'
+            - conditions:
+                  condition: state
+                  entity_id: light.bank
+                  attribute: color_mode
+                  state: xy
+              sequence:
+                    service: light.turn_on
+                    entity_id: light.kast_spot
+                    data_template:
+                      brightness: '{{state_attr("light.bank", "brightness")}}'
+                      xy_color: ['{{state_attr("light.bank", "xy_color")[0]}}','{{state_attr("light.bank", "xy_color")[1]}}']
+
 - alias: 'Reset wasmachine licht donker'
+  id: reset_wasmachine_licht_donker
   trigger:
     platform: state
     entity_id: input_select.wasmachine_state
@@ -96,7 +143,7 @@
     entity_id: light.kast_spot
     data_template:
       brightness: '{{states.light.bank.attributes.brightness}}'
-      #color_temp: '{{states.light.bank.attributes.color_temp}}'
+      color_temp: '{{states.light.bank.attributes.color_temp}}'
       xy_color: ['{{states.light.bank.attributes.xy_color[0]|float}}','{{states.light.bank.attributes.xy_color[1]|float}}']
 
 - alias: 'Reset wasmachine licht niet donker'
