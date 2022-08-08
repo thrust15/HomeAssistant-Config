@@ -34,22 +34,6 @@ binary_sensor.slaapkamer_raam:
   device_class: window
 binary_sensor.woonkamer:
   device_class: motion
-sensor.sn1_humidity:
-  device_class: humidity
-sensor.sn1_ldr:
-  device_class: illuminance
-sensor.sn1_real_feel:
-  device_class: temperature
-sensor.sn1_temperature:
-  device_class: temperature
-sensor.sn2_humidity:
-  device_class: humidity
-sensor.sn2_ldr:
-  device_class: illuminance
-sensor.sn2_real_feel:
-  device_class: temperature
-sensor.sn2_temperature:
-  device_class: temperature
 sensor.badkamer_vochtigheid:
   device_class: humidity
 sensor.badkamer_licht:

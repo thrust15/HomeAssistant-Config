@@ -62,9 +62,9 @@
       from: 'playing'
       to: 'paused'
     - platform: event
-      event_type: ios.notification_action_fired
+      event_type: mobile_app_notification_action
       event_data:
-        actionName: SNOOZE
+        action: SNOOZE
   condition:
     condition: state
     entity_id: script.alarm
@@ -80,9 +80,9 @@
       from: 'off'
       to: 'on'
     - platform: event
-      event_type: ios.notification_action_fired
+      event_type: mobile_app_notification_action
       event_data:
-        actionName: WEKKER_UIT
+        action: WEKKER_UIT
   action:
     service: script.turn_on
     entity_id: script.stop_snooze

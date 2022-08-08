@@ -39,7 +39,7 @@
       - condition: and
         conditions:
           - condition: state
-            entity_id: binary_sensor.macbook_pro_active
+            entity_id: binary_sensor.niks_macbook_pro_active
             state: 'on'
           - condition: state
             entity_id: device_tracker.macbook_pro

@@ -39,3 +39,4 @@ custom_components/hacs
 zigbee.db
 frigate.yml
 *.log.*
+music_assistant.db

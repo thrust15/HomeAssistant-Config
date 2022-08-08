@@ -111,7 +111,7 @@ blueprint:
 
 variables:
   light_brightness_var: !input light_brightness
-  light_brightness_int: '{{(light_brightness_var | float * 2.55) | round(0) }}'
+  light_brightness_int: '{{(light_brightness_var | float(default=0) * 2.55) | round(0) }}'
   turn_light_off: !input turn_light_off
   blocker_entity_1: !input blocker_entity_1
   blocker_entity_2: !input blocker_entity_2

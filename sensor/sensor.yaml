@@ -16,8 +16,6 @@
   resources:
     - type: memory_use_percent
     - type: processor_use
-    
-- platform: dnsip
 
 - platform: rest
   resource: !secret directus_prod_health_url

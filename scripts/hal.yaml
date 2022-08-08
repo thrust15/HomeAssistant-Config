@@ -63,7 +63,7 @@ sonos_say:
       entity_id:
         - media_player.slaapkamer
         - media_player.strijkkamer
-    - service: sonos.unjoin
+    - service: media_player.unjoin
       entity_id:
         - media_player.slaapkamer
         - media_player.strijkkamer

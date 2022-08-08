@@ -157,7 +157,7 @@ action:
               target: !input target_light
               data:
                 brightness: '{{states[reference_light].attributes.brightness}}'
-                xy_color: ['{{states[reference_light].attributes.xy_color[0]|float}}','{{states[reference_light].attributes.xy_color[1]|float}}']  
+                xy_color: ['{{states[reference_light].attributes.xy_color[0]|float(default=0)}}','{{states[reference_light].attributes.xy_color[1]|float(default=0)}}']  
     - conditions:
         - condition: numeric_state
           entity_id: !input power_sensor

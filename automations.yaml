@@ -25,77 +25,6 @@
       high_illuminance_threshold: '40'
       turn_light_off: true
       low_illuminance_threshold: '20'
-- id: '1630429802366'
-  alias: Zonnescherm
-  description: ''
-  trigger:
-  - device_id: bcfc8af6de85e13c9943ec9327a6e949
-    domain: zha
-    platform: device
-    type: remote_button_short_press
-    subtype: turn_on
-    id: 'on'
-  - device_id: bcfc8af6de85e13c9943ec9327a6e949
-    domain: zha
-    platform: device
-    type: remote_button_short_press
-    subtype: turn_off
-    id: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: 'on'
-      sequence:
-      - choose:
-        - conditions:
-          - condition: device
-            device_id: 6193b9b3a3a052873c5530ce93afb3eb
-            domain: cover
-            entity_id: cover.zonnescherm
-            type: is_opening
-          sequence:
-          - service: cover.stop_cover
-            target:
-              device_id: 6193b9b3a3a052873c5530ce93afb3eb
-        default:
-        - service: cover.open_cover
-          target:
-            device_id: 6193b9b3a3a052873c5530ce93afb3eb
-    - conditions:
-      - condition: trigger
-        id: 'off'
-      sequence:
-      - choose:
-        - conditions:
-          - condition: device
-            device_id: 6193b9b3a3a052873c5530ce93afb3eb
-            domain: cover
-            entity_id: cover.zonnescherm
-            type: is_closing
-          sequence:
-          - service: cover.stop_cover
-            target:
-              device_id: 6193b9b3a3a052873c5530ce93afb3eb
-        default:
-        - service: cover.close_cover
-          target:
-            device_id: 6193b9b3a3a052873c5530ce93afb3eb
-    default: []
-  mode: single
-- id: '1632132698565'
-  alias: Zonnescherm afstandbediening batterij
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.zonnescherm_afstandbediening_power
-  condition: []
-  action:
-  - service: notify.nik_telegram
-    data:
-      message: Batterij zonnescherm is nu {{states.sensor.zonnescherm_afstandbediening_power.state}}%
-  mode: single
 - id: '1634834046131'
   alias: Bas high memory usage
   description: ''
@@ -279,4 +208,44 @@
       message: Ik hoop dat je heb genoten. Je kan wel raden wie jou heeft getrokken
         tussen de loten.
       language: nl
+  mode: single
+- id: '1649147181462'
+  alias: Firealarm Smoke detected
+  description: ''
+  trigger:
+  - type: smoke
+    platform: device
+    device_id: b62bd122651666f90d498e8be0a400e2
+    entity_id: binary_sensor.rookmelder_keuken_smoke_alarm_smoke_detected
+    domain: binary_sensor
+  - type: smoke
+    platform: device
+    device_id: 408ea91b62274b73d8ab44479c40ec3f
+    entity_id: binary_sensor.rookmelder_overloop_smoke_alarm_smoke_detected
+    domain: binary_sensor
+  - type: smoke
+    platform: device
+    device_id: 4eb3684153a1b21e7626084e60014a55
+    entity_id: binary_sensor.rookmelder_zolder_smoke_alarm_smoke_detected
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.mobile_app_iphone_van_nik
+    data:
+      message: Rookmelder gaat af
+      title: BRAND!
+      data:
+        sound:
+          name: Alarm_Haptic.caf
+          critical: 1
+          volume: 1
+  - service: notify.mobile_app_iphone_van_dionne
+    data:
+      title: BRAND!
+      message: Rookmelder gaat af
+      data:
+        sound:
+          name: Alarm_Haptic.caf
+          critical: 1
+          volume: 1
   mode: single

@@ -18,16 +18,17 @@
         entity_id: media_player.woonkamer
         state: 'playing'
       - condition: template
-        value_template: '{{states.media_player.strijkkamer.attributes.sonos_group[0] != "media_player.woonkamer"}}'
+        value_template: '{{states.media_player.strijkkamer.attributes.group_members[0] != "media_player.woonkamer"}}'
   action:
     - service: media_player.volume_set
       entity_id: media_player.strijkkamer
       data:
         volume_level: 0.05
-    - service: sonos.join
-      entity_id: media_player.strijkkamer
+    - service: media_player.join
+      entity_id: media_player.woonkamer
       data:
-        master: media_player.woonkamer
+        group_members:
+          - media_player.slaapkamer
 
 - alias: Muziek strijkkamer uit
   trigger:
@@ -38,9 +39,9 @@
       minutes: 15
   condition:
     condition: template
-    value_template: '{{states.media_player.strijkkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
+    value_template: '{{states.media_player.strijkkamer.attributes.group_members[0] == "media_player.woonkamer"}}'
   action:
-    - service: sonos.unjoin
+    - service: media_player.unjoin
       entity_id: media_player.strijkkamer
 
 - alias: Muziek slaapkamer aan
@@ -68,16 +69,17 @@
         entity_id: media_player.woonkamer
         state: 'playing'
       - condition: template
-        value_template: '{{states.media_player.slaapkamer.attributes.sonos_group[0] != "media_player.woonkamer"}}'
+        value_template: '{{states.media_player.slaapkamer.attributes.group_members[0] != "media_player.woonkamer"}}'
   action:
     - service: media_player.volume_set
       entity_id: media_player.slaapkamer
       data:
         volume_level: 0.10
-    - service: sonos.join
-      entity_id: media_player.slaapkamer
+    - service: media_player.join
+      entity_id: media_player.woonkamer
       data:
-        master: media_player.woonkamer
+        group_members:
+          - media_player.slaapkamer
 
 - alias: Muziek slaapkamer uit
   id: muziek_slaapkamer_uit
@@ -95,9 +97,9 @@
         # IF player is grouped
         - conditions:
             - condition: template
-              value_template: '{{states.media_player.slaapkamer.attributes.sonos_group[0] == "media_player.woonkamer"}}'
+              value_template: '{{states.media_player.slaapkamer.attributes.group_members[0] == "media_player.woonkamer"}}'
           sequence:
-            - service: sonos.unjoin
+            - service: media_player.unjoin
               entity_id: media_player.slaapkamer
       # ELSE (Player not grouped)
       default:
@@ -116,9 +118,9 @@
     entity_id: group.wakker
     state: 'on'
   action:
-    - service: sonos.unjoin
+    - service: media_player.unjoin
       entity_id: media_player.strijkkamer
-    - service: sonos.unjoin
+    - service: media_player.unjoin
       entity_id: media_player.slaapkamer
     - delay:
         seconds: 2

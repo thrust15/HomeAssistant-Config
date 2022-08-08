@@ -12,6 +12,10 @@
     service: light.turn_on
     entity_id:
       - light.hal
+    data:
+      brightness_pct: 60
+      transition: 3
+      color_temp: 425
 
 - alias: Hal licht uit geen beweging
   trigger:
@@ -23,6 +27,8 @@
     service: light.turn_off
     entity_id:
       - light.hal
+    data:
+      transition: 3
 
 - alias: Deurbel
   id: deurbel

@@ -1,15 +1,3 @@
-- platform: ping
-  host: 192.168.1.166
-  name: "Nintendo Switch"
-  count: 5
-  scan_interval: 10
-
-- platform: ping
-  host: 192.168.1.75
-  name: "Playstation 5"
-  count: 5
-  scan_interval: 10
-
 - platform: workday
   country: NL
 

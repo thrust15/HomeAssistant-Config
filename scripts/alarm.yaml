@@ -55,8 +55,13 @@ alarm:
       data:
         title: 'Wekker'
         data:
+          actions:
+            - action: 'SNOOZE'
+              title: 'Snooze'
+            - action: 'WEKKER_UIT'
+              title: 'Wekker uit'
+              destructive: true
           push:
-            category: 'wekker'
             sound: "US-EN-Morgan-Freeman-Good-Morning.wav"
       data_template:
         message: '{{states.sensor.nik_to_work.state}} minuten naar werk'

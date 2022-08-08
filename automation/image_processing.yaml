@@ -1,4 +1,6 @@
 - alias: 'Persoon voor de deur'
+  mode: queued
+  max: 5
   id: persoon-in-voortuin
   trigger:
     - platform: numeric_state
@@ -25,9 +27,12 @@
           photo:
             file: /media/frigate/front_latest.jpg
             caption: "Persoon in voortuin gedetecteerd"
+    - delay: 60
 
 - alias: 'Persoon in achtertuin'
   id: persoon-in-achtertuin
+  mode: queued
+  max: 5
   trigger:
     - platform: numeric_state
       # entity_id: image_processing.achtertuin
@@ -53,3 +58,4 @@
           photo:
             file: /media/frigate/back_latest.jpg
             caption: "Persoon in achtertuin gedetecteerd"
+    - delay: 60

@@ -1,11 +1,34 @@
 # - alias: media player control
 #   trigger:
-- alias: reset robbie
+
+- alias: increment counter robbie
+  id: increment_counter_robbie
   trigger:
-    platform: time
-    at: '04:59:00'
+    - platform: state
+      entity_id: vacuum.robbie
+      to: cleaning
   action:
-    service: input_boolean.turn_off
-    entity_id: input_boolean.robbie
+    service: counter.increment
+    entity_id: counter.robbie_runs_after_emptying_dustbin
 
-
+- alias: robbie goes to bin
+  id: robbie_goes_to_bin
+  trigger:
+    - platform: state
+      entity_id: vacuum.robbie
+      to: docked
+  condition:
+    - alias: "10 runs passed"
+      condition: numeric_state
+      entity_id: counter.robbie_runs_after_emptying_dustbin
+      above: 9
+  action:
+    - alias: "go to bin"
+      service: mqtt.publish
+      data:
+        topic: Robbie/Robbie/GoToLocationCapability/go/set
+        payload: 2e2ff133-96ac-4fa6-b471-e01d53103232
+    - alias: "reset counter"
+      service: counter.reset
+      target:
+        entity_id: counter.robbie_runs_after_emptying_dustbin
