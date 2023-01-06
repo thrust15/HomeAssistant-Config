@@ -41,6 +41,11 @@ zigbee.db
 frigate.yml
 *.log.*
 music_assistant.db
-config/www
+www
 *.db
-zigbee2mqtt/configuration.yaml
+zigbee2mqtt
+custom_components
+esphome/*
+!esphome/*.yaml
+!esphome/.gitignore
+themes
