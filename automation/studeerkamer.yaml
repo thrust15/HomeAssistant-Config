@@ -28,23 +28,25 @@
       from: 'on'
       to: 'off'
       for:
-        minutes: 15
+        minutes: 5
     - platform: state
       entity_id: binary_sensor.studeerkamer_donker
       from: 'on'
       to: 'off'
+    - platform: state
+      entity_id: binary_sensor.monitor_on
+      from: "on"
+      to: "off"
+      for:
+        minutes: 5
   condition:
   - condition: not
     conditions:
       - condition: and
         conditions:
           - condition: state
-            entity_id: binary_sensor.niks_macbook_pro_active
+            entity_id: binary_sensor.monitor_on
             state: 'on'
-          - condition: state
-            entity_id: device_tracker.macbook_pro
-            attribute: ap_mac
-            state: '68:d7:9a:45:d8:35'
           - condition: state
             entity_id: binary_sensor.studeerkamer_donker
             state: 'on'

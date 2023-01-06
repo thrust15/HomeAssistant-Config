@@ -26,6 +26,7 @@ known_devices.yaml
 *.db-journal
 *.db-shm
 *.db-wal
+*.db.old
 __pycache__
 secrets.yaml
 ssl
@@ -35,8 +36,11 @@ tts
 *.srt
 *.mkv
 *.mp4
-custom_components/hacs
+custom_components
 zigbee.db
 frigate.yml
 *.log.*
 music_assistant.db
+config/www
+*.db
+zigbee2mqtt/configuration.yaml

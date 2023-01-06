@@ -128,7 +128,7 @@ trigger:
   - platform: state
     entity_id: !input motion_entity
     from: "on"
-    to:  "off"
+    to: "off"
     for:
       minutes: !input no_motion_wait
   - platform: numeric_state

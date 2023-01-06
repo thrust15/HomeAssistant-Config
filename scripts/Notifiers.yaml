@@ -8,7 +8,7 @@ all_notifiers:
 afvalbak_notificatie:
   sequence:
     - condition: time
-      after: '20:30:00'
+      before: '09:30:00'
     - service: script.turn_on
       entity_id:
         - script.papier_bak_notificatie
@@ -19,7 +19,7 @@ papier_bak_notificatie:
   sequence:
     - alias: papierbak
       condition: state
-      entity_id: sensor.afval_morgen
+      entity_id: sensor.afval_vandaag
       state: "Blauwe Bak"
     - service: light.turn_on
       entity_id: light.haldeur
@@ -31,7 +31,7 @@ groene_bak_notificatie:
   sequence:
     - alias: groene bak
       condition: state
-      entity_id: sensor.afval_morgen
+      entity_id: sensor.afval_vandaag
       state: "Groene Bak"
     - service: light.turn_on
       entity_id: light.haldeur
@@ -43,7 +43,7 @@ plastic_bak_notificatie:
   sequence:
     - alias: plastic bak
       condition: state
-      entity_id: sensor.afval_morgen
+      entity_id: sensor.afval_vandaag
       state: "Plastic"
     - service: light.turn_on
       entity_id: light.haldeur

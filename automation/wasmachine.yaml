@@ -179,3 +179,49 @@
     service: switch.turn_on
     entity_id: switch.droger
 
+# - alias: 'droger status'
+#   id: droger-status
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.droger_power
+#       above: 100
+#       id: highpower
+#     - platform: numeric_state
+#       entity_id: sensor.droger_power
+#       below: 0.1
+#       id: nopower
+#     - platform: state
+#       entity_id: binary_sensor.droger_deursensor_contact
+#       to: 'on'
+#       id: dooropen
+#     - platform: numeric_state
+#       entity_id: sensor.droger_power
+#       above: 0.1
+#       id: lowpower
+#     - platform: state
+#       entity_id: input_select.droger_state
+#       to: 'Klaar'
+#       for:
+#         minutes: 1
+#       id: done
+#   action:    
+#     - alias: "In welke staat is de droger?"
+#       choose:
+#       - conditions:
+#           condition: trigger
+#           id: highpower
+#         sequence:
+#           service: input_select.select_option
+#           data:
+#             entity_id: input_select.droger_state
+#             option: Draait
+#       - conditions:
+#           condition
+#         sequence:
+#           action
+#       - conditions:
+#           condition
+#         sequence:
+#           action
+#       default:
+#           action

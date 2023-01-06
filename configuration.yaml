@@ -16,6 +16,7 @@ homeassistant:
   internal_url: http://192.168.1.15:8123
   allowlist_external_dirs:
     - /media/security
+  country: NL
 
 logger:
   default: warning
@@ -102,11 +103,6 @@ tts:
 # Cloud
 #cloud:
 
-#setting up nest
-nest:
-  client_id: !secret nest_client_id
-  client_secret: !secret nest_client_secret
-
 light:
   - platform: switch
     name: Hal
@@ -185,4 +181,6 @@ group: !include_dir_merge_named group/
 automation old: !include_dir_merge_list automation/
 automation: !include automations.yaml
 script: !include_dir_merge_named scripts/
+script ui: !include scripts.yaml
 switch: !include switch.yaml
+template: !include_dir_merge_list template/

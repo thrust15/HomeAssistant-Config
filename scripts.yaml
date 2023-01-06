@@ -1,0 +1,8 @@
+sonos_say_script:
+  alias: Text-to-Speech on Sonos
+  use_blueprint:
+    path: Talvish/sonos_say.yaml
+    input:
+      tts_language: nl
+  mode: single
+  icon: mdi:voicemail

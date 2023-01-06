@@ -2,24 +2,22 @@
   alias: Overkapping verlichting
   description: ''
   trigger:
-  - platform: numeric_state
-    entity_id: sun.sun
-    attribute: elevation
-    above: '10'
+  - platform: sun
+    event: sunrise
+    offset: "+00:30:00"
     id: sun_up
-  - platform: numeric_state
-    entity_id: sun.sun
-    attribute: elevation
-    below: '10'
+  - platform: sun
+    event: sunset
+    offset: "-00:30:00"
     id: sun_down
   - platform: state
     entity_id: alarm_control_panel.home_alarm
     id: alarm_panel
   - platform: state
-    entity_id: sensor.back_person
+    entity_id: sensor.back_person_count
     id: back_person_detected
   - platform: state
-    entity_id: sensor.back_person
+    entity_id: sensor.back_person_count
     to: '0'
     for:
       minutes: 5
@@ -38,10 +36,11 @@
   action:
   - choose:
     - conditions:
-      - condition: numeric_state
-        entity_id: sun.sun
-        attribute: elevation
-        above: '10'
+      - condition: sun
+        after: sunrise
+        after_offset: "+00:30:00"
+        before: sunset
+        before_offset: "-00:30:00"
       sequence:
       - condition: not
         conditions:
@@ -69,7 +68,7 @@
             conditions:  
             - alias: "Person in backyard"
               condition: state
-              entity_id: sensor.back_person
+              entity_id: sensor.back_person_count
               state: '0'
               for:
                 minutes: 5
@@ -131,9 +130,9 @@
   - platform: state
     entity_id: alarm_control_panel.home_alarm
   - platform: state
-    entity_id: sensor.back_person
+    entity_id: sensor.back_person_count
   - platform: state
-    entity_id: sensor.back_person
+    entity_id: sensor.back_person_count
     to: '0'
     for:
       minutes: 5
@@ -151,9 +150,6 @@
           entity_id: light.achtertuin
         data:
           transition: 5
-      # - service: light.turn_off
-      #   target:
-      #     entity_id: light.kerstverlichting_achtertuin
     - conditions:
       - condition: not
         conditions:
@@ -169,7 +165,7 @@
             conditions:  
             - alias: "Person in backyard"
               condition: state
-              entity_id: sensor.back_person
+              entity_id: sensor.back_person_count
               state: '0'
               for:
                 minutes: 5
@@ -181,18 +177,12 @@
               transition: 1
               color_temp: 370
               brightness_pct: 100
-          # - service: light.turn_on
-          #   target:
-          #     entity_id: light.kerstverlichting_achtertuin
         default:
           - service: light.turn_off
             target:
               entity_id: light.achtertuin
             data:
               transition: 5
-          # - service: light.turn_off
-          #   target:
-          #     entity_id: light.kerstverlichting_achtertuin
     default:
     - service: light.turn_on
       target:
@@ -201,32 +191,4 @@
         transition: 5
         color_temp: 370
         brightness_pct: 60
-    # - service: light.turn_on
-    #   target:
-    #     entity_id: light.kerstverlichting_achtertuin
   mode: single
-
-# - id: '1611471967240'
-#   alias: bij zonsopkomst tuinverlichting uit
-#   description: ''
-#   trigger:
-#   - platform: sun
-#     event: sunrise
-#   condition: []
-#   action:
-#   - service: light.turn_off
-#     data: {}
-#     entity_id: light.achtertuin
-#   mode: single
-# - id: '1611472021768'
-#   alias: bij zonsondergang tuinverlichting aan
-#   description: ''
-#   trigger:
-#   - platform: sun
-#     event: sunset
-#   condition: []
-#   action:
-#   - service: light.turn_on
-#     data: {}
-#     entity_id: light.achtertuin
-#   mode: single

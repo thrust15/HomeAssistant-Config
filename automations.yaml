@@ -25,20 +25,8 @@
       high_illuminance_threshold: '40'
       turn_light_off: true
       low_illuminance_threshold: '20'
-- id: '1634834046131'
-  alias: Bas high memory usage
-  description: ''
-  trigger:
-  - platform: webhook
-    webhook_id: bashighmemoryusage
-  condition: []
-  action:
-  - service: notify.nik_telegram
-    data:
-      message: Bas high memory usage
-  mode: single
 - id: '1637938739076'
-  alias: Babykamer licht uit indien geen beweging
+  alias: Noud's kamer licht uit indien geen beweging
   description: ''
   trigger:
   - type: no_motion
@@ -63,152 +51,6 @@
     entity_id: light.babykamer
     domain: light
   mode: single
-- id: '1639153587015'
-  alias: Directus notification
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.directus_production
-    from: ok
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-      milliseconds: 0
-  condition: []
-  action:
-  - service: rest_command.directus_notification
-  mode: single
-- id: '1640192373877'
-  alias: Speurtocht
-  description: ''
-  trigger:
-  - platform: webhook
-    webhook_id: start_speurtocht
-  condition: []
-  action:
-  - service: tts.google_translate_say
-    data:
-      entity_id: media_player.woonkamer_google_home
-      language: nl
-      message: Van mij krijg je geen gedicht, er is een speurtocht in het vooruitzicht,
-        volg daarom het licht, dat is nu even je plicht, zorg dat je de telefoon in
-        je hand vind, dan mis je geen hint
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 10
-      milliseconds: 0
-  - repeat:
-      until:
-      - condition: state
-        entity_id: binary_sensor.woonkamer
-        state: 'on'
-        for:
-          hours: 0
-          minutes: 0
-          seconds: 0
-      sequence:
-      - service: light.turn_on
-        data:
-          flash: short
-        target:
-          entity_id: light.kast_spot
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 10
-          milliseconds: 0
-  - repeat:
-      until:
-      - condition: state
-        entity_id: binary_sensor.overloop
-        state: 'on'
-      sequence:
-      - service: light.turn_on
-        data:
-          flash: short
-        target:
-          entity_id: light.overloop_lamp
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 10
-          milliseconds: 0
-  - service: notify.mobile_app_iphone_van_nik
-    data:
-      message: Hij ligt niet in de kelder, denk je wel helemaal helder?
-  - repeat:
-      until:
-      - condition: state
-        entity_id: binary_sensor.slaapkamer
-        state: 'on'
-      sequence:
-      - service: light.turn_on
-        data:
-          flash: short
-        target:
-          entity_id:
-          - light.slaapkamer_kant_nik
-          - light.slaapkamer_kant_dionne
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 10
-          milliseconds: 0
-  - service: notify.mobile_app_iphone_van_nik
-    data:
-      message: Ach klussen kan die Jorrit zo goed, maakt een kast in een halve dag
-        als het moet. De speurtocht is nog niet geëindigd, zie jij het volgende licht?
-  - repeat:
-      until:
-      - condition: state
-        entity_id: binary_sensor.studeerkamer
-        state: 'on'
-      sequence:
-      - service: light.turn_on
-        data:
-          flash: short
-        target:
-          entity_id:
-          - light.zolder_kantoor_1
-          - light.zolder_kantoor_2
-          - light.zolder_kantoor_3
-          - light.zolder_kantoor_4
-          - light.hue_ambiance_spot_1
-          - light.hue_ambiance_spot_2
-          - light.hue_ambiance_spot_5
-          - light.hue_ambiance_spot_6
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 10
-          milliseconds: 0
-  - service: notify.mobile_app_iphone_van_nik
-    data:
-      message: 'Het einde is in zicht, maar dit keer is het geen licht. Het cadeau
-        ligt verstopt, op een plek waarin kleren worden gepropt '
-  - wait_for_trigger:
-    - platform: state
-      entity_id: binary_sensor.wasmachine_deur
-      from: 'off'
-      to: 'on'
-  - service: notify.mobile_app_iphone_van_nik
-    data:
-      message: Je hebt het cadeau, dat ging makkelijk zo. We kunnen weer naar beneden,
-        klaar met deze gekkigheden
-  - wait_for_trigger:
-    - platform: state
-      entity_id: binary_sensor.woonkamer
-      from: 'off'
-      to: 'on'
-  - service: tts.google_translate_say
-    data:
-      entity_id: media_player.woonkamer_google_home
-      message: Ik hoop dat je heb genoten. Je kan wel raden wie jou heeft getrokken
-        tussen de loten.
-      language: nl
-  mode: single
 - id: '1649147181462'
   alias: Firealarm Smoke detected
   description: ''
@@ -230,22 +72,329 @@
     domain: binary_sensor
   condition: []
   action:
-  - service: notify.mobile_app_iphone_van_nik
+  - service: notify.mobile_app_iphone
     data:
-      message: Rookmelder gaat af
       title: BRAND!
+      message: Rookmelder gaat af
       data:
-        sound:
-          name: Alarm_Haptic.caf
-          critical: 1
-          volume: 1
+        push:
+          sound:
+            name: Alarm_Haptic.caf
+            critical: 1
+            volume: 1
   - service: notify.mobile_app_iphone_van_dionne
     data:
       title: BRAND!
       message: Rookmelder gaat af
       data:
-        sound:
-          name: Alarm_Haptic.caf
-          critical: 1
-          volume: 1
+        push:
+          sound:
+            name: Alarm_Haptic.caf
+            critical: 1
+            volume: 1
+  mode: single
+- id: '1664182591940'
+  alias: Zolder slaapkamer licht aan/uit
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light_illuminance_v2.yaml
+    input:
+      motion_entity: binary_sensor.zolder_slaapkamer
+      light_target:
+        entity_id: light.zolder_slaapkamer
+      no_motion_wait: 2
+      illuminance_entity: sensor.lumi_lumi_sensor_motion_aq2_illuminance_2
+      light_brightness: 60
+      person_1: person.nik
+      person_2: person.dionne
+- id: '1664805697085'
+  alias: Washok licht aan bij beweging
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light_illuminance_v2.yaml
+    input:
+      motion_entity: binary_sensor.washok
+      light_target:
+        entity_id: light.washok
+      no_motion_wait: 0
+      illuminance_entity: sensor.washok_licht
+      light_brightness: 60
+      person_1: person.nik
+      person_2: person.dionne
+      low_illuminance_threshold: 20
+      high_illuminance_threshold: 40
+- id: '1669235889542'
+  alias: Fien kamer licht uit als er geen beweging is.
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 27d53bafbacc991083c9a75046ab0d34
+    entity_id: binary_sensor.kleine_babykamer
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition:
+  - condition: device
+    type: is_on
+    device_id: 75b5b78852b649a98c9acf3c095f37c3
+    entity_id: light.kleine_babykamer
+    domain: light
+  action:
+  - type: turn_off
+    device_id: b409c71285f1a02f7fab03e079583728
+    entity_id: light.strijkkamer
+    domain: light
+  mode: single
+- id: '1669554831191'
+  alias: Vitamines Fien
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.vitamines_gegeven
+    from: 'off'
+    to: 'on'
+    id: gave_vitamines
+  - platform: time
+    at: 06:00:00
+    id: reset
+  - platform: state
+    entity_id:
+    - binary_sensor.woonkamer
+    from: 'off'
+    to: 'on'
+    id: motion
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: motion
+      - condition: state
+        entity_id: alarm_control_panel.home_alarm
+        state: disarmed
+      - condition: state
+        entity_id: input_boolean.vitamines_gegeven
+        state: 'off'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: light.keuken_5
+            state: 'on'
+          sequence:
+          - service: light.turn_on
+            data:
+              color_name: mediumvioletred
+            target:
+              entity_id: light.keuken_1
+        default:
+        - service: light.turn_on
+          data:
+            color_name: mediumvioletred
+            brightness: 255
+          target:
+            entity_id: light.keuken_1
+      - condition: time
+        before: 00:00:00
+        after: '12:00:00'
+      - service: light.turn_on
+        data:
+          flash: long
+        target:
+          entity_id: light.keuken_1
+    - conditions:
+      - condition: trigger
+        id: gave_vitamines
+      sequence:
+      - alias: hoe kopieer ik de lamp
+        choose:
+        - conditions:
+          - condition: state
+            entity_id: light.keuken_5
+            state: 'off'
+          sequence:
+          - service: light.turn_off
+            entity_id: light.keuken_1
+        - conditions:
+          - condition: state
+            entity_id: light.keuken_5
+            state: 'on'
+          sequence:
+          - alias: Kopier lamp
+            choose:
+            - conditions:
+                condition: state
+                entity_id: light.keuken_5
+                attribute: color_mode
+                state: color_temp
+              sequence:
+              - service: light.turn_on
+                entity_id: light.keuken_1
+                data_template:
+                  brightness: '{{state_attr("light.keuken_5", "brightness")}}'
+                  color_temp: '{{state_attr("light.keuken_5", "color_temp")}}'
+            - conditions:
+                condition: state
+                entity_id: light.keuken_5
+                attribute: color_mode
+                state: xy
+              sequence:
+                service: light.turn_on
+                entity_id: light.keuken_1
+                data_template:
+                  brightness: '{{state_attr("light.keuken_5", "brightness")}}'
+                  xy_color:
+                  - '{{state_attr("light.keuken_5", "xy_color")[0]}}'
+                  - '{{state_attr("light.keuken_5", "xy_color")[1]}}'
+    - conditions:
+      - condition: trigger
+        id: reset
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.vitamines_gegeven
+  mode: single
+- id: '1669888891385'
+  alias: Tag Nik is scanned
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 586b279f-53b3-4b96-9c9f-cc76963806b4
+  condition: []
+  action:
+  - service: media_player.play_media
+    data:
+      media_content_type: playlist
+      media_content_id: spotify:playlist:6woKGopyZEzZEO0Itmgwtp
+      enqueue: play
+    target:
+      entity_id: media_player.studeerkamer
+  mode: single
+- id: '1670683085875'
+  alias: plantjes water
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.plantjes_water
+    from: 'off'
+    to: 'on'
+    id: water_gegeven
+  - platform: time
+    at: 06:00:00
+    id: reset
+  - platform: state
+    entity_id:
+    - binary_sensor.woonkamer
+    from: 'off'
+    to: 'on'
+    id: motion
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: motion
+      - condition: state
+        entity_id: alarm_control_panel.home_alarm
+        state: disarmed
+      - condition: state
+        entity_id: input_boolean.plantjes_water
+        state: 'off'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: light.keuken_5
+            state: 'on'
+          sequence:
+          - service: light.turn_on
+            data:
+              color_name: green
+            target:
+              entity_id: light.keuken_2
+        default:
+        - service: light.turn_on
+          data:
+            color_name: green
+            brightness: 255
+          target:
+            entity_id: light.keuken_2
+      - condition: time
+        weekday:
+        - fri
+        - thu
+        - wed
+        - tue
+        - mon
+        - sun
+        before: 00:00:00
+        after: 00:00:00
+      - service: light.turn_on
+        data:
+          flash: long
+        target:
+          entity_id: light.keuken_2
+    - conditions:
+      - condition: trigger
+        id: water_gegeven
+      sequence:
+      - alias: hoe kopieer ik de lamp
+        choose:
+        - conditions:
+          - condition: state
+            entity_id: light.keuken_5
+            state: 'off'
+          sequence:
+          - service: light.turn_off
+            data: {}
+            target:
+              entity_id: light.keuken_2
+        - conditions:
+          - condition: state
+            entity_id: light.keuken_5
+            state: 'on'
+          sequence:
+          - alias: Kopier lamp
+            choose:
+            - conditions:
+                condition: state
+                entity_id: light.keuken_5
+                attribute: color_mode
+                state: color_temp
+              sequence:
+              - service: light.turn_on
+                entity_id: light.keuken_2
+                data_template:
+                  brightness: '{{state_attr("light.keuken_5", "brightness")}}'
+                  color_temp: '{{state_attr("light.keuken_5", "color_temp")}}'
+            - conditions:
+                condition: state
+                entity_id: light.keuken_5
+                attribute: color_mode
+                state: xy
+              sequence:
+              - service: light.turn_on
+                entity_id: light.keuken_2
+                data_template:
+                  brightness: '{{state_attr("light.keuken_5", "brightness")}}'
+                  xy_color:
+                  - '{{state_attr("light.keuken_5", "xy_color")[0]}}'
+                  - '{{state_attr("light.keuken_5", "xy_color")[1]}}'
+    - conditions:
+      - condition: trigger
+        id: reset
+      - condition: time
+        weekday:
+        - sat
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id: input_boolean.plantjes_water
   mode: single

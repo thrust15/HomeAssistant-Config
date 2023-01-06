@@ -1,39 +1,220 @@
-- alias: Overloop licht aan indien beweging
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.overloop
-      from: 'off'
-      to: 'on'
-  action: 
-    - service: light.turn_on
-      entity_id: light.trap
-      data_template:
-        profile: >
-          {% if (states.group.wakker.state == 'on') %}
-          relax
-          {% else %}
-          nightlight
-          {% endif %}
-    - condition: numeric_state
-      entity_id: sensor.overloop_licht
-      below: 20
-    - service: light.turn_on
-      entity_id: light.overloop_lamp
-      data_template:
-        profile: >
-          {% if (states.group.wakker.state == 'on') %}
-          relax
-          {% else %}
-          nightlight
-          {% endif %}
+# older automation, remove when satisfied with new.
+# - alias: Overloop licht aan indien beweging
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.overloop
+#       from: 'off'
+#       to: 'on'
+#   action: 
+#     - service: light.turn_on
+#       entity_id: light.trap
+#       data_template:
+#         profile: >
+#           {% if (states.group.wakker.state == 'on') %}
+#           relax
+#           {% else %}
+#           nightlight
+#           {% endif %}
+#     - condition: numeric_state
+#       entity_id: sensor.overloop_licht
+#       below: 20
+#     - service: light.turn_on
+#       entity_id: light.overloop_lamp
+#       data_template:
+#         profile: >
+#           {% if (states.group.wakker.state == 'on') %}
+#           relax
+#           {% else %}
+#           nightlight
+#           {% endif %}
 
-- alias: Overloop licht uit geen beweging
-  trigger:
+# - alias: Overloop licht uit geen beweging
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.overloop
+#       from: 'on'
+#       to: 'off'
+#   action: 
+#     service: light.turn_off
+#     entity_id:
+#       - light.overloop
+
+- id: overloopenzolderbeweging 
+  alias: Licht aan bij beweging op de overloop of zolder
+  trigger: 
     - platform: state
-      entity_id: binary_sensor.overloop
-      from: 'on'
-      to: 'off'
-  action: 
-    service: light.turn_off
-    entity_id:
-      - light.overloop
+      entity_id: 
+        - binary_sensor.overloop
+        - binary_sensor.zolder_overloop
+  action:
+    - alias: "Which lights need to turn on?"
+      choose:
+      - conditions:
+          condition: and
+          conditions:
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.overloop
+              state: "off"
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.zolder_overloop
+              state: "off"
+        sequence:
+          - service: light.turn_off
+            target:
+              entity_id:
+                - light.overloop
+                - light.zolder_overloop
+      - conditions:
+          condition: and
+          conditions:
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.overloop
+              state: "on"
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.zolder_overloop
+              state: "on"
+        sequence:
+          - parallel:
+              - sequence:
+                  - service: light.turn_on
+                    entity_id: light.trap
+                    data_template:
+                      profile: >
+                        {% if (states.group.wakker.state == 'on') %}
+                        relax
+                        {% else %}
+                        nightlight
+                        {% endif %}
+                  - alias: "is dark"
+                    condition: numeric_state
+                    entity_id: sensor.overloop_licht
+                    below: 10
+                  - alias: "turn on hallway light"
+                    service: light.turn_on
+                    target:
+                      entity_id: light.overloop_lamp
+                    data_template:
+                      profile: >
+                        {% if (states.group.wakker.state == 'on') %}
+                        relax
+                        {% else %}
+                        nightlight
+                        {% endif %}
+              - sequence:
+                  - alias: "is dark"
+                    condition: numeric_state
+                    entity_id: sensor.zolder_overloop_licht
+                    below: 20
+                  - alias: "turn on attic light"
+                    service: light.turn_on
+                    target:
+                      entity_id: light.zolder_overloop
+                    data:
+                      profile: relax
+      - conditions:
+          condition: and
+          conditions:
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.overloop
+              state: "on"
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.zolder_overloop
+              state: "off"
+        sequence:
+          - parallel:
+              - sequence:
+                  - service: light.turn_on
+                    entity_id: light.trap
+                    data_template:
+                      profile: >
+                        {% if (states.group.wakker.state == 'on') %}
+                        relax
+                        {% else %}
+                        nightlight
+                        {% endif %}
+                  - alias: "is dark"
+                    condition: numeric_state
+                    entity_id: sensor.overloop_licht
+                    below: 10
+                  - alias: "turn on hallway light"
+                    service: light.turn_on
+                    target:
+                      entity_id: light.overloop_lamp
+                    data_template:
+                      profile: >
+                        {% if (states.group.wakker.state == 'on') %}
+                        relax
+                        {% else %}
+                        nightlight
+                        {% endif %}
+              - sequence:
+                  - alias: "turn off attic light"
+                    service: light.turn_off
+                    target:
+                      entity_id:
+                        - light.zolder_overloop_1
+                        - light.zolder_overloop_2
+                        - light.zolder_overloop_4
+                  - alias: "is dark"
+                    condition: numeric_state
+                    entity_id: sensor.zolder_overloop_licht
+                    below: 20
+                  - alias: "turn on attic light"
+                    service: light.turn_on
+                    target:
+                      entity_id: light.zolder_overloop_3
+                    data_template:
+                      profile: >
+                        {% if (states.group.wakker.state == 'on') %}
+                        relax
+                        {% else %}
+                        nightlight
+                        {% endif %}
+      - conditions:
+          condition: and
+          conditions:
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.overloop
+              state: "off"
+            - alias: "Overloop has motion"
+              condition: state
+              entity_id: binary_sensor.zolder_overloop
+              state: "on"
+        sequence:
+          - parallel:
+              - sequence:
+                  - service: light.turn_off
+                    entity_id: light.trap
+                  - alias: "is dark"
+                    condition: numeric_state
+                    entity_id: sensor.overloop_licht
+                    below: 10
+                  - alias: "turn on hall light"
+                    service: light.turn_on
+                    target:
+                      entity_id: light.overloop_lamp
+                    data_template:
+                      profile: >
+                        {% if (states.group.wakker.state == 'on') %}
+                        relax
+                        {% else %}
+                        nightlight
+                        {% endif %}
+              - sequence:
+                  - alias: "is dark"
+                    condition: numeric_state
+                    entity_id: sensor.zolder_overloop_licht
+                    below: 20
+                  - alias: "turn on attic light"
+                    service: light.turn_on
+                    target:
+                      entity_id: light.zolder_overloop
+                    data:
+                      profile: relax

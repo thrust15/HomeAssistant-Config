@@ -1,0 +1,14 @@
+- trigger:
+    - platform: state
+      entity_id: binary_sensor.master_bath_shower_occupancy
+      to: "on"
+      id: start
+    - platform: state
+      entity_id: binary_sensor.master_bath_shower_occupancy_off
+      to: "on"
+      id: stop
+  binary_sensor:
+    - name: Douchen
+      icon: mdi:shower-head
+      state: >-
+        {{ 'on' if (trigger.id == 'start' or is_state("binary_sensor.master_bath_shower_occupancy", "on")) else 'off' }}

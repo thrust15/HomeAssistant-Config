@@ -3,3 +3,9 @@
     studeerkamer_donker:
       value_template: '{{ (states.sensor.studeerkamer_illuminance.state | float(default=0) < 10) or ((states.sensor.studeerkamer_illuminance.state | float(default=0) < 30) and (states.light.zolder_kantoor.state == "on")) }}'
       friendly_name: 'Studeerkamer Donker'
+      unique_id: studeerkamer_donker
+    monitor_on:
+      value_template: '{{states("sensor.kerstverlichting_achtertuin_power") | float(default=0) >= 10 }}'
+      friendly_name: 'Monitor on'
+      device_class: power
+      unique_id: monitor_on

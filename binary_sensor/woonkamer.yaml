@@ -1,6 +1,6 @@
 - platform: template
   sensors:
     woonkamer_donker:
-      value_template: '{{ (states.sensor.woonkamer_licht.state | float(default=0) < 20) or ((states.sensor.woonkamer_licht.state | float(default=0) < 40) and (states.light.woonkamer.state == "on")) }}'
+      value_template: '{{ (states.sensor.woonkamer_licht.state | float(default=0) < 10) or ((states.sensor.woonkamer_licht.state | float(default=0) < 20) and (states.light.bakkerskast.state == "on")) }}'
       friendly_name: 'Woonkamer Donker'
 

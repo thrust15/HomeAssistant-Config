@@ -65,11 +65,37 @@
   id: badkamer_licht_uit
   trigger:
     - platform: state
+      id: douchen
       entity_id: binary_sensor.badkamer2
       from: 'on'
       to: 'off'
       for:
         minutes: 9
+    - platform: state
+      id: niet_douchen
+      entity_id: binary_sensor.badkamer2
+      from: "on"
+      to: "off"
+      for:
+        minutes: 2
   action:
-    service: light.turn_off
-    entity_id: light.badkamer
+    - alias: depending if someone showers turn of after 2 or 9 minutes
+      choose:
+      - conditions:
+        - alias: "There is no one showering"
+          condition: state
+          entity_id: binary_sensor.douchen
+          state: "off"
+        sequence:
+          - alias: "turn off light"
+            service: light.turn_off
+            target:
+              entity_id: light.badkamer
+      - conditions:
+          - condition: trigger
+            id: douchen
+        sequence:
+          - alias: "turn off light"
+            service: light.turn_off
+            target:
+              entity_id: light.badkamer

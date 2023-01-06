@@ -40,11 +40,11 @@ climate_temperature:
       entity_id: alarm_control_panel.home_alarm
       state: 'armed_away'
     - condition: template
-      value_template: '{{states.climate.living_room_nest.attributes.temperature != 19.5}}'
+      value_template: '{{states.climate.living_room_nest.attributes.temperature != 19.0}}'
     - service: climate.set_temperature
       entity_id: climate.living_room_nest
       data:
-        temperature: 19.5
+        temperature: 19.0
 20_graden:
   sequence:
     - condition: time
@@ -54,11 +54,11 @@ climate_temperature:
       entity_id: alarm_control_panel.home_alarm
       state: 'disarmed'
     - condition: template
-      value_template: '{{states.climate.living_room_nest.attributes.temperature != 20.5}}'
+      value_template: '{{states.climate.living_room_nest.attributes.temperature != 20.0}}'
     - service: climate.set_temperature
       entity_id: climate.living_room_nest
       data:
-        temperature: 20.5
+        temperature: 20.0
 21_graden:
   sequence:
     - condition: time
@@ -68,8 +68,8 @@ climate_temperature:
       entity_id: alarm_control_panel.home_alarm
       state: 'disarmed'
     - condition: template
-      value_template: '{{states.climate.living_room_nest.attributes.temperature != 21.5}}'
+      value_template: '{{states.climate.living_room_nest.attributes.temperature != 21.0}}'
     - service: climate.set_temperature
       entity_id: climate.living_room_nest
       data:
-        temperature: 21.5
+        temperature: 21.0

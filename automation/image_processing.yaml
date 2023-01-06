@@ -5,7 +5,7 @@
   trigger:
     - platform: numeric_state
       # entity_id: image_processing.voortuin
-      entity_id: sensor.front_person
+      entity_id: sensor.front_person_count
       above: 0
   action:
     - service: camera.record
@@ -36,7 +36,7 @@
   trigger:
     - platform: numeric_state
       # entity_id: image_processing.achtertuin
-      entity_id: sensor.back_person
+      entity_id: sensor.back_person_count
       above: 0
   action:
     - service: camera.record

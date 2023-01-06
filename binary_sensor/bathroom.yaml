@@ -1,0 +1,17 @@
+# Tracks 3 humidity readings over 10 minutes. If the change is greater than 10%, evals to true. (10/(60*10))
+- platform: trend
+  sensors:
+    master_bath_shower_occupancy:
+      max_samples: 3
+      entity_id: sensor.badkamer_vochtigheid
+      sample_duration: 600
+      min_gradient: 0.03
+# Tracks 2 humidity readings over 5 minutes. If the change decrease is greater than 5%, evals to true. (-5/(60*5))
+# Bumped samples down from 4 to 2, because it was staying on way too long.
+- platform: trend
+  sensors:
+    master_bath_shower_occupancy_off:
+      max_samples: 2
+      entity_id: sensor.badkamer_vochtigheid
+      sample_duration: 300
+      min_gradient: -0.016666

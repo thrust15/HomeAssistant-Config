@@ -1,6 +1,3 @@
-# - alias: media player control
-#   trigger:
-
 - alias: increment counter robbie
   id: increment_counter_robbie
   trigger:
@@ -32,3 +29,17 @@
       service: counter.reset
       target:
         entity_id: counter.robbie_runs_after_emptying_dustbin
+
+- id: '1666535967565'
+  alias: Reset robbie klaar
+  description: ''
+  trigger:
+  - platform: time
+    at: 05:00:00
+  condition: []
+  action:
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.robbie_klaar_vandaag
+  mode: single
