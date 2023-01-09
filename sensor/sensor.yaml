@@ -79,7 +79,7 @@
             {% set afval = 'Blauwe Bak' %}
           {% endif %}
         {% endif %}
-        {% if is_state_attr('hvc_groep_plastic_en_verpakking', 'day', 'Vandaag') %}
+        {% if is_state_attr('sensor.hvc_groep_plastic_en_verpakking', 'day', 'Vandaag') %}
           {% if afval|length %}
             {% set afval = afval + ' + Plastic' %}
           {% else %}
@@ -115,7 +115,7 @@
             {% set afval = 'Blauwe Bak' %}
           {% endif %}
         {% endif %}
-        {% if is_state_attr('hvc_groep_plastic_en_verpakking', 'day', 'Morgen') %}
+        {% if is_state_attr('sensor.hvc_groep_plastic_en_verpakking', 'day', 'Morgen') %}
           {% if afval|length %}
             {% set afval = afval + ' + Plastic' %}
           {% else %}

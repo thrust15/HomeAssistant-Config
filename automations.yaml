@@ -398,3 +398,24 @@
         target:
           entity_id: input_boolean.plantjes_water
   mode: single
+- id: '1673259984130'
+  alias: Reset afvalbak lamp
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:30:01
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.afval_vandaag
+      state: Geen
+  - condition: state
+    entity_id: light.haldeur
+    state: 'on'
+  action:
+  - service: script.copy_lamp
+    data:
+      source_lamp: light.bank
+      target_lamp: light.haldeur
+  mode: single

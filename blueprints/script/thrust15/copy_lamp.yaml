@@ -1,0 +1,59 @@
+blueprint:
+  name: Copy lamp state
+  description: This is a small blueprint script that takes a source and target lamp and copies that state
+  domain: script
+fields:
+  source_lamp:
+    description: The entity ID of the lamp you want to copy from
+    name: Source lamp
+    required: true
+    selector:
+      entity:
+        domain: light
+  target_lamp:
+    description: The entity ID of the lamp you want to copy to
+    name: Target lamp
+    required: true
+    selector:
+      entity:
+        domain: light
+sequence:
+  - alias: How to copy lamp
+    choose:
+    - conditions:
+      - "{{is_state(source_lamp, 'off')}}"
+      sequence:
+      - service: light.turn_off
+        data:
+          entity_id: '{{target_lamp}}'
+    - conditions:
+      - "{{ is_state(source_lamp, 'on')}}"
+      sequence:
+      - alias: Kopier lamp
+        choose:
+        - conditions:
+            - "{{ (is_state_attr(source_lamp, 'color_mode', 'color_temp')) }}"
+          sequence:
+          - service: light.turn_on
+            data:
+              entity_id: '{{target_lamp}}'
+              brightness: '{{state_attr(source_lamp, "brightness")}}'
+              color_temp: '{{state_attr(source_lamp, "color_temp")}}'
+        - conditions:
+            - "{{ (is_state_attr(source_lamp, 'color_mode', 'xy')) }}"
+          sequence:
+            service: light.turn_on
+            data:
+              entity_id: '{{target_lamp}}'
+              brightness: '{{state_attr(source_lamp, "brightness")}}'
+              xy_color:
+              - '{{state_attr(source_lamp, "xy_color")[0]}}'
+              - '{{state_attr(source_lamp, "xy_color")[1]}}'
+        default:
+          - service: light.turn_on
+            data:
+              entity_id: '{{target_lamp}}'
+              brightness: '{{state_attr(source_lamp, "brightness")}}'
+mode: parallel
+max_exceeded: silent
+icon: mdi:account-voice

@@ -6,3 +6,9 @@ sonos_say_script:
       tts_language: nl
   mode: single
   icon: mdi:voicemail
+copy_lamp:
+  alias: Copy lamp
+  use_blueprint:
+    path: thrust15/copy_lamp.yaml
+  mode: single
+  icon: mdi:lightbulb-multiple-outline
