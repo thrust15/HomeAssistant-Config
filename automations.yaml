@@ -419,3 +419,35 @@
       source_lamp: light.bank
       target_lamp: light.haldeur
   mode: single
+- id: '1673353448401'
+  alias: Frigate notification front
+  description: ''
+  use_blueprint:
+    path: hunterjm/frigate_0.10_notification.yaml
+    input:
+      camera: front
+      base_url: !secret base_url
+      notify_group: all_ios
+      zones: {}
+      labels:
+      - person
+- id: '1673365422069'
+  alias: Frigate notification Back
+  description: ''
+  use_blueprint:
+    path: hunterjm/frigate_0.10_notification.yaml
+    input:
+      camera: back
+      base_url: !secret base_url
+      notify_group: all_ios
+- id: '1674039819138'
+  alias: Schuur licht
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light_illuminance_v2.yaml
+    input:
+      motion_entity: binary_sensor.schuur
+      no_motion_wait: 1
+      light_target:
+        entity_id: light.schuur
+      illuminance_entity: sensor.schuur_illuminance

@@ -2,6 +2,7 @@
 #V1.0 Initial version
 #V2.0 Added optional blocker entities which when turned off prevent light from turning on, useful when using in the bedroom.
 #V2.0.1 Added person to be home to turn on light, in some scenarios light turned on while noone was home.
+#V2.0.2 Added hardcoded transition time of 1 second
 
 blueprint:
   name: Motion-activated Light with illuminance v2.0
@@ -153,6 +154,8 @@ action:
       sequence:
         - service: light.turn_off
           target: !input light_target
+          data: 
+            transition: 1
     - conditions:
         - condition: numeric_state
           entity_id: !input illuminance_entity
@@ -160,6 +163,8 @@ action:
       sequence:
         - service: light.turn_off
           target: !input light_target
+          data: 
+            transition: 1
     - conditions:
       - condition: numeric_state
         entity_id: !input illuminance_entity
@@ -200,3 +205,4 @@ action:
           data:
             color_temp: !input 'light_color_temperature'
             brightness: "{{light_brightness_int}}"
+            transition: 1

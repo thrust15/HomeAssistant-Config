@@ -49,3 +49,4 @@ esphome/*
 !esphome/*.yaml
 !esphome/.gitignore
 themes
+frigate copy.yml

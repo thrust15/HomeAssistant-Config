@@ -37,7 +37,11 @@
       from: 'off'
       to: 'on'
   action:
-    - alias: "When sleeping, dim lights "
+    - alias: "Only trigger when lights are off"
+      condition: state
+      entity_id: light.badkamer
+      state: "off"
+    - alias: "When sleeping, dim lights"
       choose:
       - conditions:
           condition: and

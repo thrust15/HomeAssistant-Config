@@ -1,6 +1,5 @@
 - alias: 'Persoon voor de deur'
-  mode: queued
-  max: 5
+  mode: single
   id: persoon-in-voortuin
   trigger:
     - platform: numeric_state
@@ -8,54 +7,57 @@
       entity_id: sensor.front_person_count
       above: 0
   action:
-    - service: camera.record
-      entity_id: camera.frontyard
-      data:
-        duration: 60
-        lookback: 30
-        filename: '/media/security/tensorflow/voortuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
-    - service: camera.snapshot
-      target:
-        entity_id: camera.front_person
-      data:
-        filename: /media/frigate/front_latest.jpg
+    # - service: camera.record
+    #   entity_id: camera.frontyard
+    #   data:
+    #     duration: 60
+    #     lookback: 30
+    #     filename: '/media/security/tensorflow/voortuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
+    # - service: camera.snapshot
+    #   target:
+    #     entity_id: camera.front_person
+    #   data:
+    #     filename: /media/frigate/front_latest.jpg
+    - variables:
+        base_url: !secret base_url
     - service: notify.security_telegram
       data:
         title: "Tensorflow"
         message: "Tensorflow"
         data:
           photo:
-            file: /media/frigate/front_latest.jpg
+            url: "{{base_url}}{{state_attr('camera.front_person', 'entity_picture')}}"
             caption: "Persoon in voortuin gedetecteerd"
     - delay: 60
 
 - alias: 'Persoon in achtertuin'
   id: persoon-in-achtertuin
-  mode: queued
-  max: 5
+  mode: single
   trigger:
     - platform: numeric_state
       # entity_id: image_processing.achtertuin
       entity_id: sensor.back_person_count
       above: 0
   action:
-    - service: camera.record
-      entity_id: camera.backyard
-      data:
-        duration: 60
-        lookback: 30
-        filename: '/media/security/tensorflow/achtertuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
-    - service: camera.snapshot
-      target:
-        entity_id: camera.back_person
-      data:
-        filename: /media/frigate/back_latest.jpg
+    # - service: camera.record
+    #   entity_id: camera.backyard
+    #   data:
+    #     duration: 60
+    #     lookback: 30
+    #     filename: '/media/security/tensorflow/achtertuin/{{ now().strftime("%Y-%m-%d") }}/{{ now().strftime("%H-%M-%S") }}.mp4'
+    # - service: camera.snapshot
+    #   target:
+    #     entity_id: camera.back_person
+    #   data:
+    #     filename: /media/frigate/back_latest.jpg
+    - variables:
+        base_url: !secret base_url
     - service: notify.security_telegram
       data:
         title: "Tensorflow"
         message: "Tensorflow"
         data:
           photo:
-            file: /media/frigate/back_latest.jpg
+            url: "{{base_url}}{{state_attr('camera.back_person', 'entity_picture')}}"
             caption: "Persoon in achtertuin gedetecteerd"
     - delay: 60
